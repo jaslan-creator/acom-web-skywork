@@ -1,0 +1,45 @@
+{
+  "documents": [],
+  "tables_parsed": [],
+  "tables_source_info": [],
+  "images": [
+    {
+      "original_name": "icon-rojo_1-8",
+      "file_name": "icon-rojo_1-8.png",
+      "file_path": "/workspace/acom_trading/public/images/icon-rojo_1-8.png",
+      "rel_path": "images/icon-rojo_1-8.png",
+      "file_type": "png",
+      "category": "images"
+    },
+    {
+      "original_name": "logo-rojo-8",
+      "file_name": "logo-rojo-8.png",
+      "file_path": "/workspace/acom_trading/public/images/logo-rojo-8.png",
+      "rel_path": "images/logo-rojo-8.png",
+      "file_type": "png",
+      "category": "images"
+    }
+  ],
+  "summary": {
+    "total_files": 3,
+    "by_category": {
+      "documents": 0,
+      "tables_parsed": 0,
+      "tables_source_info": 0,
+      "images": 2,
+      "document": 1
+    },
+    "processing_time": null
+  },
+  "document": [
+    {
+      "original_name": "LOGO ACOM NORMAS BÁSICAS",
+      "file_name": "LOGO ACOM NORMAS BÁSICAS.md",
+      "file_path": "/workspace/acom_trading/uploaded_files/documents/LOGO ACOM NORMAS BÁSICAS.md",
+      "file_type": "pdf",
+      "category": "document",
+      "summary": "Processed LOGO ACOM NORMAS BÁSICAS for coding",
+      "source_id": "2018125099743444992"
+    }
+  ]
+}

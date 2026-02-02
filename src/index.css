@@ -1,0 +1,203 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+==========================================================================
+【AI HANDOVER NOTE】
+1. DESIGN PHILOSOPHY:
+   - Trust-Led B2B Corporate: The design focuses on stability, professional authority, and high-efficiency information architecture.
+   - Visual Style: Neo-minimalism with 'Solid Surfaces'. We use subtle borders and consistent padding to create a sense of organized, large-scale distribution.
+   - Rationale: For a wholesale distributor in Venezuela, the UI must feel 'heavy' enough to be reliable but 'light' enough to navigate quickly on mobile devices. The rounded geometric qualities of the logo are echoed in the 0.75rem radius and font choice.
+
+2. TYPOGRAPHY:
+   - Sans (Plus Jakarta Sans): Chosen for its modern, professional geometric shapes that mirror the ACOM logo's curves while maintaining exceptional legibility for B2B catalogs.
+   - Mono (IBM Plex Mono): Used specifically for technical data, SKU details, and the '$250 Minimum Order' callouts to evoke a sense of precision and logistics.
+
+3. COLOR SYSTEM:
+   - Brand Primary: A sophisticated Burgundy (Hue 18) extracted from the logo. It represents maturity and established market presence.
+   - Mapping: --primary is the core brand burgundy. --accent is used for interactive hover states and subtle highlights to guide the user toward the WhatsApp CTA.
+   - Semantic Logic: Destructive uses a high-chroma red for errors, while Success (mapped in charts) uses a deep emerald to signify growth and reliability.
+
+4. USAGE GUIDE:
+   - Layout: Use a 'Modular Surface' approach. Content blocks (Brands, Process, Value Prop) should be clearly separated by subtle borders or light-grey backgrounds.
+   - CTAs: The 'Hablar con un asesor' button must always use the --primary background with high contrast to ensure immediate visibility.
+   - Special Effects: Use subtle 'Ambient Occlusion' (soft shadows) on cards to give them physicality without looking like a consumer-facing app.
+==========================================================================
+*/
+
+:root {
+  /* Typography */
+  --font-sans: Plus Jakarta Sans, system-ui, sans-serif;
+  --font-mono: IBM Plex Mono, monospace;
+  
+  /* Radius */
+  --radius: 0.75rem;
+
+  /* Core UI Tokens */
+  --background: oklch(0.99 0.002 18);
+  --foreground: oklch(0.18 0.015 20);
+  --card: oklch(1.0 0.0 0);
+  --card-foreground: oklch(0.18 0.015 20);
+  --popover: oklch(1.0 0.0 0);
+  --popover-foreground: oklch(0.18 0.015 20);
+  --primary: oklch(0.42 0.16 18);
+  --primary-foreground: oklch(0.98 0.01 18);
+  --secondary: oklch(0.96 0.01 18);
+  --secondary-foreground: oklch(0.25 0.02 18);
+  --muted: oklch(0.95 0.01 20);
+  --muted-foreground: oklch(0.45 0.02 20);
+  --accent: oklch(0.92 0.03 18);
+  --accent-foreground: oklch(0.35 0.14 18);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0.01 25);
+  --border: oklch(0.91 0.01 20);
+  --input: oklch(0.91 0.01 20);
+  --ring: oklch(0.42 0.16 18);
+  
+  /* Chart Tokens */
+  --chart-1: oklch(0.42 0.16 18);
+  --chart-2: oklch(0.32 0.08 240);
+  --chart-3: oklch(0.45 0.12 150);
+  --chart-4: oklch(0.75 0.15 60);
+  --chart-5: oklch(0.62 0.18 30);
+  
+  /* Sidebar Tokens */
+  --sidebar: oklch(0.98 0.005 18);
+  --sidebar-foreground: oklch(0.25 0.01 20);
+  --sidebar-primary: oklch(0.42 0.16 18);
+  --sidebar-primary-foreground: oklch(0.98 0.01 18);
+  --sidebar-accent: oklch(0.94 0.02 18);
+  --sidebar-accent-foreground: oklch(0.35 0.14 18);
+  --sidebar-border: oklch(0.92 0.01 20);
+  --sidebar-ring: oklch(0.42 0.16 18);
+}
+
+.dark {
+  --background: oklch(0.14 0.01 20);
+  --foreground: oklch(0.92 0.01 20);
+  --card: oklch(0.16 0.01 20);
+  --card-foreground: oklch(0.92 0.01 20);
+  --popover: oklch(0.14 0.01 20);
+  --popover-foreground: oklch(0.92 0.01 20);
+  --primary: oklch(0.52 0.18 18);
+  --primary-foreground: oklch(0.98 0.01 18);
+  --secondary: oklch(0.22 0.02 20);
+  --secondary-foreground: oklch(0.92 0.01 20);
+  --muted: oklch(0.22 0.02 20);
+  --muted-foreground: oklch(0.65 0.02 20);
+  --accent: oklch(0.25 0.06 18);
+  --accent-foreground: oklch(0.92 0.02 18);
+  --destructive: oklch(0.45 0.18 25);
+  --destructive-foreground: oklch(0.98 0.01 25);
+  --border: oklch(0.25 0.02 20);
+  --input: oklch(0.25 0.02 20);
+  --ring: oklch(0.52 0.18 18);
+  
+  /* Chart Tokens */
+  --chart-1: oklch(0.52 0.18 18);
+  --chart-2: oklch(0.45 0.12 240);
+  --chart-3: oklch(0.55 0.15 150);
+  --chart-4: oklch(0.82 0.12 60);
+  --chart-5: oklch(0.68 0.15 30);
+  
+  /* Sidebar Tokens */
+  --sidebar: oklch(0.12 0.01 20);
+  --sidebar-foreground: oklch(0.88 0.01 20);
+  --sidebar-primary: oklch(0.52 0.18 18);
+  --sidebar-primary-foreground: oklch(0.98 0.01 18);
+  --sidebar-accent: oklch(0.22 0.04 18);
+  --sidebar-accent-foreground: oklch(0.92 0.02 18);
+  --sidebar-border: oklch(0.22 0.02 20);
+  --sidebar-ring: oklch(0.52 0.18 18);
+}
+
+@theme inline {
+  /* Shadcn Core Mapping */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Charts Mapping */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar Mapping */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Typography */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  /* Radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply scroll-smooth antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans min-h-screen;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  code, pre {
+    @apply font-mono;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-primary;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40;
+  }
+}
