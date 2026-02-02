@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Clock, 
-  MessageSquare, 
-  Mail, 
-  Phone, 
-  Building2, 
-  CheckCircle2 
+import {
+  Clock,
+  MessageSquare,
+  Mail,
+  Phone,
+  Building2,
+  CheckCircle2
 } from 'lucide-react';
 import { CTAButton } from '@/components/CTAButton';
 import { Button } from '@/components/ui/button';
@@ -51,7 +51,7 @@ export default function Contacto() {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            
+
             {/* Información de Contacto y Valor B2B */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -113,11 +113,11 @@ export default function Contacto() {
               <div className="space-y-4 pt-4">
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Mail className="w-5 h-5" />
-                  <span>contacto@acomtrading.com.ve</span>
+                  <a href="mailto:ventas@acomve.com" className="hover:text-primary transition-colors">ventas@acomve.com</a>
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Phone className="w-5 h-5" />
-                  <span>+58 (212) 000-0000</span>
+                  <a href="https://wa.me/584244567154" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">+58 424 456-7154</a>
                 </div>
               </div>
             </motion.div>
@@ -138,10 +138,10 @@ export default function Contacto() {
                         <Label htmlFor="name" className="text-foreground font-semibold">
                           Nombre y Apellido
                         </Label>
-                        <Input 
-                          id="name" 
-                          placeholder="Ej. Juan Pérez" 
-                          required 
+                        <Input
+                          id="name"
+                          placeholder="Ej. Juan Pérez"
+                          required
                           className="bg-muted/30 focus:bg-background h-12"
                         />
                       </div>
@@ -151,10 +151,10 @@ export default function Contacto() {
                         </Label>
                         <div className="relative">
                           <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input 
-                            id="company" 
-                            placeholder="Ej. Librería Central C.A." 
-                            required 
+                          <Input
+                            id="company"
+                            placeholder="Ej. Librería Central C.A."
+                            required
                             className="pl-10 bg-muted/30 focus:bg-background h-12"
                           />
                         </div>
@@ -166,11 +166,11 @@ export default function Contacto() {
                         <Label htmlFor="email" className="text-foreground font-semibold">
                           Correo Electrónico Corporativo
                         </Label>
-                        <Input 
-                          id="email" 
-                          type="email" 
-                          placeholder="nombre@empresa.com" 
-                          required 
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="nombre@empresa.com"
+                          required
                           className="bg-muted/30 focus:bg-background h-12"
                         />
                       </div>
@@ -178,11 +178,11 @@ export default function Contacto() {
                         <Label htmlFor="phone" className="text-foreground font-semibold">
                           WhatsApp de Contacto
                         </Label>
-                        <Input 
-                          id="phone" 
-                          type="tel" 
-                          placeholder="+58 412 0000000" 
-                          required 
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="+58 412 0000000"
+                          required
                           className="bg-muted/30 focus:bg-background h-12"
                         />
                       </div>
@@ -192,22 +192,22 @@ export default function Contacto() {
                       <Label htmlFor="message" className="text-foreground font-semibold">
                         ¿En qué marcas o productos estás interesado?
                       </Label>
-                      <Textarea 
-                        id="message" 
+                      <Textarea
+                        id="message"
                         placeholder="Bambary, Pelikan, Zanotti, SanRemo... Cuéntanos tus necesidades de abastecimiento."
                         className="min-h-[150px] bg-muted/30 focus:bg-background resize-none"
                       />
                     </div>
 
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-lg font-bold rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.98]"
                     >
                       Hablar con un asesor comercial
                     </Button>
-                    
+
                     <p className="text-xs text-center text-muted-foreground mt-4">
-                      Al enviar esta solicitud, confirmas que representas a un comercio o negocio mayorista. 
+                      Al enviar esta solicitud, confirmas que representas a un comercio o negocio mayorista.
                       Acom Trading C.A. protege tus datos según estándares de privacidad comercial.
                     </p>
                   </form>

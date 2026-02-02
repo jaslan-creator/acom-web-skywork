@@ -45,7 +45,16 @@ export interface Benefit {
  */
 export const BUSINESS_CONFIG = {
   MIN_ORDER_USD: 250,
-  WHATSAPP_PHONE: "584120000000", // Example placeholder, to be updated with real contact if provided
+  WHATSAPP_PHONE: "584244567154",
+  WHATSAPP_DISPLAY: "+58 424 456-7154",
+  EMAIL: "ventas@acomve.com",
+  ADDRESS: {
+    LINE1: "Urb. Industrial Castillito, Calle 97",
+    LINE2: "Centro Comercial Valencia (CCCV II)",
+    LINE3: "Local 18",
+    CITY: "Valencia",
+    COUNTRY: "Venezuela",
+  },
   RESPONSE_TIME_EXPECTATION: "24 horas hábiles",
   COUNTRY: "Venezuela",
 } as const;
