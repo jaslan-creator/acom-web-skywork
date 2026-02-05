@@ -8,6 +8,7 @@ import { Layout } from "@/components/Layout";
 import Home from "@/pages/Home";
 import Marcas from "@/pages/Marcas";
 import ComoTrabajamos from "@/pages/ComoTrabajamos";
+import LineaCredito from "@/pages/LineaCredito";
 import SobreAcom from "@/pages/SobreAcom";
 import Contacto from "@/pages/Contacto";
 
@@ -48,6 +49,10 @@ const App = () => {
               <Route 
                 path={ROUTE_PATHS.COMO_TRABAJAMOS} 
                 element={<ComoTrabajamos />} 
+              />
+              <Route 
+                path={ROUTE_PATHS.LINEA_CREDITO} 
+                element={<LineaCredito />} 
               />
               <Route 
                 path={ROUTE_PATHS.SOBRE_ACOM} 

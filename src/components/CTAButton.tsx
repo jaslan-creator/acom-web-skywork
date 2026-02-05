@@ -30,10 +30,10 @@ export function CTAButton({
   variant = 'primary',
   className,
   children,
-  href = "https://wa.me/584244567154", // WhatsApp comercial de ACOM
+  href = "https://wa.me/584120000000", // Placeholder for Venezuelan commercial WhatsApp
   showIcon = true,
 }: CTAButtonProps) {
-
+  
   const variants = {
     primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md",
     secondary: "bg-white text-primary border-2 border-primary hover:bg-primary/5",
@@ -66,7 +66,7 @@ export function CTAButton({
         </span>
       )}
       <span>{children}</span>
-
+      
       {/* Subtle indicator for B2B seriousness */}
       {!showIcon && <MessageCircle className="w-4 h-4 opacity-70" />}
     </motion.a>

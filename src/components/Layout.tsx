@@ -32,6 +32,7 @@ export function Layout({ children }: LayoutProps) {
     { label: "Home", path: ROUTE_PATHS.HOME },
     { label: "Marcas", path: ROUTE_PATHS.MARCAS },
     { label: "Cómo Trabajamos", path: ROUTE_PATHS.COMO_TRABAJAMOS },
+    { label: "Línea de Crédito", path: ROUTE_PATHS.LINEA_CREDITO },
     { label: "Sobre Acom", path: ROUTE_PATHS.SOBRE_ACOM },
     { label: "Contacto", path: ROUTE_PATHS.CONTACTO },
   ];
@@ -146,7 +147,7 @@ export function Layout({ children }: LayoutProps) {
                 className="h-10 w-auto opacity-90"
               />
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Importación y distribución mayorista de marcas líderes en Venezuela.
+                Importación y distribución mayorista de marcas líderes en Venezuela. 
                 Especialistas en artículos escolares, de oficina y hogar.
               </p>
               <div className="flex items-center gap-4">
@@ -185,22 +186,19 @@ export function Layout({ children }: LayoutProps) {
                 <li className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <a href={whatsappLink} className="text-muted-foreground hover:text-primary text-sm transition-colors">
-                    {BUSINESS_CONFIG.WHATSAPP_DISPLAY}
+                    +{BUSINESS_CONFIG.WHATSAPP_PHONE}
                   </a>
                 </li>
                 <li className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <a href={`mailto:${BUSINESS_CONFIG.EMAIL}`} className="text-muted-foreground hover:text-primary text-sm transition-colors">
-                    {BUSINESS_CONFIG.EMAIL}
-                  </a>
+                  <span className="text-muted-foreground text-sm">
+                    ventas@acomtrading.com
+                  </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Map_Pin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <span className="text-muted-foreground text-sm">
-                    {BUSINESS_CONFIG.ADDRESS.LINE1}<br />
-                    {BUSINESS_CONFIG.ADDRESS.LINE2}<br />
-                    {BUSINESS_CONFIG.ADDRESS.LINE3}<br />
-                    {BUSINESS_CONFIG.ADDRESS.CITY}, {BUSINESS_CONFIG.ADDRESS.COUNTRY}
+                    Caracas, Venezuela
                   </span>
                 </li>
               </ul>

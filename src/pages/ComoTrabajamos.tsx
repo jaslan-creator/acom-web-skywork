@@ -1,16 +1,22 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { 
   Building2, 
   DollarSign, 
   UserCheck, 
   Package, 
   Truck, 
-  ArrowRight 
+  ArrowRight,
+  Calendar,
+  Clock,
+  TrendingUp,
+  CreditCard
 } from "lucide-react";
 import { processSteps } from "../data/index";
 import { CTAButton } from "../components/CTAButton";
 import { ProcessCard, BenefitCard } from "../components/Cards";
 import { springPresets, fadeInUp, staggerContainer, staggerItem } from "../lib/motion";
+import { ROUTE_PATHS } from "../lib/index";
 
 const details = [
   {
@@ -148,6 +154,69 @@ export default function ComoTrabajamos() {
                   Iniciar contacto comercial
                 </CTAButton>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Línea de Crédito Section */}
+      <section className="py-24 bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={springPresets.gentle}
+              viewport={{ once: true }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                ¿Necesitas financiamiento para tu inventario?
+              </h2>
+              <p className="text-xl opacity-90 mb-8 leading-relaxed">
+                Solicita tu línea de crédito y optimiza tu capital de trabajo
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                  <Calendar className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold mb-2">Hasta 30 días</h3>
+                <p className="text-sm opacity-80">de plazo para pago</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                  <DollarSign className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold mb-2">US$250 - US$5,000</h3>
+                <p className="text-sm opacity-80">límites de crédito</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                  <Clock className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold mb-2">48 horas</h3>
+                <p className="text-sm opacity-80">tiempo de aprobación</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                  <TrendingUp className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold mb-2">Renovación</h3>
+                <p className="text-sm opacity-80">automática disponible</p>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Link 
+                to={ROUTE_PATHS.LINEA_CREDITO}
+                className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-white/90 transition-colors shadow-lg"
+              >
+                <CreditCard className="w-5 h-5" />
+                Solicitar línea de crédito
+              </Link>
             </div>
           </div>
         </div>
