@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { 
-  DollarSign, 
-  Clock, 
-  CheckCircle, 
+import {
+  DollarSign,
+  Clock,
   Calendar,
   TrendingUp,
   FileText,
@@ -52,12 +52,72 @@ const requirements = [
 ];
 
 export default function LineaCredito() {
+  useEffect(() => {
+    // Initialize Zoho Form
+    const containerId = "zf_div_KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8";
+    const container = document.getElementById(containerId);
+
+    if (container && !container.querySelector("iframe")) {
+      try {
+        const f = document.createElement("iframe");
+        let ifrmSrc = 'https://forms.acom.com.ve/acom/form/AplicacinparaCrdito2/formperma/KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8?zf_rszfm=1';
+
+        f.src = ifrmSrc;
+        f.style.border = "none";
+        f.style.height = "3093px";
+        f.style.width = "100%";
+        f.style.transition = "all 0.5s ease";
+        f.setAttribute("aria-label", "Aplicación Registro de Cliente");
+        f.setAttribute("allow", "geolocation;");
+
+        container.appendChild(f);
+
+        const handleMessage = (event: MessageEvent) => {
+          const evntData = event.data;
+          if (evntData && typeof evntData === 'string') {
+            const zf_ifrm_data = evntData.split("|");
+            if (zf_ifrm_data.length === 2 || zf_ifrm_data.length === 3) {
+              const zf_perma = zf_ifrm_data[0];
+              const zf_ifrm_ht_nw = (parseInt(zf_ifrm_data[1], 10) + 15) + "px";
+              const iframe = container.querySelector("iframe");
+              if (iframe && iframe.src.indexOf('formperma') > 0 && iframe.src.indexOf(zf_perma) > 0) {
+                const prevIframeHeight = iframe.style.height;
+                let zf_tout = false;
+                if (zf_ifrm_data.length === 3) {
+                  iframe.scrollIntoView();
+                  zf_tout = true;
+                }
+                if (prevIframeHeight !== zf_ifrm_ht_nw) {
+                  if (zf_tout) {
+                    setTimeout(() => {
+                      iframe.style.height = zf_ifrm_ht_nw;
+                    }, 500);
+                  } else {
+                    iframe.style.height = zf_ifrm_ht_nw;
+                  }
+                }
+              }
+            }
+          }
+        };
+
+        window.addEventListener('message', handleMessage);
+
+        return () => {
+          window.removeEventListener('message', handleMessage);
+        };
+      } catch (e) {
+        console.error("Error loading Zoho form:", e);
+      }
+    }
+  }, []);
+
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-background py-20 lg:py-32 border-b border-border">
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div 
+          <motion.div
             className="max-w-4xl mx-auto text-center"
             initial="initial"
             animate="animate"
@@ -71,7 +131,7 @@ export default function LineaCredito() {
             </p>
           </motion.div>
         </div>
-        
+
         {/* Abstract Background Element */}
         <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-1/2 h-full bg-primary/5 rounded-full blur-3xl -z-10" />
       </section>
@@ -79,7 +139,7 @@ export default function LineaCredito() {
       {/* Introducción */}
       <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="max-w-4xl mx-auto text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -105,7 +165,7 @@ export default function LineaCredito() {
             </p>
           </div>
 
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
             variants={staggerContainer}
             initial="hidden"
@@ -140,7 +200,7 @@ export default function LineaCredito() {
             <h3 className="text-2xl font-bold mb-8 text-center">Requisitos mínimos</h3>
             <div className="space-y-4">
               {requirements.map((req, index) => (
-                <motion.div 
+                <motion.div
                   key={index}
                   className="flex items-center gap-4 p-4 rounded-lg border border-border bg-card/50"
                   initial={{ opacity: 0, x: -20 }}
@@ -171,7 +231,7 @@ export default function LineaCredito() {
             </p>
           </div>
 
-          <motion.div 
+          <motion.div
             className="max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -180,92 +240,9 @@ export default function LineaCredito() {
           >
             <Card className="overflow-hidden">
               <CardContent className="p-0">
-                {/* Formulario integrado */}
-                <div id="zf_div_KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8" className="w-full">
+                {/* Formulario integrado - cargado via useEffect */}
+                <div id="zf_div_KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8" className="w-full min-h-[800px]">
                 </div>
-                <script type="text/javascript" dangerouslySetInnerHTML={{
-                  __html: `
-                    (function() {
-                      try{
-                        var f = document.createElement("iframe");
-                        
-                        var ifrmSrc = 'https://forms.acom.com.ve/acom/form/AplicacinparaCrdito2/formperma/KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8?zf_rszfm=1';
-                        
-                        try{
-                          if ( typeof ZFAdvLead != "undefined" && typeof zfutm_zfAdvLead != "undefined" ) {
-                            for( var prmIdx = 0 ; prmIdx < ZFAdvLead.utmPNameArr.length ; prmIdx ++ ) {
-                                var utmPm = ZFAdvLead.utmPNameArr[ prmIdx ];
-                                utmPm = ( ZFAdvLead.isSameDomian && ( ZFAdvLead.utmcustPNameArr.indexOf(utmPm) == -1 ) ) ? "zf_" + utmPm : utmPm;
-                                var utmVal = zfutm_zfAdvLead.zfautm_gC_enc( ZFAdvLead.utmPNameArr[ prmIdx ] );
-                                if ( typeof utmVal !== "undefined" ) {
-                                  if ( utmVal != "" ) {
-                                    if(ifrmSrc.indexOf('?') > 0){
-                                         ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
-                                    }else{
-                                        ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
-                                    }
-                                  }
-                                }
-                            }
-                          }
-                          if ( typeof ZFLead !== "undefined" && typeof zfutm_zfLead !== "undefined" ) {
-                            for( var prmIdx = 0 ; prmIdx < ZFLead.utmPNameArr.length ; prmIdx ++ ) {
-                              var utmPm = ZFLead.utmPNameArr[ prmIdx ];
-                              var utmVal = zfutm_zfLead.zfutm_gC_enc( ZFLead.utmPNameArr[ prmIdx ] );
-                              if ( typeof utmVal !== "undefined" ) {
-                                if ( utmVal != "" ){
-                                  if(ifrmSrc.indexOf('?') > 0){
-                                    ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
-                                  }else{
-                                    ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }catch(e){}
-                        
-                        f.src = ifrmSrc;
-                        f.style.border="none";
-                        f.style.height="3093px";
-                        f.style.width="100%";
-                        f.style.transition="all 0.5s ease";
-                        f.setAttribute("aria-label", 'Aplicación Registro de Cliente');
-                        f.setAttribute("allow","geolocation;");
-                        var d = document.getElementById("zf_div_KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8");
-                        d.appendChild(f);
-                        window.addEventListener('message', function (){
-                          var evntData = event.data;
-                          if( evntData && evntData.constructor == String ){
-                            var zf_ifrm_data = evntData.split("|");
-                            if ( zf_ifrm_data.length == 2 || zf_ifrm_data.length == 3 ) {
-                              var zf_perma = zf_ifrm_data[0];
-                              var zf_ifrm_ht_nw = ( parseInt(zf_ifrm_data[1], 10) + 15 ) + "px";
-                              var iframe = document.getElementById("zf_div_KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8").getElementsByTagName("iframe")[0];
-                              if ( (iframe.src).indexOf('formperma') > 0 && (iframe.src).indexOf(zf_perma) > 0 ) {
-                                var prevIframeHeight = iframe.style.height;
-                                var zf_tout = false;
-                                if( zf_ifrm_data.length == 3 ) {
-                                    iframe.scrollIntoView();
-                                    zf_tout = true;
-                                }
-                                if ( prevIframeHeight != zf_ifrm_ht_nw ) {
-                                  if( zf_tout ) {
-                                      setTimeout(function(){
-                                          iframe.style.height = zf_ifrm_ht_nw;
-                                      },500);
-                                  } else {
-                                      iframe.style.height = zf_ifrm_ht_nw;
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }, false);
-                      }catch(e){}
-                    })();
-                  `
-                }} />
               </CardContent>
             </Card>
           </motion.div>
@@ -289,7 +266,7 @@ export default function LineaCredito() {
                 Nuestro equipo comercial está listo para asesorarte
               </p>
               <div className="flex justify-center">
-                <CTAButton 
+                <CTAButton
                   className="bg-white text-primary hover:bg-white/90 border-none shadow-xl"
                   showIcon
                 >
