@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { Brand, ProcessStep } from "@/lib/index";
+import { Link } from "react-router-dom";
+import { Brand, ProcessStep, ROUTE_PATHS } from "@/lib/index";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { hoverLift, springPresets } from "@/lib/motion";
@@ -32,13 +33,15 @@ export function BrandCard({ brand }: { brand: Brand }) {
           </p>
         </CardContent>
         <CardFooter className="pt-0">
-          <Button 
-            variant="outline" 
-            className="w-full group border-primary/20 hover:border-primary text-primary transition-colors"
-          >
-            {brand.cta}
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Button>
+          <Link to={ROUTE_PATHS.CONTACTO} className="w-full">
+            <Button
+              variant="outline"
+              className="w-full group border-primary/20 hover:border-primary text-primary transition-colors"
+            >
+              {brand.cta}
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Button>
+          </Link>
         </CardFooter>
       </Card>
     </motion.div>
