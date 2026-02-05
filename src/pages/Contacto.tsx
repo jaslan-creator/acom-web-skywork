@@ -1,20 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Clock, 
-  MessageSquare, 
-  Mail, 
-  Phone, 
-  Building2, 
-  CheckCircle2 
+import {
+  Clock,
+  MessageSquare,
+  Mail,
+  Phone,
+  CheckCircle2
 } from 'lucide-react';
 import { CTAButton } from '@/components/CTAButton';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { springPresets } from '@/lib/motion';
+import { BUSINESS_CONFIG } from '@/lib/index';
 
 /**
  * Página de contacto de Acom Trading.
@@ -22,11 +18,65 @@ import { springPresets } from '@/lib/motion';
  * CTA Principal: Formulario de contacto y WhatsApp.
  */
 export default function Contacto() {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Lógica de envío de formulario para producción
-    console.log('Formulario enviado');
-  };
+  useEffect(() => {
+    // Initialize Zoho Contact Form
+    const containerId = "zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU";
+    const container = document.getElementById(containerId);
+
+    if (container && !container.querySelector("iframe")) {
+      try {
+        const f = document.createElement("iframe");
+        let ifrmSrc = 'https://forms.acom.com.ve/acom/form/FormulariodeContacto/formperma/6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU?zf_rszfm=1';
+
+        f.src = ifrmSrc;
+        f.style.border = "none";
+        f.style.height = "758px";
+        f.style.width = "100%";
+        f.style.transition = "all 0.5s ease";
+        f.setAttribute("aria-label", "Formulario de Contacto");
+        f.setAttribute("allow", "geolocation;");
+
+        container.appendChild(f);
+
+        const handleMessage = (event: MessageEvent) => {
+          const evntData = event.data;
+          if (evntData && typeof evntData === 'string') {
+            const zf_ifrm_data = evntData.split("|");
+            if (zf_ifrm_data.length === 2 || zf_ifrm_data.length === 3) {
+              const zf_perma = zf_ifrm_data[0];
+              const zf_ifrm_ht_nw = (parseInt(zf_ifrm_data[1], 10) + 15) + "px";
+              const iframe = container.querySelector("iframe");
+              if (iframe && iframe.src.indexOf('formperma') > 0 && iframe.src.indexOf(zf_perma) > 0) {
+                const prevIframeHeight = iframe.style.height;
+                let zf_tout = false;
+                if (zf_ifrm_data.length === 3) {
+                  iframe.scrollIntoView();
+                  zf_tout = true;
+                }
+                if (prevIframeHeight !== zf_ifrm_ht_nw) {
+                  if (zf_tout) {
+                    setTimeout(() => {
+                      iframe.style.height = zf_ifrm_ht_nw;
+                    }, 500);
+                  } else {
+                    iframe.style.height = zf_ifrm_ht_nw;
+                  }
+                }
+              }
+            }
+          }
+        };
+
+        window.addEventListener('message', handleMessage);
+
+        return () => {
+          window.removeEventListener('message', handleMessage);
+        };
+      } catch (e) {
+        console.error("Error loading Zoho form:", e);
+      }
+    }
+  }, []);
 
   return (
     <main className="min-h-screen bg-background">
@@ -51,7 +101,7 @@ export default function Contacto() {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            
+
             {/* Información de Contacto y Valor B2B */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -68,7 +118,7 @@ export default function Contacto() {
                   <div>
                     <h3 className="font-bold text-xl mb-1">Expectativa de Respuesta</h3>
                     <p className="text-muted-foreground leading-snug">
-                      Tiempo de respuesta promedio: <span className="font-mono font-bold text-primary">24 horas hábiles</span>
+                      Tiempo de respuesta promedio: <span className="font-mono font-bold text-primary">{BUSINESS_CONFIG.RESPONSE_TIME_EXPECTATION}</span>
                     </p>
                   </div>
                 </div>
@@ -97,7 +147,7 @@ export default function Contacto() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-primary" />
-                    <p className="text-foreground font-medium">Pedido mínimo: <span className="font-mono text-lg font-bold">$250 USD</span></p>
+                    <p className="text-foreground font-medium">Pedido mínimo: <span className="font-mono text-lg font-bold">${BUSINESS_CONFIG.MIN_ORDER_USD} USD</span></p>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-primary" />
@@ -113,16 +163,20 @@ export default function Contacto() {
               <div className="space-y-4 pt-4">
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Mail className="w-5 h-5" />
-                  <span>contacto@acomtrading.com.ve</span>
+                  <a href={`mailto:${BUSINESS_CONFIG.EMAIL}`} className="hover:text-primary transition-colors">
+                    {BUSINESS_CONFIG.EMAIL}
+                  </a>
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Phone className="w-5 h-5" />
-                  <span>+58 (212) 000-0000</span>
+                  <a href={`https://wa.me/${BUSINESS_CONFIG.WHATSAPP_PHONE}`} className="hover:text-primary transition-colors">
+                    +58-424 456 7154
+                  </a>
                 </div>
               </div>
             </motion.div>
 
-            {/* Formulario de Captura de Leads */}
+            {/* Formulario de Contacto Zoho */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -131,86 +185,9 @@ export default function Contacto() {
               className="lg:col-span-7"
             >
               <Card className="border-border bg-card shadow-2xl shadow-primary/5">
-                <CardContent className="p-8 md:p-10">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="text-foreground font-semibold">
-                          Nombre y Apellido
-                        </Label>
-                        <Input 
-                          id="name" 
-                          placeholder="Ej. Juan Pérez" 
-                          required 
-                          className="bg-muted/30 focus:bg-background h-12"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="company" className="text-foreground font-semibold">
-                          Nombre del Negocio / Comercio
-                        </Label>
-                        <div className="relative">
-                          <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input 
-                            id="company" 
-                            placeholder="Ej. Librería Central C.A." 
-                            required 
-                            className="pl-10 bg-muted/30 focus:bg-background h-12"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="email" className="text-foreground font-semibold">
-                          Correo Electrónico Corporativo
-                        </Label>
-                        <Input 
-                          id="email" 
-                          type="email" 
-                          placeholder="nombre@empresa.com" 
-                          required 
-                          className="bg-muted/30 focus:bg-background h-12"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-foreground font-semibold">
-                          WhatsApp de Contacto
-                        </Label>
-                        <Input 
-                          id="phone" 
-                          type="tel" 
-                          placeholder="+58 412 0000000" 
-                          required 
-                          className="bg-muted/30 focus:bg-background h-12"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="message" className="text-foreground font-semibold">
-                        ¿En qué marcas o productos estás interesado?
-                      </Label>
-                      <Textarea 
-                        id="message" 
-                        placeholder="Bambary, Pelikan, Zanotti, SanRemo... Cuéntanos tus necesidades de abastecimiento."
-                        className="min-h-[150px] bg-muted/30 focus:bg-background resize-none"
-                      />
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-lg font-bold rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.98]"
-                    >
-                      Hablar con un asesor comercial
-                    </Button>
-                    
-                    <p className="text-xs text-center text-muted-foreground mt-4">
-                      Al enviar esta solicitud, confirmas que representas a un comercio o negocio mayorista. 
-                      Acom Trading C.A. protege tus datos según estándares de privacidad comercial.
-                    </p>
-                  </form>
+                <CardContent className="p-0">
+                  <div id="zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU" className="w-full min-h-[400px]">
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
