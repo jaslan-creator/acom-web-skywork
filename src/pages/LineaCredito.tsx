@@ -53,21 +53,21 @@ const requirements = [
 
 export default function LineaCredito() {
   useEffect(() => {
-    // Initialize Zoho Form
-    const containerId = "zf_div_KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8";
+    // Initialize Zoho Contact Form
+    const containerId = "zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU";
     const container = document.getElementById(containerId);
 
     if (container && !container.querySelector("iframe")) {
       try {
         const f = document.createElement("iframe");
-        let ifrmSrc = 'https://forms.acom.com.ve/acom/form/AplicacinparaCrdito2/formperma/KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8?zf_rszfm=1';
+        let ifrmSrc = 'https://forms.acom.com.ve/acom/form/FormulariodeContacto/formperma/6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU?zf_rszfm=1';
 
         f.src = ifrmSrc;
         f.style.border = "none";
-        f.style.height = "3093px";
+        f.style.height = "758px";
         f.style.width = "100%";
         f.style.transition = "all 0.5s ease";
-        f.setAttribute("aria-label", "Aplicación Registro de Cliente");
+        f.setAttribute("aria-label", "Formulario de Contacto");
         f.setAttribute("allow", "geolocation;");
 
         container.appendChild(f);
@@ -241,7 +241,7 @@ export default function LineaCredito() {
             <Card className="overflow-hidden">
               <CardContent className="p-0">
                 {/* Formulario integrado - cargado via useEffect */}
-                <div id="zf_div_KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8" className="w-full min-h-[800px]">
+                <div id="zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU" className="w-full min-h-[400px]">
                 </div>
               </CardContent>
             </Card>

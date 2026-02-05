@@ -147,7 +147,7 @@ export function Layout({ children }: LayoutProps) {
                 className="h-10 w-auto opacity-90"
               />
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Importación y distribución mayorista de marcas líderes en Venezuela. 
+                Importación y distribución mayorista de marcas líderes en Venezuela.
                 Especialistas en artículos escolares, de oficina y hogar.
               </p>
               <div className="flex items-center gap-4">
@@ -191,14 +191,14 @@ export function Layout({ children }: LayoutProps) {
                 </li>
                 <li className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span className="text-muted-foreground text-sm">
-                    ventas@acomtrading.com
-                  </span>
+                  <a href={`mailto:${BUSINESS_CONFIG.EMAIL}`} className="text-muted-foreground hover:text-primary text-sm transition-colors">
+                    {BUSINESS_CONFIG.EMAIL}
+                  </a>
                 </li>
                 <li className="flex items-start gap-3">
                   <Map_Pin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <span className="text-muted-foreground text-sm">
-                    Caracas, Venezuela
+                    {BUSINESS_CONFIG.ADDRESS}
                   </span>
                 </li>
               </ul>
