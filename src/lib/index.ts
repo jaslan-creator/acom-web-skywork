@@ -10,6 +10,8 @@ export const ROUTE_PATHS = {
   LINEA_CREDITO: "/linea-credito",
   SOBRE_ACOM: "/sobre-acom",
   CONTACTO: "/contacto",
+  TERMINOS: "/terminos-y-condiciones",
+  PRIVACIDAD: "/politica-de-privacidad",
 } as const;
 
 /**

@@ -11,6 +11,8 @@ import ComoTrabajamos from "@/pages/ComoTrabajamos";
 import LineaCredito from "@/pages/LineaCredito";
 import SobreAcom from "@/pages/SobreAcom";
 import Contacto from "@/pages/Contacto";
+import Terminos from "@/pages/Terminos";
+import Privacidad from "@/pages/Privacidad";
 
 /**
  * Setup React Query Client with default settings
@@ -38,34 +40,42 @@ const App = () => {
         <BrowserRouter>
           <Layout>
             <Routes>
-              <Route 
-                path={ROUTE_PATHS.HOME} 
-                element={<Home />} 
+              <Route
+                path={ROUTE_PATHS.HOME}
+                element={<Home />}
               />
-              <Route 
-                path={ROUTE_PATHS.MARCAS} 
-                element={<Marcas />} 
+              <Route
+                path={ROUTE_PATHS.MARCAS}
+                element={<Marcas />}
               />
-              <Route 
-                path={ROUTE_PATHS.COMO_TRABAJAMOS} 
-                element={<ComoTrabajamos />} 
+              <Route
+                path={ROUTE_PATHS.COMO_TRABAJAMOS}
+                element={<ComoTrabajamos />}
               />
-              <Route 
-                path={ROUTE_PATHS.LINEA_CREDITO} 
-                element={<LineaCredito />} 
+              <Route
+                path={ROUTE_PATHS.LINEA_CREDITO}
+                element={<LineaCredito />}
               />
-              <Route 
-                path={ROUTE_PATHS.SOBRE_ACOM} 
-                element={<SobreAcom />} 
+              <Route
+                path={ROUTE_PATHS.SOBRE_ACOM}
+                element={<SobreAcom />}
               />
-              <Route 
-                path={ROUTE_PATHS.CONTACTO} 
-                element={<Contacto />} 
+              <Route
+                path={ROUTE_PATHS.CONTACTO}
+                element={<Contacto />}
+              />
+              <Route
+                path={ROUTE_PATHS.TERMINOS}
+                element={<Terminos />}
+              />
+              <Route
+                path={ROUTE_PATHS.PRIVACIDAD}
+                element={<Privacidad />}
               />
               {/* Catch-all route redirecting to Home to maintain B2B lead generation flow */}
-              <Route 
-                path="*" 
-                element={<Home />} 
+              <Route
+                path="*"
+                element={<Home />}
               />
             </Routes>
           </Layout>

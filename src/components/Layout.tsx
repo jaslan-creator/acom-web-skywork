@@ -208,8 +208,8 @@ export function Layout({ children }: LayoutProps) {
           <div className="mt-16 pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground font-medium">
             <p>© 2026 Acom Trading, C.A. Todos los derechos reservados.</p>
             <div className="flex gap-6">
-              <Link to="#" className="hover:text-primary transition-colors">Términos y Condiciones</Link>
-              <Link to="#" className="hover:text-primary transition-colors">Política de Privacidad</Link>
+              <Link to={ROUTE_PATHS.TERMINOS} className="hover:text-primary transition-colors">Términos y Condiciones</Link>
+              <Link to={ROUTE_PATHS.PRIVACIDAD} className="hover:text-primary transition-colors">Política de Privacidad</Link>
             </div>
           </div>
         </div>
