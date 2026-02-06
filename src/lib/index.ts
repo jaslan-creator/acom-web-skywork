@@ -53,4 +53,9 @@ export const BUSINESS_CONFIG = {
   ADDRESS: "Urb. Industrial Castillito, Calle 97, Centro Comercial Valencia (CCCV II). Local 18. Valencia. Venezuela",
   RESPONSE_TIME_EXPECTATION: "48 horas hábiles",
   COUNTRY: "Venezuela",
+  SOCIAL_MEDIA: {
+    FACEBOOK: "https://www.facebook.com/acom.ve",
+    INSTAGRAM: "https://www.instagram.com/acom_ve",
+    LINKEDIN: "https://www.linkedin.com/company/acomrading",
+  },
 } as const;

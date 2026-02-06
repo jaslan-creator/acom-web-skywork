@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { Menu, X, MessageSquare, Phone, Mail, MapPin } from "lucide-react";
+import { Menu, X, MessageSquare, Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
 import { ROUTE_PATHS, BUSINESS_CONFIG } from "@/lib/index";
 import { IMAGES } from "@/assets/images";
 import { Button } from "@/components/ui/button";
@@ -82,7 +82,36 @@ export function Layout({ children }: LayoutProps) {
             ))}
           </nav>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-4">
+            <div className="flex items-center gap-1 mr-2">
+              <a
+                href={BUSINESS_CONFIG.SOCIAL_MEDIA.FACEBOOK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a
+                href={BUSINESS_CONFIG.SOCIAL_MEDIA.INSTAGRAM}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a
+                href={BUSINESS_CONFIG.SOCIAL_MEDIA.LINKEDIN}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+            </div>
             <Button asChild className="bg-primary hover:bg-primary/90 rounded-full px-6">
               <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                 <MessageSquare className="mr-2 h-4 w-4" />
@@ -126,6 +155,35 @@ export function Layout({ children }: LayoutProps) {
                   Hablar con un asesor
                 </a>
               </Button>
+              <div className="flex items-center justify-center gap-6 mt-4">
+                <a
+                  href={BUSINESS_CONFIG.SOCIAL_MEDIA.FACEBOOK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground hover:text-primary transition-colors"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-6 w-6" />
+                </a>
+                <a
+                  href={BUSINESS_CONFIG.SOCIAL_MEDIA.INSTAGRAM}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground hover:text-primary transition-colors"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-6 w-6" />
+                </a>
+                <a
+                  href={BUSINESS_CONFIG.SOCIAL_MEDIA.LINKEDIN}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground hover:text-primary transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-6 w-6" />
+                </a>
+              </div>
             </nav>
           </div>
         )}
@@ -154,6 +212,35 @@ export function Layout({ children }: LayoutProps) {
                 <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest">
                   Pedido Mínimo: ${BUSINESS_CONFIG.MIN_ORDER_USD}
                 </span>
+              </div>
+              <div className="flex items-center gap-4 mt-4">
+                <a
+                  href={BUSINESS_CONFIG.SOCIAL_MEDIA.FACEBOOK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-foreground hover:text-primary transition-colors"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-5 w-5" />
+                </a>
+                <a
+                  href={BUSINESS_CONFIG.SOCIAL_MEDIA.INSTAGRAM}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-foreground hover:text-primary transition-colors"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+                <a
+                  href={BUSINESS_CONFIG.SOCIAL_MEDIA.LINKEDIN}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-foreground hover:text-primary transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
               </div>
             </div>
 
