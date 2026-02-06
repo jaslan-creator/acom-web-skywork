@@ -88,7 +88,7 @@ export function Layout({ children }: LayoutProps) {
                 href={BUSINESS_CONFIG.SOCIAL_MEDIA.FACEBOOK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                className="p-2 text-[#1877F2] hover:opacity-80 transition-opacity"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
@@ -97,7 +97,7 @@ export function Layout({ children }: LayoutProps) {
                 href={BUSINESS_CONFIG.SOCIAL_MEDIA.INSTAGRAM}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                className="p-2 text-[#E4405F] hover:opacity-80 transition-opacity"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
@@ -106,7 +106,7 @@ export function Layout({ children }: LayoutProps) {
                 href={BUSINESS_CONFIG.SOCIAL_MEDIA.LINKEDIN}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                className="p-2 text-[#0A66C2] hover:opacity-80 transition-opacity"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-5 w-5" />
@@ -160,7 +160,7 @@ export function Layout({ children }: LayoutProps) {
                   href={BUSINESS_CONFIG.SOCIAL_MEDIA.FACEBOOK}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
+                  className="text-[#1877F2] hover:opacity-80 transition-opacity"
                   aria-label="Facebook"
                 >
                   <Facebook className="h-6 w-6" />
@@ -169,7 +169,7 @@ export function Layout({ children }: LayoutProps) {
                   href={BUSINESS_CONFIG.SOCIAL_MEDIA.INSTAGRAM}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
+                  className="text-[#E4405F] hover:opacity-80 transition-opacity"
                   aria-label="Instagram"
                 >
                   <Instagram className="h-6 w-6" />
@@ -178,7 +178,7 @@ export function Layout({ children }: LayoutProps) {
                   href={BUSINESS_CONFIG.SOCIAL_MEDIA.LINKEDIN}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
+                  className="text-[#0A66C2] hover:opacity-80 transition-opacity"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="h-6 w-6" />
@@ -218,7 +218,7 @@ export function Layout({ children }: LayoutProps) {
                   href={BUSINESS_CONFIG.SOCIAL_MEDIA.FACEBOOK}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-foreground hover:text-primary transition-colors"
+                  className="p-2 text-[#1877F2] hover:opacity-80 transition-opacity"
                   aria-label="Facebook"
                 >
                   <Facebook className="h-5 w-5" />
@@ -227,7 +227,7 @@ export function Layout({ children }: LayoutProps) {
                   href={BUSINESS_CONFIG.SOCIAL_MEDIA.INSTAGRAM}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-foreground hover:text-primary transition-colors"
+                  className="p-2 text-[#E4405F] hover:opacity-80 transition-opacity"
                   aria-label="Instagram"
                 >
                   <Instagram className="h-5 w-5" />
@@ -236,7 +236,7 @@ export function Layout({ children }: LayoutProps) {
                   href={BUSINESS_CONFIG.SOCIAL_MEDIA.LINKEDIN}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-foreground hover:text-primary transition-colors"
+                  className="p-2 text-[#0A66C2] hover:opacity-80 transition-opacity"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="h-5 w-5" />
