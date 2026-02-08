@@ -43,7 +43,7 @@ export function Layout({ children }: LayoutProps) {
     <div className="min-h-screen flex flex-col bg-background">
       {/* Top Banner */}
       <div className="bg-primary text-primary-foreground py-2 px-4 text-center text-xs font-mono tracking-wider">
-        (despachos gratis a nivel nacional)
+        DESPACHOS GRATIS A NIVEL NACIONAL
       </div>
 
       {/* Header */}
