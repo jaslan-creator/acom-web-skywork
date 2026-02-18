@@ -60,12 +60,12 @@ export function Layout({ children }: LayoutProps) {
             <img
               src={IMAGES.LOGO_ROJO_8_2}
               alt="Acom Trading Logo"
-              className="h-10 md:h-12 w-auto object-contain"
+              className="h-10 xl:h-12 w-auto object-contain"
             />
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-3 xl:gap-6">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
@@ -82,8 +82,8 @@ export function Layout({ children }: LayoutProps) {
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center gap-4">
-            <div className="flex items-center gap-1 mr-2">
+          <div className="hidden lg:flex items-center gap-3 xl:gap-4">
+            <div className="hidden xl:flex items-center gap-1 mr-2">
               <a
                 href={BUSINESS_CONFIG.SOCIAL_MEDIA.FACEBOOK}
                 target="_blank"
@@ -112,7 +112,7 @@ export function Layout({ children }: LayoutProps) {
                 <Linkedin className="h-5 w-5" />
               </a>
             </div>
-            <Button asChild className="bg-primary hover:bg-primary/90 rounded-full px-6">
+            <Button asChild className="bg-primary hover:bg-primary/90 rounded-full px-4 xl:px-6">
               <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                 <MessageSquare className="mr-2 h-4 w-4" />
                 Hablar con un asesor
@@ -122,7 +122,7 @@ export function Layout({ children }: LayoutProps) {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden p-2 text-foreground"
+            className="lg:hidden p-2 text-foreground"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -132,7 +132,7 @@ export function Layout({ children }: LayoutProps) {
 
         {/* Mobile Navigation Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-background border-b border-border shadow-xl animate-in fade-in slide-in-from-top-4 duration-200">
+          <div className="lg:hidden absolute top-full left-0 w-full bg-background border-b border-border shadow-xl animate-in fade-in slide-in-from-top-4 duration-200">
             <nav className="flex flex-col p-6 gap-4">
               {navItems.map((item) => (
                 <NavLink
@@ -197,7 +197,7 @@ export function Layout({ children }: LayoutProps) {
       {/* Footer */}
       <footer className="bg-secondary/30 border-t border-border mt-20">
         <div className="container mx-auto px-4 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             <div className="space-y-6">
               <img
                 src={IMAGES.LOGO_ROJO_8_2}
@@ -307,7 +307,7 @@ export function Layout({ children }: LayoutProps) {
         href={whatsappLink}
         target="_blank"
         rel="noopener noreferrer"
-        className="md:hidden fixed bottom-6 right-6 z-40 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-transform"
+        className="lg:hidden fixed bottom-6 right-6 z-40 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-transform"
         aria-label="WhatsApp"
       >
         <MessageSquare className="h-6 w-6" />

@@ -88,7 +88,7 @@ export default function Contacto() {
             animate={{ opacity: 1, y: 0 }}
             transition={springPresets.gentle}
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-6">
               Conecta con nuestro equipo comercial
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">

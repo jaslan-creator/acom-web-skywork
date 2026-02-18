@@ -90,7 +90,7 @@ export default function Home() {
           </div>
 
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 lg:gap-8"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"

@@ -78,7 +78,7 @@ const Marcas: React.FC = () => {
         <div className="container mx-auto px-4">
           <motion.div 
             variants={fadeInUp}
-            className="relative overflow-hidden bg-primary rounded-[2rem] p-8 md:p-16 shadow-2xl"
+            className="relative overflow-hidden bg-primary rounded-[2rem] p-8 md:p-12 lg:p-16 shadow-2xl"
           >
             {/* Decorative Overlay */}
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,var(--color-primary-foreground),transparent)]" />
