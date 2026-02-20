@@ -26,7 +26,7 @@ export default function Contacto() {
     if (container && !container.querySelector("iframe")) {
       try {
         const f = document.createElement("iframe");
-        let ifrmSrc = 'https://forms.acom.com.ve/acom/form/FormulariodeContacto/formperma/6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU?zf_rszfm=1';
+        const ifrmSrc = 'https://forms.acom.com.ve/acom/form/FormulariodeContacto/formperma/6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU?zf_rszfm=1';
 
         f.src = ifrmSrc;
         f.style.border = "none";

@@ -60,7 +60,7 @@ export default function LineaCredito() {
     if (container && !container.querySelector("iframe")) {
       try {
         const f = document.createElement("iframe");
-        let ifrmSrc = 'https://forms.acom.com.ve/acom/form/AplicacinparaCrdito2/formperma/KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8?zf_rszfm=1';
+        const ifrmSrc = 'https://forms.acom.com.ve/acom/form/AplicacinparaCrdito2/formperma/KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8?zf_rszfm=1';
 
         f.src = ifrmSrc;
         f.style.border = "none";
