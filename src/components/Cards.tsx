@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MessageSquare, ClipboardCheck, BookOpen, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Brand, Category, ProcessStep, ROUTE_PATHS } from "@/lib/index";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -86,18 +86,35 @@ export function BenefitCard({
   );
 }
 
+/** Icons for the four wholesale process steps, in order. */
+export const PROCESS_ICONS: React.ReactNode[] = [
+  <MessageSquare className="h-5 w-5" />,
+  <ClipboardCheck className="h-5 w-5" />,
+  <BookOpen className="h-5 w-5" />,
+  <Truck className="h-5 w-5" />,
+];
+
 /**
- * ProcessCard - Displays a numbered step in the wholesale workflow
+ * ProcessCard - Displays a numbered step in the wholesale workflow.
+ * `h-full` keeps every card the same height inside a grid row.
  */
-export function ProcessCard({ step, index }: { step: ProcessStep; index: number }) {
+export function ProcessCard({
+  step,
+  index,
+  icon,
+}: {
+  step: ProcessStep;
+  index: number;
+  icon?: React.ReactNode;
+}) {
   return (
-    <div className="relative flex flex-col items-start p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
+    <div className="relative flex h-full flex-col items-start p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
       <div className="absolute top-5 right-6 sm:top-6 sm:right-8 font-mono text-4xl sm:text-5xl font-bold text-primary/10 select-none">
         {String(index + 1).padStart(2, '0')}
       </div>
       <div className="z-10">
-        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground font-mono text-sm font-bold mb-6">
-          {step.number}
+        <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground mb-6">
+          {icon ?? <span className="font-mono text-sm font-bold">{step.number}</span>}
         </span>
         <h3 className="text-xl font-bold mb-3 text-foreground">{step.title}</h3>
         <p className="text-muted-foreground leading-relaxed">

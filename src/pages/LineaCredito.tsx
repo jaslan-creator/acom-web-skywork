@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import { CTAButton } from "@/components/CTAButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { springPresets, fadeInUp, staggerContainer, staggerItem } from "@/lib/motion";
+import { PageHero } from "@/components/PageHero";
+import { MEDIA } from "@/assets/media";
+import { springPresets, staggerContainer, staggerItem } from "@/lib/motion";
 
 const ZOHO_FORM_ORIGIN = "https://forms.acom.com.ve";
 
@@ -121,26 +123,12 @@ export default function LineaCredito() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-background py-16 sm:py-20 lg:py-32 border-b border-border">
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            className="max-w-4xl mx-auto text-center"
-            initial="initial"
-            animate="animate"
-            variants={fadeInUp}
-          >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-5 sm:mb-6">
-              Solicita tu línea de crédito
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
-              Accede a financiamiento especial para hacer crecer tu inventario. Condiciones preferenciales para distribuidores establecidos.
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Abstract Background Element */}
-        <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-1/2 h-full bg-primary/5 rounded-full blur-3xl -z-10" />
-      </section>
+      <PageHero
+        image={MEDIA.lineaCredito ?? ""}
+        align="center"
+        title="Solicita tu línea de crédito"
+        subtitle="Accede a financiamiento especial para hacer crecer tu inventario. Condiciones preferenciales para distribuidores establecidos."
+      />
 
       {/* Introducción */}
       <section className="py-12 sm:py-16 bg-card">

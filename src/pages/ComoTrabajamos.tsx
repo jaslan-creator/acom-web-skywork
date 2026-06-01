@@ -13,8 +13,10 @@ import {
 } from "lucide-react";
 import { processSteps } from "../data/index";
 import { CTAButton } from "../components/CTAButton";
-import { ProcessCard, BenefitCard } from "../components/Cards";
-import { springPresets, fadeInUp, staggerContainer, staggerItem } from "../lib/motion";
+import { ProcessCard, BenefitCard, PROCESS_ICONS } from "../components/Cards";
+import { PageHero } from "../components/PageHero";
+import { MEDIA } from "../assets/media";
+import { springPresets, staggerContainer, staggerItem } from "../lib/motion";
 import { ROUTE_PATHS } from "../lib/index";
 
 const details = [
@@ -49,25 +51,11 @@ export default function ComoTrabajamos() {
   return (
     <div className="flex flex-col gap-0">
       {/* Hero Section */}
-      <section className="relative py-16 sm:py-20 lg:py-32 bg-secondary/30">
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div 
-            initial="initial" 
-            animate="animate" 
-            variants={fadeInUp}
-            className="max-w-3xl"
-          >
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-foreground mb-5 sm:mb-6">
-              Un proceso mayorista <span className="text-primary">claro y eficiente</span>
-            </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              En Acom optimizamos el abastecimiento para que tu negocio no se detenga. 
-              Eliminamos las complicaciones innecesarias para ofrecerte un servicio ágil y profesional.
-            </p>
-          </motion.div>
-        </div>
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 transform translate-x-1/2" />
-      </section>
+      <PageHero
+        image={MEDIA.comoTrabajamos ?? ""}
+        title={<>Un proceso mayorista claro y eficiente</>}
+        subtitle="En Acom optimizamos el abastecimiento para que tu negocio no se detenga. Eliminamos las complicaciones innecesarias para ofrecerte un servicio ágil y profesional."
+      />
 
       {/* Process Steps Section */}
       <section className="py-16 sm:py-24 bg-background">
@@ -85,8 +73,8 @@ export default function ComoTrabajamos() {
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8"
           >
             {processSteps.map((step, index) => (
-              <motion.div key={step.number} variants={staggerItem}>
-                <ProcessCard step={step} index={index} />
+              <motion.div key={step.number} variants={staggerItem} className="h-full">
+                <ProcessCard step={step} index={index} icon={PROCESS_ICONS[index]} />
               </motion.div>
             ))}
           </motion.div>

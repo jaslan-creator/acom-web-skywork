@@ -2,35 +2,20 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Building2, ShieldCheck, Target, Users, Truck } from 'lucide-react';
 import { CTAButton } from '@/components/CTAButton';
+import { PageHero } from '@/components/PageHero';
+import { MEDIA } from '@/assets/media';
 import { fadeInUp, staggerContainer, staggerItem } from '@/lib/motion';
 
 export default function SobreAcom() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="relative py-16 sm:py-20 lg:py-32 bg-secondary/30 border-b border-border overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeInUp}
-            className="max-w-3xl"
-          >
-            <span className="inline-block px-4 py-1.5 mb-6 text-xs font-mono font-bold tracking-widest uppercase bg-primary/10 text-primary rounded-full">
-              Nuestra Empresa
-            </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-5 sm:mb-6 leading-tight">
-              Más que un proveedor, <br />
-              <span className="text-primary">un aliado comercial</span>
-            </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Impulsamos el canal minorista y mayorista en Venezuela a través de una cadena de suministro eficiente y marcas de prestigio.
-            </p>
-          </motion.div>
-        </div>
-        {/* Decorative element */}
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl -z-10" />
-      </section>
+      <PageHero
+        image={MEDIA.sobreAcom ?? ""}
+        eyebrow="Nuestra Empresa"
+        title={<>Más que un proveedor,<br className="hidden sm:block" /> un aliado comercial</>}
+        subtitle="Impulsamos el canal minorista y mayorista en Venezuela a través de una cadena de suministro eficiente y marcas de prestigio."
+      />
 
       {/* Main Content Section */}
       <section className="py-16 sm:py-24">

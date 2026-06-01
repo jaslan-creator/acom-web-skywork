@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { brands, categories, processSteps, benefits } from "../data/index.ts";
 import { CTAButton } from "../components/CTAButton.tsx";
-import { BrandCard, BenefitCard, ProcessCard, CategoryCard } from "../components/Cards.tsx";
+import { BrandCard, BenefitCard, ProcessCard, CategoryCard, PROCESS_ICONS } from "../components/Cards.tsx";
 import { springPresets, fadeInUp, staggerContainer } from "../lib/motion.ts";
 import { MEDIA } from "../assets/media.ts";
 import { cn } from "../lib/utils.ts";
@@ -216,7 +216,7 @@ export default function Home() {
             viewport={{ once: true }}
           >
             {processSteps.map((step, index) => (
-              <ProcessCard key={index} step={step} index={index} />
+              <ProcessCard key={index} step={step} index={index} icon={PROCESS_ICONS[index]} />
             ))}
           </motion.div>
 
