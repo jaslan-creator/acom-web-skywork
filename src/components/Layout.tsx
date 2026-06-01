@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { Menu, X, MessageSquare, Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Menu, X, MessageSquare, Phone, Mail, MapPin, Facebook, Instagram, Linkedin, FileText } from "lucide-react";
 import { ROUTE_PATHS, BUSINESS_CONFIG } from "@/lib/index";
 import { IMAGES } from "@/assets/images";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,7 @@ export function Layout({ children }: LayoutProps) {
   ];
 
   const whatsappLink = `https://wa.me/${BUSINESS_CONFIG.WHATSAPP_PHONE}`;
+  const portalUrl = BUSINESS_CONFIG.PORTAL_URL;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -112,10 +113,16 @@ export function Layout({ children }: LayoutProps) {
                 <Linkedin className="h-5 w-5" />
               </a>
             </div>
-            <Button asChild className="bg-primary hover:bg-primary/90 rounded-full px-4 xl:px-6">
+            <Button asChild variant="outline" className="rounded-full border-primary/30 text-primary hover:bg-primary/5 px-3 xl:px-5">
               <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                 <MessageSquare className="mr-2 h-4 w-4" />
                 Hablar con un asesor
+              </a>
+            </Button>
+            <Button asChild className="bg-primary hover:bg-primary/90 rounded-full px-3 xl:px-5">
+              <a href={portalUrl}>
+                <FileText className="mr-2 h-4 w-4" />
+                Cotizar en línea
               </a>
             </Button>
           </div>
@@ -151,6 +158,12 @@ export function Layout({ children }: LayoutProps) {
               ))}
               <hr className="border-border my-2" />
               <Button asChild className="w-full bg-primary py-6 text-base rounded-xl">
+                <a href={portalUrl}>
+                  <FileText className="mr-2 h-5 w-5" />
+                  Cotizar en línea
+                </a>
+              </Button>
+              <Button asChild variant="outline" className="w-full border-primary/30 text-primary py-6 text-base rounded-xl">
                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                   <MessageSquare className="mr-2 h-5 w-5" />
                   Hablar con un asesor
@@ -255,6 +268,12 @@ export function Layout({ children }: LayoutProps) {
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <a href={portalUrl} className="inline-flex min-h-8 items-center gap-1.5 text-primary font-semibold hover:text-primary/80 transition-colors text-sm">
+                    <FileText className="h-4 w-4" />
+                    Cotizar en línea
+                  </a>
+                </li>
               </ul>
             </div>
 

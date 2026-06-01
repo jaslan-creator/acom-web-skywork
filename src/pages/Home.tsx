@@ -8,13 +8,31 @@ import {
   GraduationCap,
   Palette,
   Home as HomeIcon,
+  FileText,
+  CheckCircle2,
 } from "lucide-react";
 import { brands, categories, processSteps, benefits } from "../data/index.ts";
 import { CTAButton } from "../components/CTAButton.tsx";
 import { BrandCard, BenefitCard, ProcessCard, CategoryCard, PROCESS_ICONS } from "../components/Cards.tsx";
 import { springPresets, fadeInUp, staggerContainer } from "../lib/motion.ts";
 import { MEDIA } from "../assets/media.ts";
+import { BUSINESS_CONFIG } from "../lib/index.ts";
 import { cn } from "../lib/utils.ts";
+
+const PORTAL_FEATURES = [
+  {
+    title: "Catálogo con precios actualizados",
+    description: "Consulta disponibilidad y precios mayoristas al día.",
+  },
+  {
+    title: "Arma tu cotización en minutos",
+    description: "Selecciona productos y genera tu pedido sin llamadas.",
+  },
+  {
+    title: "Todo en un solo lugar",
+    description: "Historial de pedidos y seguimiento de tus compras.",
+  },
+];
 
 const BENEFIT_ICONS = [
   <DollarSign className="w-6 h-6 text-primary" />,
@@ -40,6 +58,8 @@ const CATEGORY_IMAGES: Record<string, string | null> = {
 
 export default function Home() {
   const hasHero = Boolean(MEDIA.hero);
+  const portalUrl = BUSINESS_CONFIG.PORTAL_URL;
+  const whatsappLink = `https://wa.me/${BUSINESS_CONFIG.WHATSAPP_PHONE}`;
 
   return (
     <div className="flex flex-col w-full">
@@ -136,6 +156,68 @@ export default function Home() {
                 icon={CATEGORY_ICONS[category.id]}
               />
             ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Portal B2B */}
+      <section className="py-16 sm:py-24 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-sm"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={springPresets.gentle}
+            viewport={{ once: true }}
+          >
+            <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />
+            <div className="relative grid gap-8 p-8 sm:p-12 lg:grid-cols-2 lg:items-center lg:gap-12">
+              <div>
+                <span className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
+                  Portal mayorista
+                </span>
+                <h2 className="mt-3 text-2xl font-bold sm:text-3xl md:text-4xl">
+                  Cotiza y compra en línea
+                </h2>
+                <p className="mt-4 text-muted-foreground leading-relaxed">
+                  Accede a nuestro catálogo mayorista con precios actualizados, arma tu cotización en minutos y haz seguimiento de tus pedidos desde un solo lugar.
+                </p>
+                <div className="mt-8">
+                  <motion.a
+                    href={portalUrl}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={springPresets.snappy}
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-base font-bold text-primary-foreground shadow-md transition-colors hover:bg-primary/90"
+                  >
+                    <FileText className="h-5 w-5" />
+                    Cotizar en línea
+                  </motion.a>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Acceso para clientes ACOM. ¿Aún no tienes cuenta?{" "}
+                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">
+                      Habla con un asesor
+                    </a>
+                    .
+                  </p>
+                </div>
+              </div>
+
+              <ul className="grid gap-4">
+                {PORTAL_FEATURES.map((feature) => (
+                  <li
+                    key={feature.title}
+                    className="flex items-start gap-3 rounded-xl border border-border bg-background/60 p-4"
+                  >
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
+                    <div>
+                      <h3 className="font-semibold leading-none text-foreground">{feature.title}</h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </motion.div>
         </div>
       </section>

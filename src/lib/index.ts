@@ -61,6 +61,8 @@ export const BUSINESS_CONFIG = {
   MIN_ORDER_USD: 250,
   WHATSAPP_PHONE: "584244567154",
   EMAIL: "ventas@acomve.com",
+  /** B2B portal: online wholesale catalog with prices + quotes. */
+  PORTAL_URL: "https://b2b.acomve.com",
   ADDRESS: "Urb. Industrial Castillito, Calle 97, Centro Comercial Valencia (CCCV II). Local 18. Valencia. Venezuela",
   RESPONSE_TIME_EXPECTATION: "48 horas hábiles",
   COUNTRY: "Venezuela",
