@@ -42,12 +42,17 @@ export const categories: Category[] = [
   {
     id: "escolar",
     label: "Escolar",
-    description: "Cuadernos, manualidades y útiles de alta rotación para la temporada escolar."
+    description: "Cuadernos, lápices y útiles de alta rotación para la temporada escolar."
   },
   {
     id: "oficina",
     label: "Oficina",
     description: "Escritura, organización y suministros para abastecer al canal corporativo."
+  },
+  {
+    id: "manualidades",
+    label: "Manualidades",
+    description: "Pinturas, marcadores y materiales creativos con gran salida en aula y hogar."
   },
   {
     id: "hogar",

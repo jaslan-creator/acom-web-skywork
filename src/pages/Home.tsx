@@ -6,6 +6,7 @@ import {
   UserCheck,
   Truck,
   GraduationCap,
+  Palette,
   Home as HomeIcon,
 } from "lucide-react";
 import { brands, categories, processSteps, benefits } from "../data/index.ts";
@@ -26,12 +27,14 @@ const BENEFIT_ICONS = [
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   escolar: <GraduationCap className="h-5 w-5" />,
   oficina: <Briefcase className="h-5 w-5" />,
+  manualidades: <Palette className="h-5 w-5" />,
   hogar: <HomeIcon className="h-5 w-5" />,
 };
 
 const CATEGORY_IMAGES: Record<string, string | null> = {
   escolar: MEDIA.categoryEscolar,
   oficina: MEDIA.categoryOficina,
+  manualidades: MEDIA.categoryManualidades,
   hogar: MEDIA.categoryHogar,
 };
 
@@ -80,7 +83,7 @@ export default function Home() {
                 hasHero && "text-background"
               )}
             >
-              Importamos y distribuimos marcas líderes para librerías y papelerías en Venezuela
+              Importamos y distribuimos marcas líderes para abastecer tu negocio en Venezuela
             </h1>
             <p
               className={cn(
@@ -88,7 +91,7 @@ export default function Home() {
                 hasHero ? "text-background/85" : "text-muted-foreground"
               )}
             >
-              Abastece tu negocio con productos escolares, de oficina y hogar, desde{" "}
+              Productos escolares, de oficina, manualidades y hogar para mayoristas y comercios, desde{" "}
               <span className={cn("font-mono font-semibold", hasHero ? "text-background" : "text-foreground")}>
                 $250 por pedido
               </span>
@@ -111,7 +114,7 @@ export default function Home() {
               Qué distribuimos
             </span>
             <h2 className="mt-3 text-2xl font-bold sm:text-3xl md:text-4xl">
-              Tres categorías, una sola logística
+              Cuatro categorías, una sola logística
             </h2>
             <p className="mt-4 text-muted-foreground">
               Cubrimos el portafolio completo de tu negocio con productos de alta rotación para cada temporada.
@@ -119,7 +122,7 @@ export default function Home() {
           </div>
 
           <motion.div
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
