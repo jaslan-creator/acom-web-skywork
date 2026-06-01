@@ -6,7 +6,6 @@ import {
   UserCheck, 
   Package, 
   Truck, 
-  ArrowRight,
   Calendar,
   Clock,
   TrendingUp,
@@ -50,7 +49,7 @@ export default function ComoTrabajamos() {
   return (
     <div className="flex flex-col gap-0">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 bg-secondary/30">
+      <section className="relative py-16 sm:py-20 lg:py-32 bg-secondary/30">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div 
             initial="initial" 
@@ -58,7 +57,7 @@ export default function ComoTrabajamos() {
             variants={fadeInUp}
             className="max-w-3xl"
           >
-            <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-foreground mb-5 sm:mb-6">
               Un proceso mayorista <span className="text-primary">claro y eficiente</span>
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
@@ -71,10 +70,10 @@ export default function ComoTrabajamos() {
       </section>
 
       {/* Process Steps Section */}
-      <section className="py-24 bg-background">
+      <section className="py-16 sm:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold mb-4">Así funciona comprar con Acom</h2>
+          <div className="mb-10 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4">Así funciona comprar con Acom</h2>
             <div className="w-20 h-1 bg-primary rounded-full" />
           </div>
 
@@ -106,10 +105,10 @@ export default function ComoTrabajamos() {
       </section>
 
       {/* Details Section */}
-      <section className="py-24 bg-secondary/20">
+      <section className="py-16 sm:py-24 bg-secondary/20">
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold mb-4">Detalles del proceso comercial</h2>
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4">Detalles del proceso comercial</h2>
             <p className="text-muted-foreground">
               Establecemos condiciones claras para garantizar una relación comercial sólida y transparente.
             </p>
@@ -129,9 +128,9 @@ export default function ComoTrabajamos() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-background">
+      <section className="py-16 sm:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <div className="bg-primary rounded-[2rem] p-8 lg:p-16 text-primary-foreground relative overflow-hidden">
+          <div className="bg-primary rounded-2xl sm:rounded-[2rem] p-6 sm:p-8 lg:p-16 text-primary-foreground relative overflow-hidden">
             {/* Background Accent */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
             
@@ -160,7 +159,7 @@ export default function ComoTrabajamos() {
       </section>
 
       {/* Línea de Crédito Section */}
-      <section className="py-24 bg-primary text-primary-foreground">
+      <section className="py-16 sm:py-24 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <motion.div

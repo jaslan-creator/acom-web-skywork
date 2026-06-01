@@ -7,16 +7,16 @@ import { BUSINESS_CONFIG } from '@/lib/index';
  */
 export default function Privacidad() {
     return (
-        <main className="min-h-screen bg-background">
+        <div className="min-h-screen bg-background">
             {/* Header */}
-            <section className="relative py-16 bg-secondary/30 border-b border-border">
+            <section className="relative py-12 sm:py-16 bg-secondary/30 border-b border-border">
                 <div className="container mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={springPresets.gentle}
                     >
-                        <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-4">
                             Política de Privacidad
                         </h1>
                         <p className="text-muted-foreground">
@@ -27,7 +27,7 @@ export default function Privacidad() {
             </section>
 
             {/* Content */}
-            <section className="py-12 md:py-16">
+            <section className="py-10 sm:py-12 md:py-16">
                 <div className="container mx-auto px-4 max-w-4xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -87,7 +87,7 @@ export default function Privacidad() {
                             <section className="space-y-4">
                                 <h2 className="text-2xl font-bold text-primary">5. Cookies y Tecnologías de Seguimiento</h2>
                                 <p className="text-muted-foreground leading-relaxed">
-                                    Nuestro sitio web puede utilizar cookies para mejorar la experiencia de navegación. Estas cookies nos ayudan a entender cómo los visitantes interactúan con nuestro sitio y a optimizar nuestros servicios.
+                                    Nuestro sitio web puede utilizar cookies y tecnologías de seguimiento para mejorar la experiencia de navegación. Esto incluye Meta Pixel, Vercel Analytics, Vercel Speed Insights y formularios integrados de Zoho Forms para entender la interacción con el sitio y gestionar solicitudes comerciales.
                                 </p>
                             </section>
 
@@ -125,7 +125,7 @@ export default function Privacidad() {
                                 </p>
                                 <ul className="list-disc pl-6 text-muted-foreground space-y-2">
                                     <li>Email: {BUSINESS_CONFIG.EMAIL}</li>
-                                    <li>WhatsApp: +58-424 456 7154</li>
+                                    <li>WhatsApp: +{BUSINESS_CONFIG.WHATSAPP_PHONE}</li>
                                     <li>Dirección: {BUSINESS_CONFIG.ADDRESS}</li>
                                 </ul>
                             </section>
@@ -133,6 +133,6 @@ export default function Privacidad() {
                     </motion.div>
                 </div>
             </section>
-        </main>
+        </div>
     );
 }

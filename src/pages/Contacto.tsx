@@ -12,6 +12,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { springPresets } from '@/lib/motion';
 import { BUSINESS_CONFIG } from '@/lib/index';
 
+const ZOHO_FORM_ORIGIN = "https://forms.acom.com.ve";
+
 /**
  * Página de contacto de Acom Trading.
  * Enfoque: Generación de leads B2B (Librerías, Papelerías, Cadenas).
@@ -26,19 +28,23 @@ export default function Contacto() {
     if (container && !container.querySelector("iframe")) {
       try {
         const f = document.createElement("iframe");
-        let ifrmSrc = 'https://forms.acom.com.ve/acom/form/FormulariodeContacto/formperma/6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU?zf_rszfm=1';
+        const ifrmSrc = `${ZOHO_FORM_ORIGIN}/acom/form/FormulariodeContacto/formperma/6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU?zf_rszfm=1`;
 
         f.src = ifrmSrc;
         f.style.border = "none";
         f.style.height = "758px";
         f.style.width = "100%";
+        f.style.maxWidth = "100%";
+        f.style.display = "block";
         f.style.transition = "all 0.5s ease";
         f.setAttribute("aria-label", "Formulario de Contacto");
-        f.setAttribute("allow", "geolocation;");
+        f.setAttribute("allow", "geolocation");
 
         container.appendChild(f);
 
         const handleMessage = (event: MessageEvent) => {
+          if (event.origin !== ZOHO_FORM_ORIGIN) return;
+
           const evntData = event.data;
           if (evntData && typeof evntData === 'string') {
             const zf_ifrm_data = evntData.split("|");
@@ -79,16 +85,16 @@ export default function Contacto() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       {/* Hero Header */}
-      <section className="relative py-20 bg-secondary/30 border-b border-border">
+      <section className="relative py-14 sm:py-20 bg-secondary/30 border-b border-border">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={springPresets.gentle}
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-5 sm:mb-6">
               Conecta con nuestro equipo comercial
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
@@ -98,9 +104,9 @@ export default function Contacto() {
         </div>
       </section>
 
-      <section className="py-16 md:py-24">
+      <section className="py-10 sm:py-16 md:py-24">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
             {/* Información de Contacto y Valor B2B */}
             <motion.div
@@ -108,9 +114,9 @@ export default function Contacto() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={springPresets.gentle}
-              className="lg:col-span-5 space-y-10"
+              className="lg:col-span-5 space-y-8 sm:space-y-10"
             >
-              <div className="space-y-8">
+              <div className="space-y-7 sm:space-y-8">
                 <div className="flex items-start gap-5">
                   <div className="bg-primary/10 p-3 rounded-xl text-primary">
                     <Clock className="w-6 h-6" />
@@ -140,7 +146,7 @@ export default function Contacto() {
               </div>
 
               {/* Pedido Mínimo Card */}
-              <div className="bg-card border border-primary/20 p-8 rounded-2xl shadow-sm">
+              <div className="bg-card border border-primary/20 p-5 sm:p-8 rounded-2xl shadow-sm">
                 <h4 className="font-mono text-sm uppercase tracking-widest text-primary font-bold mb-4">
                   Condiciones Mayoristas
                 </h4>
@@ -170,7 +176,7 @@ export default function Contacto() {
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Phone className="w-5 h-5" />
                   <a href={`https://wa.me/${BUSINESS_CONFIG.WHATSAPP_PHONE}`} className="hover:text-primary transition-colors">
-                    +58-424 456 7154
+                    +{BUSINESS_CONFIG.WHATSAPP_PHONE}
                   </a>
                 </div>
               </div>
@@ -184,9 +190,12 @@ export default function Contacto() {
               transition={springPresets.gentle}
               className="lg:col-span-7"
             >
-              <Card className="border-border bg-card shadow-2xl shadow-primary/5">
+              <Card className="overflow-hidden border-border bg-card shadow-2xl shadow-primary/5">
                 <CardContent className="p-0">
-                  <div id="zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU" className="w-full min-h-[400px]">
+                  <div
+                    id="zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU"
+                    className="w-full min-h-[400px] overflow-x-hidden [&_iframe]:!m-0 [&_iframe]:!w-full [&_iframe]:!max-w-full"
+                  >
                   </div>
                 </CardContent>
               </Card>
@@ -197,7 +206,7 @@ export default function Contacto() {
       </section>
 
       {/* Map or Locations Placeholder Section */}
-      <section className="py-16 bg-muted/20">
+      <section className="py-12 sm:py-16 bg-muted/20">
         <div className="container mx-auto px-4 text-center">
           <p className="text-sm font-mono text-muted-foreground uppercase tracking-widest mb-2">
             Distribución Nacional
@@ -210,6 +219,6 @@ export default function Contacto() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

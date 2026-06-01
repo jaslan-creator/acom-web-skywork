@@ -2,23 +2,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { SiWhatsapp } from 'react-icons/si';
 import { MessageCircle } from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-/**
- * Utility to merge tailwind classes safely
- */
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { Link } from 'react-router-dom';
+import { BUSINESS_CONFIG } from '@/lib/index';
+import { cn } from '@/lib/utils';
 
 interface CTAButtonProps {
   variant?: 'primary' | 'secondary';
   className?: string;
   children: React.ReactNode;
-  /** Optional: link to WhatsApp. Defaults to a placeholder if not provided. */
   href?: string;
-  /** If true, shows a WhatsApp icon. Defaults to true. */
   showIcon?: boolean;
 }
 
@@ -30,9 +22,11 @@ export function CTAButton({
   variant = 'primary',
   className,
   children,
-  href = "https://wa.me/584244567154",
+  href,
   showIcon = true,
 }: CTAButtonProps) {
+  const resolvedHref = href ?? `https://wa.me/${BUSINESS_CONFIG.WHATSAPP_PHONE}`;
+  const isInternalLink = resolvedHref.startsWith("/");
 
   const variants = {
     primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md",
@@ -45,30 +39,49 @@ export function CTAButton({
     damping: 30,
   };
 
+  const content = (
+    <>
+      {showIcon && (
+        <span className="flex items-center justify-center">
+          <SiWhatsapp className="w-5 h-5" />
+        </span>
+      )}
+      <span>{children}</span>
+      {!showIcon && <MessageCircle className="w-4 h-4 opacity-70" />}
+    </>
+  );
+
+  const sharedClassName = cn(
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-6 py-3 text-center text-base font-bold transition-colors duration-200 sm:px-8 sm:py-4",
+    variants[variant],
+    className
+  );
+
+  if (isInternalLink) {
+    return (
+      <motion.div
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+        transition={springConfig}
+      >
+        <Link to={resolvedHref} className={sharedClassName}>
+          {content}
+        </Link>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.a
-      href={href}
+      href={resolvedHref}
       target="_blank"
       rel="noopener noreferrer"
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
       transition={springConfig}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg font-bold text-base transition-colors duration-200",
-        variants[variant],
-        className
-      )}
+      className={sharedClassName}
     >
-      {showIcon && (
-        <span className="flex items-center justify-center">
-          {/* Using SiWhatsapp for brand recognition, fallback to MessageCircle */}
-          <SiWhatsapp className="w-5 h-5" />
-        </span>
-      )}
-      <span>{children}</span>
-
-      {/* Subtle indicator for B2B seriousness */}
-      {!showIcon && <MessageCircle className="w-4 h-4 opacity-70" />}
+      {content}
     </motion.a>
   );
 }

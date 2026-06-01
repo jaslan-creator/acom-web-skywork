@@ -31,19 +31,19 @@ const staggerContainer = {
  */
 const Marcas: React.FC = () => {
   return (
-    <motion.main 
+    <motion.div 
       initial="initial"
       animate="animate"
       className="min-h-screen bg-background"
     >
       {/* Header Section */}
-      <section className="relative py-20 lg:py-32 overflow-hidden border-b border-border">
+      <section className="relative py-16 sm:py-20 lg:py-32 overflow-hidden border-b border-border">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div 
             variants={fadeInUp}
             className="max-w-3xl"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-5 sm:mb-6 leading-tight">
               Marcas mayoristas con <br />
               <span className="text-primary">demanda comprobada</span>
             </h1>
@@ -58,7 +58,7 @@ const Marcas: React.FC = () => {
       </section>
 
       {/* Brands Display */}
-      <section className="py-16 lg:py-24 bg-muted/10">
+      <section className="py-12 sm:py-16 lg:py-24 bg-muted/10">
         <div className="container mx-auto px-4">
           <motion.div 
             variants={staggerContainer}
@@ -74,17 +74,17 @@ const Marcas: React.FC = () => {
       </section>
 
       {/* Global Call to Action Section */}
-      <section className="py-20 lg:py-32">
+      <section className="py-16 sm:py-20 lg:py-32">
         <div className="container mx-auto px-4">
           <motion.div 
             variants={fadeInUp}
-            className="relative overflow-hidden bg-primary rounded-[2rem] p-8 md:p-12 lg:p-16 shadow-2xl"
+                className="relative overflow-hidden bg-primary rounded-2xl sm:rounded-[2rem] p-6 sm:p-8 md:p-12 lg:p-16 shadow-2xl"
           >
             {/* Decorative Overlay */}
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,var(--color-primary-foreground),transparent)]" />
             
             <div className="relative z-10 flex flex-col items-center text-center">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-5 sm:mb-6">
                 ¿Listo para abastecer tu negocio?
               </h2>
               <p className="text-lg md:text-xl text-primary-foreground/90 mb-10 max-w-2xl">
@@ -106,12 +106,12 @@ const Marcas: React.FC = () => {
       </section>
 
       {/* Trust Footer Text */}
-      <section className="pb-16 text-center">
+      <section className="pb-12 sm:pb-16 text-center">
         <p className="text-muted-foreground font-mono text-sm tracking-widest uppercase">
           Distribución Confiable • Venezuela 2026
         </p>
       </section>
-    </motion.main>
+    </motion.div>
   );
 };
 

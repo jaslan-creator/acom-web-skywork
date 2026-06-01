@@ -13,6 +13,8 @@ import { CTAButton } from "@/components/CTAButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { springPresets, fadeInUp, staggerContainer, staggerItem } from "@/lib/motion";
 
+const ZOHO_FORM_ORIGIN = "https://forms.acom.com.ve";
+
 const benefits = [
   {
     icon: <Calendar className="w-6 h-6" />,
@@ -60,19 +62,23 @@ export default function LineaCredito() {
     if (container && !container.querySelector("iframe")) {
       try {
         const f = document.createElement("iframe");
-        let ifrmSrc = 'https://forms.acom.com.ve/acom/form/AplicacinparaCrdito2/formperma/KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8?zf_rszfm=1';
+        const ifrmSrc = `${ZOHO_FORM_ORIGIN}/acom/form/AplicacinparaCrdito2/formperma/KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8?zf_rszfm=1`;
 
         f.src = ifrmSrc;
         f.style.border = "none";
         f.style.height = "3093px";
         f.style.width = "100%";
+        f.style.maxWidth = "100%";
+        f.style.display = "block";
         f.style.transition = "all 0.5s ease";
         f.setAttribute("aria-label", "Aplicación Registro de Cliente");
-        f.setAttribute("allow", "geolocation;");
+        f.setAttribute("allow", "geolocation");
 
         container.appendChild(f);
 
         const handleMessage = (event: MessageEvent) => {
+          if (event.origin !== ZOHO_FORM_ORIGIN) return;
+
           const evntData = event.data;
           if (evntData && typeof evntData === 'string') {
             const zf_ifrm_data = evntData.split("|");
@@ -115,7 +121,7 @@ export default function LineaCredito() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-background py-20 lg:py-32 border-b border-border">
+      <section className="relative overflow-hidden bg-background py-16 sm:py-20 lg:py-32 border-b border-border">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-4xl mx-auto text-center"
@@ -123,7 +129,7 @@ export default function LineaCredito() {
             animate="animate"
             variants={fadeInUp}
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-5 sm:mb-6">
               Solicita tu línea de crédito
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
@@ -137,7 +143,7 @@ export default function LineaCredito() {
       </section>
 
       {/* Introducción */}
-      <section className="py-16 bg-card">
+      <section className="py-12 sm:py-16 bg-card">
         <div className="container mx-auto px-4">
           <motion.div
             className="max-w-4xl mx-auto text-center"
@@ -154,7 +160,7 @@ export default function LineaCredito() {
       </section>
 
       {/* Beneficios */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -194,7 +200,7 @@ export default function LineaCredito() {
       </section>
 
       {/* Requisitos */}
-      <section className="py-16 bg-background">
+      <section className="py-12 sm:py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             <h3 className="text-2xl font-bold mb-8 text-center">Requisitos mínimos</h3>
@@ -220,7 +226,7 @@ export default function LineaCredito() {
       </section>
 
       {/* Formulario */}
-      <section className="py-24 bg-card">
+      <section className="py-16 sm:py-24 bg-card">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -241,7 +247,10 @@ export default function LineaCredito() {
             <Card className="overflow-hidden">
               <CardContent className="p-0">
                 {/* Formulario integrado - cargado via useEffect */}
-                <div id="zf_div_KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8" className="w-full min-h-[800px]">
+                <div
+                  id="zf_div_KN0sf6cLhsY8S7gbWXtof17iLWa2bZTeBSLdx2F6I-8"
+                  className="w-full min-h-[800px] overflow-x-hidden [&_iframe]:!m-0 [&_iframe]:!w-full [&_iframe]:!max-w-full"
+                >
                 </div>
               </CardContent>
             </Card>
@@ -250,7 +259,7 @@ export default function LineaCredito() {
       </section>
 
       {/* CTA Final */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      <section className="py-12 sm:py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <motion.div

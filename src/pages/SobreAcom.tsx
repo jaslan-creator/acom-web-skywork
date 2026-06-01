@@ -2,13 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Building2, ShieldCheck, Target, Users, Truck } from 'lucide-react';
 import { CTAButton } from '@/components/CTAButton';
-import { springPresets, fadeInUp, staggerContainer, staggerItem } from '@/lib/motion';
+import { fadeInUp, staggerContainer, staggerItem } from '@/lib/motion';
 
 export default function SobreAcom() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 bg-secondary/30 border-b border-border overflow-hidden">
+      <section className="relative py-16 sm:py-20 lg:py-32 bg-secondary/30 border-b border-border overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial="hidden"
@@ -19,7 +19,7 @@ export default function SobreAcom() {
             <span className="inline-block px-4 py-1.5 mb-6 text-xs font-mono font-bold tracking-widest uppercase bg-primary/10 text-primary rounded-full">
               Nuestra Empresa
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-5 sm:mb-6 leading-tight">
               Más que un proveedor, <br />
               <span className="text-primary">un aliado comercial</span>
             </h1>
@@ -33,9 +33,9 @@ export default function SobreAcom() {
       </section>
 
       {/* Main Content Section */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -54,7 +54,7 @@ export default function SobreAcom() {
                 Nuestro enfoque es apoyar el crecimiento de librerías, papelerías y distribuidores a través de un portafolio confiable y una operación eficiente.
               </p>
               <div className="pt-4">
-                <CTAButton href="/marcas" variant="primary" showIcon>
+                <CTAButton href="/marcas" variant="primary" showIcon={false}>
                   Conocer nuestras marcas
                 </CTAButton>
               </div>
@@ -71,7 +71,7 @@ export default function SobreAcom() {
                 <motion.div
                   key={index}
                   variants={staggerItem}
-                  className="p-8 bg-card border border-border rounded-2xl shadow-sm hover:shadow-md transition-shadow"
+                  className="p-6 sm:p-8 bg-card border border-border rounded-2xl shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-4">
                     {pillar.icon}
@@ -86,7 +86,7 @@ export default function SobreAcom() {
       </section>
 
       {/* Stats/Highlights Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
+      <section className="py-16 sm:py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div className="space-y-2">
@@ -106,7 +106,7 @@ export default function SobreAcom() {
       </section>
 
       {/* Commitment Section */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-accent rounded-full mb-4">

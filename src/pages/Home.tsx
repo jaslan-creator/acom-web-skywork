@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-background py-20 lg:py-32 border-b border-border">
+      <section className="relative overflow-hidden bg-background py-16 sm:py-20 lg:py-32 border-b border-border">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div 
             className="max-w-3xl"
@@ -31,10 +31,10 @@ export default function Home() {
             animate="animate"
             variants={fadeInUp}
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-5 sm:mb-6">
               Importamos y distribuimos marcas líderes para librerías y papelerías en Venezuela
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-7 sm:mb-8 leading-relaxed">
               Abastece tu negocio con productos escolares, de oficina y hogar, desde <span className="font-mono font-semibold text-foreground">$250 por pedido</span>, con marcas exclusivas y despacho confiable a nivel nacional.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -50,11 +50,11 @@ export default function Home() {
       </section>
 
       {/* Marcas Destacadas */}
-      <section className="py-24 bg-card">
+      <section className="py-16 sm:py-24 bg-card">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6">
             <div className="max-w-2xl">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
                 Marcas que impulsan la rotación de tu negocio
               </h2>
               <p className="text-muted-foreground">
@@ -81,10 +81,10 @@ export default function Home() {
       </section>
 
       {/* Propuesta de Valor */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-10 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
               Un proveedor mayorista en el que puedes confiar
             </h2>
           </div>
@@ -109,10 +109,10 @@ export default function Home() {
       </section>
 
       {/* Proceso */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-10 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
               Así funciona comprar con Acom
             </h2>
           </div>
@@ -138,7 +138,7 @@ export default function Home() {
       </section>
 
       {/* CTA Final */}
-      <section className="py-24 bg-primary text-primary-foreground">
+      <section className="py-16 sm:py-24 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
@@ -147,10 +147,10 @@ export default function Home() {
               transition={springPresets.gentle}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-5 sm:mb-6">
                 ¿Buscas un proveedor confiable para tu negocio?
               </h2>
-              <p className="text-xl opacity-90 mb-10">
+              <p className="text-lg sm:text-xl opacity-90 mb-8 sm:mb-10">
                 Si tienes una librería, papelería o comercio mayorista, Acom está listo para abastecerte.
               </p>
               <div className="flex justify-center">

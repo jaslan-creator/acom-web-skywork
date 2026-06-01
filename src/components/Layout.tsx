@@ -52,7 +52,7 @@ export function Layout({ children }: LayoutProps) {
           "sticky top-0 z-50 w-full transition-all duration-300 border-b",
           isScrolled
             ? "bg-background/95 backdrop-blur-md py-3 shadow-sm border-border"
-            : "bg-background py-5 border-transparent"
+            : "bg-background py-4 sm:py-5 border-transparent"
         )}
       >
         <div className="container mx-auto px-4 flex items-center justify-between">
@@ -60,7 +60,7 @@ export function Layout({ children }: LayoutProps) {
             <img
               src={IMAGES.LOGO_ROJO_8_2}
               alt="Acom Trading Logo"
-              className="h-10 xl:h-12 w-auto object-contain"
+              className="h-9 sm:h-10 xl:h-12 w-auto object-contain"
             />
           </Link>
 
@@ -122,9 +122,10 @@ export function Layout({ children }: LayoutProps) {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="lg:hidden p-2 text-foreground"
+            className="lg:hidden flex h-11 w-11 items-center justify-center text-foreground"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
@@ -133,14 +134,14 @@ export function Layout({ children }: LayoutProps) {
         {/* Mobile Navigation Overlay */}
         {isMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 w-full bg-background border-b border-border shadow-xl animate-in fade-in slide-in-from-top-4 duration-200">
-            <nav className="flex flex-col p-6 gap-4">
+            <nav className="flex flex-col p-5 gap-2">
               {navItems.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
                   className={({ isActive }) =>
                     cn(
-                      "text-lg font-semibold py-2 transition-colors",
+                      "flex min-h-11 items-center text-base font-semibold transition-colors",
                       isActive ? "text-primary" : "text-foreground"
                     )
                   }
@@ -149,7 +150,7 @@ export function Layout({ children }: LayoutProps) {
                 </NavLink>
               ))}
               <hr className="border-border my-2" />
-              <Button asChild className="w-full bg-primary py-6 text-lg rounded-xl">
+              <Button asChild className="w-full bg-primary py-6 text-base rounded-xl">
                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                   <MessageSquare className="mr-2 h-5 w-5" />
                   Hablar con un asesor
@@ -195,10 +196,10 @@ export function Layout({ children }: LayoutProps) {
       </main>
 
       {/* Footer */}
-      <footer className="bg-secondary/30 border-t border-border mt-20">
-        <div className="container mx-auto px-4 py-16">
+      <footer className="bg-secondary/30 border-t border-border mt-12 sm:mt-20">
+        <div className="container mx-auto px-4 py-10 sm:py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            <div className="space-y-6">
+            <div className="space-y-5">
               <img
                 src={IMAGES.LOGO_ROJO_8_2}
                 alt="Acom Trading"
@@ -245,11 +246,11 @@ export function Layout({ children }: LayoutProps) {
             </div>
 
             <div>
-              <h4 className="font-bold text-foreground mb-6 uppercase tracking-wider text-xs">Navegación</h4>
-              <ul className="space-y-4">
+              <h4 className="font-bold text-foreground mb-4 sm:mb-6 uppercase tracking-wider text-xs">Navegación</h4>
+              <ul className="space-y-2 sm:space-y-4">
                 {navItems.map((item) => (
                   <li key={item.path}>
-                    <Link to={item.path} className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                    <Link to={item.path} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary transition-colors text-sm">
                       {item.label}
                     </Link>
                   </li>
@@ -258,18 +259,18 @@ export function Layout({ children }: LayoutProps) {
             </div>
 
             <div>
-              <h4 className="font-bold text-foreground mb-6 uppercase tracking-wider text-xs">Marcas</h4>
-              <ul className="space-y-4">
-                <li><Link to={ROUTE_PATHS.MARCAS} className="text-muted-foreground hover:text-primary text-sm transition-colors">Bambary</Link></li>
-                <li><Link to={ROUTE_PATHS.MARCAS} className="text-muted-foreground hover:text-primary text-sm transition-colors">Pelikan</Link></li>
-                <li><Link to={ROUTE_PATHS.MARCAS} className="text-muted-foreground hover:text-primary text-sm transition-colors">Zanotti</Link></li>
-                <li><Link to={ROUTE_PATHS.MARCAS} className="text-muted-foreground hover:text-primary text-sm transition-colors">SanRemo</Link></li>
+              <h4 className="font-bold text-foreground mb-4 sm:mb-6 uppercase tracking-wider text-xs">Marcas</h4>
+              <ul className="space-y-2 sm:space-y-4">
+                <li><Link to={ROUTE_PATHS.MARCAS} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary text-sm transition-colors">Bambary</Link></li>
+                <li><Link to={ROUTE_PATHS.MARCAS} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary text-sm transition-colors">Pelikan</Link></li>
+                <li><Link to={ROUTE_PATHS.MARCAS} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary text-sm transition-colors">Zanotti</Link></li>
+                <li><Link to={ROUTE_PATHS.MARCAS} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary text-sm transition-colors">SanRemo</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-foreground mb-6 uppercase tracking-wider text-xs">Contacto Comercial</h4>
-              <ul className="space-y-4">
+              <h4 className="font-bold text-foreground mb-4 sm:mb-6 uppercase tracking-wider text-xs">Contacto Comercial</h4>
+              <ul className="space-y-3 sm:space-y-4">
                 <li className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <a href={whatsappLink} className="text-muted-foreground hover:text-primary text-sm transition-colors">
@@ -283,7 +284,7 @@ export function Layout({ children }: LayoutProps) {
                   </a>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Map_Pin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <span className="text-muted-foreground text-sm">
                     {BUSINESS_CONFIG.ADDRESS}
                   </span>
@@ -292,9 +293,9 @@ export function Layout({ children }: LayoutProps) {
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground font-medium">
+          <div className="mt-10 sm:mt-16 pt-6 sm:pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left text-xs text-muted-foreground font-medium">
             <p>© 2026 Acom Trading, C.A. Todos los derechos reservados.</p>
-            <div className="flex gap-6">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-3">
               <Link to={ROUTE_PATHS.TERMINOS} className="hover:text-primary transition-colors">Términos y Condiciones</Link>
               <Link to={ROUTE_PATHS.PRIVACIDAD} className="hover:text-primary transition-colors">Política de Privacidad</Link>
             </div>
@@ -307,7 +308,7 @@ export function Layout({ children }: LayoutProps) {
         href={whatsappLink}
         target="_blank"
         rel="noopener noreferrer"
-        className="lg:hidden fixed bottom-6 right-6 z-40 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-transform"
+        className="lg:hidden fixed bottom-4 right-4 z-40 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-transform"
         aria-label="WhatsApp"
       >
         <MessageSquare className="h-6 w-6" />
@@ -315,6 +316,3 @@ export function Layout({ children }: LayoutProps) {
     </div>
   );
 }
-
-// Workaround for icon name discrepancy if MapPin vs Map_Pin
-const Map_Pin = MapPin;
