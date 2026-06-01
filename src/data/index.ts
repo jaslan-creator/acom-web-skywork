@@ -1,4 +1,4 @@
-import { Brand, ProcessStep, Benefit } from "../lib/index.ts";
+import { Brand, ProcessStep, Benefit, Category } from "../lib/index.ts";
 
 /**
  * Data for the brands distributed by Acom Trading
@@ -32,6 +32,27 @@ export const brands: Brand[] = [
     headline: "Soluciones funcionales para el hogar.",
     description: "Productos de alta utilidad y buena rotación.",
     cta: "Solicitar catálogo SanRemo"
+  }
+];
+
+/**
+ * Product categories distributed by Acom Trading, shown on the Home page
+ */
+export const categories: Category[] = [
+  {
+    id: "escolar",
+    label: "Escolar",
+    description: "Cuadernos, manualidades y útiles de alta rotación para la temporada escolar."
+  },
+  {
+    id: "oficina",
+    label: "Oficina",
+    description: "Escritura, organización y suministros para abastecer al canal corporativo."
+  },
+  {
+    id: "hogar",
+    label: "Hogar",
+    description: "Productos funcionales de uso diario que amplían tu ticket promedio."
   }
 ];
 

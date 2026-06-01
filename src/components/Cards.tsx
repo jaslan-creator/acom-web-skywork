@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Brand, ProcessStep, ROUTE_PATHS } from "@/lib/index";
+import { Brand, Category, ProcessStep, ROUTE_PATHS } from "@/lib/index";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { hoverLift, springPresets } from "@/lib/motion";
+import { Image } from "@/components/Image";
+import { hoverLift, springPresets, staggerItem } from "@/lib/motion";
 
 /**
  * BrandCard - Displays detailed information about a distributed brand
@@ -19,10 +20,20 @@ export function BrandCard({ brand }: { brand: Brand }) {
       className="h-full"
     >
       <Card className="h-full flex flex-col overflow-hidden border-border bg-card shadow-sm">
-        <CardHeader className="space-y-1">
-          <div className="flex items-center justify-between">
+        <CardHeader className="space-y-3">
+          {brand.logo ? (
+            <div className="flex h-12 items-center">
+              <img
+                src={brand.logo}
+                alt={brand.name}
+                className="max-h-10 w-auto max-w-[75%] object-contain object-left"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ) : (
             <CardTitle className="text-xl sm:text-2xl font-bold text-primary">{brand.name}</CardTitle>
-          </div>
+          )}
           <CardDescription className="text-accent-foreground font-medium">
             {brand.headline}
           </CardDescription>
@@ -94,5 +105,46 @@ export function ProcessCard({ step, index }: { step: ProcessStep; index: number 
         </p>
       </div>
     </div>
+  );
+}
+
+/**
+ * CategoryCard - Showcases a product category with imagery (or an on-brand
+ * gradient fallback while the image is pending) plus an icon badge.
+ */
+export function CategoryCard({
+  category,
+  image,
+  icon,
+}: {
+  category: Category;
+  image: string | null;
+  icon: React.ReactNode;
+}) {
+  return (
+    <motion.div variants={staggerItem} className="h-full">
+      <Link to={ROUTE_PATHS.MARCAS} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
+        <div className="relative">
+          {image ? (
+            <Image src={image} alt={`Categoría ${category.label}`} ratio="card" />
+          ) : (
+            <div className="aspect-[4/3] bg-gradient-to-br from-primary/15 via-primary/5 to-accent/50" />
+          )}
+          <span className="absolute left-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-background/90 text-primary shadow-sm backdrop-blur-sm">
+            {icon}
+          </span>
+        </div>
+        <div className="flex flex-grow flex-col p-5 sm:p-6">
+          <h3 className="text-lg font-bold text-foreground sm:text-xl">{category.label}</h3>
+          <p className="mt-2 flex-grow text-sm leading-relaxed text-muted-foreground">
+            {category.description}
+          </p>
+          <span className="mt-4 inline-flex items-center text-sm font-semibold text-primary">
+            Ver marcas
+            <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </span>
+        </div>
+      </Link>
+    </motion.div>
   );
 }

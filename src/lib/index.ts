@@ -24,6 +24,17 @@ export interface Brand {
   description: string;
   cta: string;
   imageKey?: string;
+  /** Path to the official brand logo in /public/images. Falls back to the text title when absent. */
+  logo?: string;
+}
+
+/**
+ * Represents a product category shown on the Home page
+ */
+export interface Category {
+  id: string;
+  label: string;
+  description: string;
 }
 
 /**
