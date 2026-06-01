@@ -14,9 +14,9 @@ type MediaKey =
   | "sobreAcom";
 
 export const MEDIA: Record<MediaKey, string | null> = {
-  hero: null,
-  categoryEscolar: null,
-  categoryOficina: null,
-  categoryHogar: null,
+  hero: "/images/hero.jpg",
+  categoryEscolar: "/images/category-escolar.jpg",
+  categoryOficina: "/images/category-oficina.jpg",
+  categoryHogar: "/images/category-hogar.jpg",
   sobreAcom: null,
 };
