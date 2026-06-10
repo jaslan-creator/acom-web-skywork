@@ -134,6 +134,26 @@ type IframeCmd =
   | { type: "ROUTE_CONTROL"; action: "replace"; path: string; }
   | { type: "RELOAD"; };
 
+/** Origins allowed to send routing commands (dev/preview tooling only). */
+const TRUSTED_ROUTING_ORIGIN_SUFFIXES = [
+  "lovable.dev",
+  "lovableproject.com",
+  "lovable.app",
+  "gptengineer.app",
+];
+
+function isTrustedRoutingOrigin(origin: string): boolean {
+  if (origin === window.location.origin) return true;
+  try {
+    const { hostname } = new URL(origin);
+    return TRUSTED_ROUTING_ORIGIN_SUFFIXES.some(
+      (suffix) => hostname === suffix || hostname.endsWith(`.${suffix}`)
+    );
+  } catch {
+    return false;
+  }
+}
+
 /** A component that lives inside the router context and bridges both ways */
 function RouterBridge(): null {
   const location = RRD.useLocation();
@@ -155,6 +175,11 @@ function RouterBridge(): null {
       
       // Check if route messaging is enabled
       if (!__ROUTE_MESSAGING_ENABLED__) {
+        return;
+      }
+
+      // Only accept routing commands from same-origin or the trusted preview editor.
+      if (!isTrustedRoutingOrigin(e.origin)) {
         return;
       }
 
