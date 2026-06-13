@@ -92,6 +92,7 @@ const App = () => {
         </BrowserRouter>
         <Analytics />
         <SpeedInsights />
+        <Analytics />
       </TooltipProvider>
     </QueryClientProvider>
   );
