@@ -12,7 +12,6 @@ import { Layout } from "@/components/Layout";
 const Home = lazy(() => import("@/pages/Home"));
 const Marcas = lazy(() => import("@/pages/Marcas"));
 const ComoTrabajamos = lazy(() => import("@/pages/ComoTrabajamos"));
-const LineaCredito = lazy(() => import("@/pages/LineaCredito"));
 const SobreAcom = lazy(() => import("@/pages/SobreAcom"));
 const Contacto = lazy(() => import("@/pages/Contacto"));
 const Terminos = lazy(() => import("@/pages/Terminos"));
@@ -61,10 +60,6 @@ const App = () => {
                 <Route
                   path={ROUTE_PATHS.COMO_TRABAJAMOS}
                   element={<ComoTrabajamos />}
-                />
-                <Route
-                  path={ROUTE_PATHS.LINEA_CREDITO}
-                  element={<LineaCredito />}
                 />
                 <Route
                   path={ROUTE_PATHS.SOBRE_ACOM}

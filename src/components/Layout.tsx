@@ -32,7 +32,6 @@ export function Layout({ children }: LayoutProps) {
     { label: "Home", path: ROUTE_PATHS.HOME },
     { label: "Marcas", path: ROUTE_PATHS.MARCAS },
     { label: "Cómo Trabajamos", path: ROUTE_PATHS.COMO_TRABAJAMOS },
-    { label: "Línea de Crédito", path: ROUTE_PATHS.LINEA_CREDITO },
     { label: "Sobre Acom", path: ROUTE_PATHS.SOBRE_ACOM },
     { label: "Contacto", path: ROUTE_PATHS.CONTACTO },
   ];

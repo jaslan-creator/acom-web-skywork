@@ -7,7 +7,6 @@ export const ROUTE_PATHS = {
   HOME: "/",
   MARCAS: "/marcas",
   COMO_TRABAJAMOS: "/como-trabajamos",
-  LINEA_CREDITO: "/linea-credito",
   SOBRE_ACOM: "/sobre-acom",
   CONTACTO: "/contacto",
   TERMINOS: "/terminos-y-condiciones",

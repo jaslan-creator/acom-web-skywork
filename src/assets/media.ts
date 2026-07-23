@@ -13,7 +13,6 @@ type MediaKey =
   | "categoryManualidades"
   | "categoryHogar"
   | "comoTrabajamos"
-  | "lineaCredito"
   | "sobreAcom";
 
 export const MEDIA: Record<MediaKey, string | null> = {
@@ -23,6 +22,5 @@ export const MEDIA: Record<MediaKey, string | null> = {
   categoryManualidades: "/images/category-manualidades.jpg",
   categoryHogar: "/images/category-hogar.jpg",
   comoTrabajamos: "/images/como-trabajamos.jpg",
-  lineaCredito: "/images/linea-credito.jpg",
   sobreAcom: "/images/sobre-acom.jpg",
 };

@@ -1,15 +1,13 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { 
-  Building2, 
-  DollarSign, 
-  UserCheck, 
-  Package, 
-  Truck, 
+import {
+  Building2,
+  DollarSign,
+  UserCheck,
+  Package,
+  Truck,
   Calendar,
   Clock,
-  TrendingUp,
-  CreditCard
+  TrendingUp
 } from "lucide-react";
 import { processSteps } from "../data/index";
 import { CTAButton } from "../components/CTAButton";
@@ -17,7 +15,6 @@ import { ProcessCard, BenefitCard, PROCESS_ICONS } from "../components/Cards";
 import { PageHero } from "../components/PageHero";
 import { MEDIA } from "../assets/media";
 import { springPresets, staggerContainer, staggerItem } from "../lib/motion";
-import { ROUTE_PATHS } from "../lib/index";
 
 const details = [
   {
@@ -194,16 +191,6 @@ export default function ComoTrabajamos() {
                 <h3 className="font-semibold mb-2">Renovación</h3>
                 <p className="text-sm opacity-80">automática disponible</p>
               </div>
-            </div>
-
-            <div className="text-center">
-              <Link 
-                to={ROUTE_PATHS.LINEA_CREDITO}
-                className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-white/90 transition-colors shadow-lg"
-              >
-                <CreditCard className="w-5 h-5" />
-                Solicitar línea de crédito
-              </Link>
             </div>
           </div>
         </div>
