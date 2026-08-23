@@ -6,7 +6,6 @@ import {
   Package,
   Truck,
   Calendar,
-  Clock,
   TrendingUp
 } from "lucide-react";
 import { processSteps } from "../data/index";
@@ -112,6 +111,81 @@ export default function ComoTrabajamos() {
         </div>
       </section>
 
+      {/*
+        Financiamiento. This block was orphaned by the commit that removed the Línea de Crédito
+        page: it survived as the LAST thing on the page, after the closing CTA, promising figures
+        with no button at all. It is the strongest B2B differentiator here, so it is rewritten —
+        moved above the closing CTA and given an honest destination.
+
+        🚨 The form cannot be linked from a public page, and this was validated rather than assumed:
+        cliente.acomve.com/solicitud-credito requires five HMAC-signed parameters (customer id,
+        seller id, a 7-day expiry) that a sales rep mints against an EXISTING customer record.
+        Without them the screen falls to "enlace inválido". A previous audit read its HTTP 200 as
+        proof the form was public — the portal is a SPA with a catch-all, so ANY invented route
+        returns 200.
+
+        Figures with no backing were removed: "US$250 - US$5,000" (real limits in the ERP reach
+        $10,000 and $12,000) and a 48-hour approval promise that nothing enforces.
+      */}
+      <section className="py-16 sm:py-24 bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={springPresets.gentle}
+              viewport={{ once: true }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                ¿Necesitas financiamiento para tu inventario?
+              </h2>
+              <p className="text-xl opacity-90 mb-8 leading-relaxed">
+                Trabajamos con líneas de crédito para clientes con historial. Tu asesor evalúa tu
+                caso y prepara la solicitud contigo.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                  <Calendar className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold mb-2">Hasta 30 días</h3>
+                <p className="text-sm opacity-80">de plazo para pago</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                  <DollarSign className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold mb-2">Límite a tu medida</h3>
+                <p className="text-sm opacity-80">según tu volumen e historial</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                  <UserCheck className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold mb-2">Lo tramita tu asesor</h3>
+                <p className="text-sm opacity-80">él prepara y envía la solicitud</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                  <TrendingUp className="w-8 h-8" />
+                </div>
+                <h3 className="font-semibold mb-2">Se revisa contigo</h3>
+                <p className="text-sm opacity-80">según tu comportamiento de pago</p>
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <CTAButton className="bg-white text-primary hover:bg-white/90 border-none shadow-xl" showIcon>
+                Consultar mi línea de crédito
+              </CTAButton>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Final CTA Section */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="container mx-auto px-4">
@@ -137,59 +211,6 @@ export default function ComoTrabajamos() {
                 >
                   Iniciar contacto comercial
                 </CTAButton>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Línea de Crédito Section */}
-      <section className="py-16 sm:py-24 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={springPresets.gentle}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                ¿Necesitas financiamiento para tu inventario?
-              </h2>
-              <p className="text-xl opacity-90 mb-8 leading-relaxed">
-                Solicita tu línea de crédito y optimiza tu capital de trabajo
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
-                  <Calendar className="w-8 h-8" />
-                </div>
-                <h3 className="font-semibold mb-2">Hasta 30 días</h3>
-                <p className="text-sm opacity-80">de plazo para pago</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
-                  <DollarSign className="w-8 h-8" />
-                </div>
-                <h3 className="font-semibold mb-2">US$250 - US$5,000</h3>
-                <p className="text-sm opacity-80">límites de crédito</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
-                  <Clock className="w-8 h-8" />
-                </div>
-                <h3 className="font-semibold mb-2">48 horas</h3>
-                <p className="text-sm opacity-80">tiempo de aprobación</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
-                  <TrendingUp className="w-8 h-8" />
-                </div>
-                <h3 className="font-semibold mb-2">Renovación</h3>
-                <p className="text-sm opacity-80">automática disponible</p>
               </div>
             </div>
           </div>

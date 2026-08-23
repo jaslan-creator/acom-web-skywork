@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { Menu, X, MessageSquare, Phone, Mail, MapPin, Facebook, Instagram, Linkedin, FileText } from "lucide-react";
+import { Menu, X, MessageSquare, Phone, Mail, MapPin, Facebook, Instagram, Linkedin, LogIn } from "lucide-react";
 import { ROUTE_PATHS, BUSINESS_CONFIG } from "@/lib/index";
+import { brands, categoriesProse } from "@/data/index";
+import { trackWhatsappLeads } from "@/lib/analytics";
 import { IMAGES } from "@/assets/images";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -28,9 +30,14 @@ export function Layout({ children }: LayoutProps) {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  // Conversion tracking for every WhatsApp link on the site. Mounted once, here, because the
+  // Layout wraps all routes — see src/lib/analytics.ts for why it is delegated, not per-button.
+  useEffect(() => trackWhatsappLeads(), []);
+
   const navItems = [
     { label: "Home", path: ROUTE_PATHS.HOME },
     { label: "Marcas", path: ROUTE_PATHS.MARCAS },
+    { label: "Catálogo", path: ROUTE_PATHS.CATALOGO },
     { label: "Cómo Trabajamos", path: ROUTE_PATHS.COMO_TRABAJAMOS },
     { label: "Sobre Acom", path: ROUTE_PATHS.SOBRE_ACOM },
     { label: "Contacto", path: ROUTE_PATHS.CONTACTO },
@@ -65,14 +72,14 @@ export function Layout({ children }: LayoutProps) {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-3 xl:gap-6">
+          <nav className="hidden lg:flex items-center gap-2.5 xl:gap-5">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
                   cn(
-                    "text-sm font-medium transition-colors hover:text-primary",
+                    "whitespace-nowrap text-sm font-medium transition-colors hover:text-primary",
                     isActive ? "text-primary" : "text-muted-foreground"
                   )
                 }
@@ -112,16 +119,26 @@ export function Layout({ children }: LayoutProps) {
                 <Linkedin className="h-5 w-5" />
               </a>
             </div>
-            <Button asChild variant="outline" className="rounded-full border-primary/30 text-primary hover:bg-primary/5 px-3 xl:px-5">
+            {/*
+              The portal link is deliberately NOT a button any more. It used to be the most
+              prominent CTA on all 7 pages while pointing at a portal retired on 2026-08-02, and
+              its replacement is invite-only and ships 1.6 MB before telling a stranger "this
+              email is not enabled". The converting CTA is the advisor.
+              target/rel added: these three links had neither, unlike the WhatsApp ones beside them.
+            */}
+            <a
+              href={portalUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              <LogIn className="h-4 w-4" />
+              Soy cliente
+            </a>
+            <Button asChild className="bg-primary hover:bg-primary/90 rounded-full px-3 xl:px-5">
               <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                 <MessageSquare className="mr-2 h-4 w-4" />
                 Hablar con un asesor
-              </a>
-            </Button>
-            <Button asChild className="bg-primary hover:bg-primary/90 rounded-full px-3 xl:px-5">
-              <a href={portalUrl}>
-                <FileText className="mr-2 h-4 w-4" />
-                Cotizar en línea
               </a>
             </Button>
           </div>
@@ -156,18 +173,18 @@ export function Layout({ children }: LayoutProps) {
                 </NavLink>
               ))}
               <hr className="border-border my-2" />
-              <Button asChild className="w-full bg-primary py-6 text-base rounded-xl">
-                <a href={portalUrl}>
-                  <FileText className="mr-2 h-5 w-5" />
-                  Cotizar en línea
-                </a>
-              </Button>
-              <Button asChild variant="outline" className="w-full border-primary/30 text-primary py-6 text-base rounded-xl">
-                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                  <MessageSquare className="mr-2 h-5 w-5" />
-                  Hablar con un asesor
-                </a>
-              </Button>
+                <Button asChild className="w-full bg-primary py-6 text-base rounded-xl">
+                  <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                    <MessageSquare className="mr-2 h-5 w-5" />
+                    Hablar con un asesor
+                  </a>
+                </Button>
+                <Button asChild variant="outline" className="w-full border-primary/30 text-primary py-6 text-base rounded-xl">
+                  <a href={portalUrl} target="_blank" rel="noreferrer">
+                    <LogIn className="mr-2 h-5 w-5" />
+                    Soy cliente · Entrar
+                  </a>
+                </Button>
               <div className="flex items-center justify-center gap-6 mt-4">
                 <a
                   href={BUSINESS_CONFIG.SOCIAL_MEDIA.FACEBOOK}
@@ -219,7 +236,7 @@ export function Layout({ children }: LayoutProps) {
               />
               <p className="text-muted-foreground text-sm leading-relaxed">
                 Importación y distribución mayorista de marcas líderes en Venezuela.
-                Especialistas en artículos escolares, de oficina y hogar.
+                Especialistas en artículos {categoriesProse()}.
               </p>
               <div className="flex items-center gap-4">
                 <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest">
@@ -268,22 +285,36 @@ export function Layout({ children }: LayoutProps) {
                   </li>
                 ))}
                 <li>
-                  <a href={portalUrl} className="inline-flex min-h-8 items-center gap-1.5 text-primary font-semibold hover:text-primary/80 transition-colors text-sm">
-                    <FileText className="h-4 w-4" />
-                    Cotizar en línea
-                  </a>
+                    <a
+                      href={portalUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex min-h-8 items-center gap-1.5 text-primary font-semibold hover:text-primary/80 transition-colors text-sm"
+                    >
+                      <LogIn className="h-4 w-4" />
+                      Soy cliente · Entrar
+                    </a>
                 </li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-bold text-foreground mb-4 sm:mb-6 uppercase tracking-wider text-xs">Marcas</h4>
-              <ul className="space-y-2 sm:space-y-4">
-                <li><Link to={ROUTE_PATHS.MARCAS} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary text-sm transition-colors">Bambary</Link></li>
-                <li><Link to={ROUTE_PATHS.MARCAS} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary text-sm transition-colors">Pelikan</Link></li>
-                <li><Link to={ROUTE_PATHS.MARCAS} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary text-sm transition-colors">Zanotti</Link></li>
-                <li><Link to={ROUTE_PATHS.MARCAS} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary text-sm transition-colors">SanRemo</Link></li>
-              </ul>
+                {/*
+                  Derived from `brands`, never hand-written: this list was a hard-coded copy and it
+                  drifted — for months it kept advertising, on all 7 pages, a brand that had already
+                  been archived in the ERP, and it misspelled another one. A silent failure: no error
+                  anywhere, and nothing that could ever catch it.
+                */}
+                <ul className="space-y-2 sm:space-y-4">
+                  {brands.map((brand) => (
+                    <li key={brand.id}>
+                      <Link to={ROUTE_PATHS.MARCAS} className="inline-flex min-h-8 items-center text-muted-foreground hover:text-primary text-sm transition-colors">
+                        {brand.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
             </div>
 
             <div>

@@ -1,8 +1,35 @@
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTE_PATHS } from "@/lib/index";
 
+/**
+ * 404 screen.
+ *
+ * 🚨 This route still answers HTTP **200**, and that is a real SEO problem, not a nitpick. The SPA
+ * rewrite in vercel.json sends every unknown path to index.html, so `/linea-credito` — a page that
+ * was deleted — and any mistyped URL someone shares come back as valid documents. Google calls this
+ * a soft 404 and penalises it: instead of dropping the dead page it keeps it indexed.
+ *
+ * The robots meta below is what stops that: Google renders the JS before indexing, sees `noindex`
+ * and drops the URL. It is injected imperatively because this project has no head management at
+ * all (no react-helmet, no SSR) and adding one for a single tag is not worth the dependency.
+ *
+ * ⚠️ Limitation, stated rather than hidden: this does NOT turn the response into a 404. Serving a
+ * real 404 would mean enumerating every route in vercel.json and losing this branded screen.
+ * The known dead URL is handled properly, with a 301 redirect in vercel.json.
+ */
 const NotFound = () => {
   const location = useLocation();
+
+  useEffect(() => {
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, follow";
+    document.head.appendChild(meta);
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
 
   return (
     <section className="min-h-[60vh] bg-background px-4 py-16 sm:py-24">

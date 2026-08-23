@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { springPresets } from '@/lib/motion';
 import { BUSINESS_CONFIG } from '@/lib/index';
+import { categoriesProse } from '@/data/index';
 
 /**
  * Página de Términos y Condiciones de ACOM Trading
@@ -46,7 +47,7 @@ export default function Terminos() {
                             <section className="space-y-4">
                                 <h2 className="text-2xl font-bold text-primary">2. Servicio de Distribución Mayorista</h2>
                                 <p className="text-muted-foreground leading-relaxed">
-                                    ACOM Trading C.A. es una empresa dedicada a la distribución mayorista de productos escolares, de oficina y hogar en Venezuela. Nuestros servicios están dirigidos exclusivamente a comercios, negocios y empresas que cumplan con los requisitos establecidos.
+                                    ACOM Trading C.A. es una empresa dedicada a la distribución mayorista de productos {categoriesProse()} en Venezuela. Nuestros servicios están dirigidos exclusivamente a comercios, negocios y empresas que cumplan con los requisitos establecidos.
                                 </p>
                                 <ul className="list-disc pl-6 text-muted-foreground space-y-2">
                                     <li>Pedido mínimo: ${BUSINESS_CONFIG.MIN_ORDER_USD} USD</li>

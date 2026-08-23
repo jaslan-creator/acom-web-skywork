@@ -27,7 +27,9 @@ const staggerContainer = {
 
 /**
  * Marcas Page
- * Displays detailed information about Acom Trading's portfolio: Bambary, Pelikan, Zanotti, and SanRemo.
+ * Displays detailed information about Acom Trading's published portfolio.
+ * The brand list is NEVER written here — it is read from `brands` in src/data, which is the
+ * single source. This comment used to enumerate them and named an archived brand for months.
  */
 const Marcas: React.FC = () => {
   return (
