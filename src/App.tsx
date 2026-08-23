@@ -11,6 +11,7 @@ import { Layout } from "@/components/Layout";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Marcas = lazy(() => import("@/pages/Marcas"));
+const Catalogo = lazy(() => import("@/pages/Catalogo"));
 const ComoTrabajamos = lazy(() => import("@/pages/ComoTrabajamos"));
 const SobreAcom = lazy(() => import("@/pages/SobreAcom"));
 const Contacto = lazy(() => import("@/pages/Contacto"));
@@ -56,6 +57,10 @@ const App = () => {
                 <Route
                   path={ROUTE_PATHS.MARCAS}
                   element={<Marcas />}
+                />
+                <Route
+                  path={ROUTE_PATHS.CATALOGO}
+                  element={<Catalogo />}
                 />
                 <Route
                   path={ROUTE_PATHS.COMO_TRABAJAMOS}
