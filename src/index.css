@@ -1,4 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+/*
+ * 🚨 Montserrat AND IBM Plex Mono in the same request. The outgoing sans and the mono were
+ * imported on one line, so swapping that line for Montserrat alone would silently drop the mono
+ * to generic `monospace` — taking with it the top "DESPACHOS GRATIS" banner, every $250, the
+ * eyebrows and the stats. The brand manual only specifies the sans; the mono stays.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -6,31 +12,44 @@
 
 /*
 ==========================================================================
-【AI HANDOVER NOTE】
-1. DESIGN PHILOSOPHY:
-   - Trust-Led B2B Corporate: The design focuses on stability, professional authority, and high-efficiency information architecture.
-   - Visual Style: Neo-minimalism with 'Solid Surfaces'. We use subtle borders and consistent padding to create a sense of organized, large-scale distribution.
-   - Rationale: For a wholesale distributor in Venezuela, the UI must feel 'heavy' enough to be reliable but 'light' enough to navigate quickly on mobile devices. The rounded geometric qualities of the logo are echoed in the 0.75rem radius and font choice.
+【AI HANDOVER NOTE】  — rewritten 2026-08-23. The previous version told you the
+typography and the colour had been derived from the logo. That was never true of
+the actual brand manual, and following it would have taken you further away.
+
+1. SOURCE OF TRUTH FOR IDENTITY:
+   - The brand manual is `uploaded_files/documents/LOGO ACOM NORMAS BÁSICAS.md`.
+     It fixes #A5002B (primary), #444444 and #A5A5A5, and Montserrat for web.
+   - --primary is that #A5002B, expressed in oklch: oklch(0.457 0.183 19).
+     White on it is 7.97:1 — AAA. Do not "fix" the colour by eye.
+   - 🚨 The brand red is NOT only --primary. It is also --ring (the keyboard focus
+     ring — accessibility), --chart-1, --sidebar-primary, --sidebar-ring,
+     --accent-foreground and --sidebar-accent-foreground, plus their .dark twins.
+     Changing --primary alone leaves the button new and its focus ring old, and
+     nothing anywhere reports it.
+   - ⚠️ CONSCIOUS DEVIATION, recorded so it is not re-litigated: only 1 of the 3
+     manual colours is applied. The greys here are deliberately WARM
+     (--foreground: oklch(0.18 0.015 20), a reddish hue) against the manual's
+     neutrals, because they sit better under the red. Leave them.
 
 2. TYPOGRAPHY:
-   - Sans (Plus Jakarta Sans): Chosen for its modern, professional geometric shapes that mirror the ACOM logo's curves while maintaining exceptional legibility for B2B catalogs.
-   - Mono (IBM Plex Mono): Used specifically for technical data, SKU details, and the '$250 Minimum Order' callouts to evoke a sense of precision and logistics.
+   - Sans (Montserrat): the manual's web face.
+   - Mono (IBM Plex Mono): technical data, SKU codes and the $250 callouts. Kept
+     on purpose — see the note above the @import.
+   - There used to be `font-feature-settings: "cv02","cv03","cv04","cv11"` on body.
+     Those were character variants of the previous sans; Montserrat has none of
+     them, so they were inert and were removed rather than left looking meaningful.
 
-3. COLOR SYSTEM:
-   - Brand Primary: A sophisticated Burgundy (Hue 18) extracted from the logo. It represents maturity and established market presence.
-   - Mapping: --primary is the core brand burgundy. --accent is used for interactive hover states and subtle highlights to guide the user toward the WhatsApp CTA.
-   - Semantic Logic: Destructive uses a high-chroma red for errors, while Success (mapped in charts) uses a deep emerald to signify growth and reliability.
-
-4. USAGE GUIDE:
-   - Layout: Use a 'Modular Surface' approach. Content blocks (Brands, Process, Value Prop) should be clearly separated by subtle borders or light-grey backgrounds.
-   - CTAs: The 'Hablar con un asesor' button must always use the --primary background with high contrast to ensure immediate visibility.
-   - Special Effects: Use subtle 'Ambient Occlusion' (soft shadows) on cards to give them physicality without looking like a consumer-facing app.
+3. USAGE GUIDE:
+   - Layout: 'Modular Surface'. Content blocks separated by subtle borders or
+     light-grey backgrounds.
+   - CTAs: the converting CTA on this site is 'Hablar con un asesor' (WhatsApp).
+     The customer-portal link is deliberately secondary — it is invite-only.
+   - Cards get soft shadows for physicality, not consumer-app bounce.
 ==========================================================================
 */
-
 :root {
   /* Typography */
-  --font-sans: Plus Jakarta Sans, system-ui, sans-serif;
+  --font-sans: Montserrat, system-ui, sans-serif;
   --font-mono: IBM Plex Mono, monospace;
   
   /* Radius */
@@ -43,22 +62,22 @@
   --card-foreground: oklch(0.18 0.015 20);
   --popover: oklch(1.0 0.0 0);
   --popover-foreground: oklch(0.18 0.015 20);
-  --primary: oklch(0.42 0.16 18);
-  --primary-foreground: oklch(0.98 0.01 18);
+  --primary: oklch(0.457 0.183 19); /* #A5002B — brand manual */
+  --primary-foreground: oklch(0.98 0.01 19);
   --secondary: oklch(0.96 0.01 18);
   --secondary-foreground: oklch(0.25 0.02 18);
   --muted: oklch(0.95 0.01 20);
   --muted-foreground: oklch(0.45 0.02 20);
   --accent: oklch(0.92 0.03 18);
-  --accent-foreground: oklch(0.35 0.14 18);
+  --accent-foreground: oklch(0.387 0.15 19);
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(0.98 0.01 25);
   --border: oklch(0.91 0.01 20);
   --input: oklch(0.91 0.01 20);
-  --ring: oklch(0.42 0.16 18);
+  --ring: oklch(0.457 0.183 19); /* keyboard focus — must track --primary */
   
   /* Chart Tokens */
-  --chart-1: oklch(0.42 0.16 18);
+  --chart-1: oklch(0.457 0.183 19);
   --chart-2: oklch(0.32 0.08 240);
   --chart-3: oklch(0.45 0.12 150);
   --chart-4: oklch(0.75 0.15 60);
@@ -67,12 +86,12 @@
   /* Sidebar Tokens */
   --sidebar: oklch(0.98 0.005 18);
   --sidebar-foreground: oklch(0.25 0.01 20);
-  --sidebar-primary: oklch(0.42 0.16 18);
-  --sidebar-primary-foreground: oklch(0.98 0.01 18);
+  --sidebar-primary: oklch(0.457 0.183 19);
+  --sidebar-primary-foreground: oklch(0.98 0.01 19);
   --sidebar-accent: oklch(0.94 0.02 18);
-  --sidebar-accent-foreground: oklch(0.35 0.14 18);
+  --sidebar-accent-foreground: oklch(0.387 0.15 19);
   --sidebar-border: oklch(0.92 0.01 20);
-  --sidebar-ring: oklch(0.42 0.16 18);
+  --sidebar-ring: oklch(0.457 0.183 19);
 }
 
 .dark {
@@ -82,8 +101,8 @@
   --card-foreground: oklch(0.92 0.01 20);
   --popover: oklch(0.14 0.01 20);
   --popover-foreground: oklch(0.92 0.01 20);
-  --primary: oklch(0.52 0.18 18);
-  --primary-foreground: oklch(0.98 0.01 18);
+  --primary: oklch(0.557 0.203 19);
+  --primary-foreground: oklch(0.98 0.01 19);
   --secondary: oklch(0.22 0.02 20);
   --secondary-foreground: oklch(0.92 0.01 20);
   --muted: oklch(0.22 0.02 20);
@@ -94,10 +113,10 @@
   --destructive-foreground: oklch(0.98 0.01 25);
   --border: oklch(0.25 0.02 20);
   --input: oklch(0.25 0.02 20);
-  --ring: oklch(0.52 0.18 18);
+  --ring: oklch(0.557 0.203 19);
   
   /* Chart Tokens */
-  --chart-1: oklch(0.52 0.18 18);
+  --chart-1: oklch(0.557 0.203 19);
   --chart-2: oklch(0.45 0.12 240);
   --chart-3: oklch(0.55 0.15 150);
   --chart-4: oklch(0.82 0.12 60);
@@ -106,12 +125,12 @@
   /* Sidebar Tokens */
   --sidebar: oklch(0.12 0.01 20);
   --sidebar-foreground: oklch(0.88 0.01 20);
-  --sidebar-primary: oklch(0.52 0.18 18);
-  --sidebar-primary-foreground: oklch(0.98 0.01 18);
+  --sidebar-primary: oklch(0.557 0.203 19);
+  --sidebar-primary-foreground: oklch(0.98 0.01 19);
   --sidebar-accent: oklch(0.22 0.04 18);
   --sidebar-accent-foreground: oklch(0.92 0.02 18);
   --sidebar-border: oklch(0.22 0.02 20);
-  --sidebar-ring: oklch(0.52 0.18 18);
+  --sidebar-ring: oklch(0.557 0.203 19);
 }
 
 @theme inline {
@@ -175,7 +194,6 @@
 
   body {
     @apply bg-background text-foreground font-sans min-h-screen;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   h1, h2, h3, h4, h5, h6 {
