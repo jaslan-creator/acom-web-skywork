@@ -8,29 +8,41 @@ import {
   GraduationCap,
   Palette,
   Home as HomeIcon,
-  FileText,
+  CupSoda,
+  BookOpen,
+  LogIn,
   CheckCircle2,
+  ArrowRight,
 } from "lucide-react";
-import { brands, categories, processSteps, benefits } from "../data/index.ts";
+import { Link } from "react-router-dom";
+import { brands, categories, categoriesProse, processSteps, benefits } from "../data/index.ts";
+import type { CategoryId } from "../data/index.ts";
 import { CTAButton } from "../components/CTAButton.tsx";
+import { Cobertura } from "../components/Cobertura.tsx";
 import { BrandCard, BenefitCard, ProcessCard, CategoryCard, PROCESS_ICONS } from "../components/Cards.tsx";
 import { springPresets, fadeInUp, staggerContainer } from "../lib/motion.ts";
 import { MEDIA } from "../assets/media.ts";
-import { BUSINESS_CONFIG } from "../lib/index.ts";
+import { BUSINESS_CONFIG, CATALOG, ROUTE_PATHS, catalogPageUrl } from "../lib/index.ts";
 import { cn } from "../lib/utils.ts";
 
+/**
+ * What the customer portal actually does. The previous copy described self-service e-commerce
+ * ("cotiza y compra en línea") for a portal that is invite-only and whose account is created by
+ * the customer's sales rep — so a stranger who clicked it downloaded 1.6 MB to be told their
+ * email was not enabled. These are the real features.
+ */
 const PORTAL_FEATURES = [
   {
-    title: "Catálogo con precios actualizados",
-    description: "Consulta disponibilidad y precios mayoristas al día.",
+    title: "Tu catálogo con tus precios",
+    description: "No una lista general: la tarifa que se te asignó, con tus ofertas vigentes.",
   },
   {
-    title: "Arma tu cotización en minutos",
-    description: "Selecciona productos y genera tu pedido sin llamadas.",
+    title: "Armas la cotización, tu asesor la aprueba",
+    description: "La revisa contigo y al aprobarla se convierte en pedido. «Comprar de nuevo» repite tus habituales.",
   },
   {
-    title: "Todo en un solo lugar",
-    description: "Historial de pedidos y seguimiento de tus compras.",
+    title: "Tus facturas y tu estado de cuenta",
+    description: "Descargas el PDF, y ves saldo, límite, crédito disponible y próximo vencimiento.",
   },
 ];
 
@@ -42,24 +54,31 @@ const BENEFIT_ICONS = [
   <Truck className="w-6 h-6 text-primary" />,
 ];
 
-const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+/**
+ * 🚨 Keyed by `CategoryId`, not by `string`. As a Record<string, …> a missing key was NOT a type
+ * error and the lookup returned a non-optional type, so adding a category silently rendered an
+ * empty white badge and a gradient card at runtime. With the union closed, adding a category
+ * without its icon stops compiling — which is the only reason the typecheck gate is worth having.
+ */
+const CATEGORY_ICONS: Record<CategoryId, React.ReactNode> = {
   escolar: <GraduationCap className="h-5 w-5" />,
   oficina: <Briefcase className="h-5 w-5" />,
   manualidades: <Palette className="h-5 w-5" />,
   hogar: <HomeIcon className="h-5 w-5" />,
+  "termos-cavas": <CupSoda className="h-5 w-5" />,
 };
 
-const CATEGORY_IMAGES: Record<string, string | null> = {
+const CATEGORY_IMAGES: Record<CategoryId, string | null> = {
   escolar: MEDIA.categoryEscolar,
   oficina: MEDIA.categoryOficina,
   manualidades: MEDIA.categoryManualidades,
   hogar: MEDIA.categoryHogar,
+  "termos-cavas": MEDIA.categoryTermosCavas,
 };
 
 export default function Home() {
   const hasHero = Boolean(MEDIA.hero);
   const portalUrl = BUSINESS_CONFIG.PORTAL_URL;
-  const whatsappLink = `https://wa.me/${BUSINESS_CONFIG.WHATSAPP_PHONE}`;
 
   return (
     <div className="flex flex-col w-full">
@@ -111,7 +130,7 @@ export default function Home() {
                 hasHero ? "text-background/85" : "text-muted-foreground"
               )}
             >
-              Productos escolares, de oficina, manualidades y hogar para mayoristas y comercios, desde{" "}
+              Productos {categoriesProse()} para mayoristas y comercios, desde{" "}
               <span className={cn("font-mono font-semibold", hasHero ? "text-background" : "text-foreground")}>
                 $250 por pedido
               </span>
@@ -134,7 +153,7 @@ export default function Home() {
               Qué distribuimos
             </span>
             <h2 className="mt-3 text-2xl font-bold sm:text-3xl md:text-4xl">
-              Cuatro categorías, una sola logística
+              {categories.length} categorías, una sola logística
             </h2>
             <p className="mt-4 text-muted-foreground">
               Cubrimos el portafolio completo de tu negocio con productos de alta rotación para cada temporada.
@@ -142,7 +161,7 @@ export default function Home() {
           </div>
 
           <motion.div
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -160,7 +179,70 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Portal B2B */}
+      {/*
+        Catálogo. Hasta hoy el sitio no mostraba NI UN producto: ni catálogo, ni PDF, ni una lista,
+        ni un ejemplo. El catálogo ya estaba renderizado y es público; el único sitio que no lo
+        enlazaba era el nuestro.
+      */}
+      <section className="py-16 sm:py-24 bg-card">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={springPresets.gentle}
+            viewport={{ once: true }}
+          >
+            <div>
+              <span className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
+                Qué vendemos, en concreto
+              </span>
+              <h2 className="mt-3 text-2xl font-bold sm:text-3xl md:text-4xl">
+                Mira el catálogo antes de escribirnos
+              </h2>
+              <p className="mt-4 leading-relaxed text-muted-foreground">
+                {CATALOG.PAGES} páginas de {brands[0].name} con códigos, presentaciones y unidades por
+                bulto. Sin registro y sin dejar tus datos.{" "}
+                <span className="font-medium text-foreground">Los precios te los envía tu asesor</span>,
+                según tu tipo de negocio.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Link
+                  to={ROUTE_PATHS.CATALOGO}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-base font-bold text-primary-foreground shadow-md transition-colors hover:bg-primary/90"
+                >
+                  <BookOpen className="h-5 w-5" />
+                  Ver el catálogo
+                </Link>
+                <Link
+                  to={ROUTE_PATHS.MARCAS}
+                  className="inline-flex min-h-11 items-center gap-1.5 text-base font-semibold text-primary transition-colors hover:text-primary/80"
+                >
+                  Ver todas las marcas
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+
+            <Link
+              to={ROUTE_PATHS.CATALOGO}
+              className="group mx-auto w-full max-w-xs overflow-hidden rounded-2xl border border-border shadow-sm transition-shadow hover:shadow-md"
+              aria-hidden="true"
+              tabIndex={-1}
+            >
+              <img
+                src={catalogPageUrl(1)}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="w-full transition-transform duration-500 group-hover:scale-[1.02]"
+              />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Portal de cliente — por invitación, no autoservicio */}
       <section className="py-16 sm:py-24 bg-muted/30">
         <div className="container mx-auto px-4">
           <motion.div
@@ -174,32 +256,32 @@ export default function Home() {
             <div className="relative grid gap-8 p-8 sm:p-12 lg:grid-cols-2 lg:items-center lg:gap-12">
               <div>
                 <span className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
-                  Portal mayorista
+                  Ya eres cliente
                 </span>
                 <h2 className="mt-3 text-2xl font-bold sm:text-3xl md:text-4xl">
-                  Cotiza y compra en línea
+                  Tu cuenta ACOM, en línea
                 </h2>
                 <p className="mt-4 text-muted-foreground leading-relaxed">
-                  Accede a nuestro catálogo mayorista con precios actualizados, arma tu cotización en minutos y haz seguimiento de tus pedidos desde un solo lugar.
+                  Si ya compras con nosotros, tu asesor puede habilitarte el portal: entras con Google
+                  o con un código de 6 dígitos que te llega al correo, y también se instala como app
+                  en el teléfono.{" "}
+                  <span className="font-medium text-foreground">Es por invitación</span>, no se abre
+                  cuenta sola.
                 </p>
-                <div className="mt-8">
+                <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+                  <CTAButton showIcon>Pedir acceso a mi asesor</CTAButton>
                   <motion.a
                     href={portalUrl}
+                    target="_blank"
+                    rel="noreferrer"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     transition={springPresets.snappy}
-                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-base font-bold text-primary-foreground shadow-md transition-colors hover:bg-primary/90"
+                    className="inline-flex min-h-11 items-center justify-center gap-2 text-base font-semibold text-primary transition-colors hover:text-primary/80"
                   >
-                    <FileText className="h-5 w-5" />
-                    Cotizar en línea
+                    <LogIn className="h-5 w-5" />
+                    Ya tengo cuenta · Entrar
                   </motion.a>
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    Acceso para clientes ACOM. ¿Aún no tienes cuenta?{" "}
-                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">
-                      Habla con un asesor
-                    </a>
-                    .
-                  </p>
                 </div>
               </div>
 
@@ -309,6 +391,12 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/*
+        Cobertura. Vivía enterrada al pie de /contacto, la última sección de la última página,
+        debajo del formulario — el único texto geográfico del sitio, donde nadie llega.
+      */}
+      <Cobertura className="bg-muted/30" />
 
       {/* CTA Final */}
       <section className="py-16 sm:py-24 bg-primary text-primary-foreground">

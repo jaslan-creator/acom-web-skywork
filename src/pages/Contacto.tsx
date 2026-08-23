@@ -8,6 +8,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { CTAButton } from '@/components/CTAButton';
+import { Cobertura } from '@/components/Cobertura';
 import { Card, CardContent } from '@/components/ui/card';
 import { springPresets } from '@/lib/motion';
 import { BUSINESS_CONFIG } from '@/lib/index';
@@ -134,7 +135,7 @@ export default function Contacto() {
                     <MessageSquare className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-xl mb-1">Atención Inmediata</h3>
+                    <h3 className="font-bold text-xl mb-1">Atención por WhatsApp</h3>
                     <p className="text-muted-foreground mb-4">
                       Si prefieres atención directa por WhatsApp para agilizar tu solicitud comercial.
                     </p>
@@ -204,21 +205,7 @@ export default function Contacto() {
           </div>
         </div>
       </section>
-
-      {/* Map or Locations Placeholder Section */}
-      <section className="py-12 sm:py-16 bg-muted/20">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm font-mono text-muted-foreground uppercase tracking-widest mb-2">
-            Distribución Nacional
-          </p>
-          <h2 className="text-2xl font-bold mb-8">Abastecemos negocios en toda Venezuela</h2>
-          <div className="flex flex-wrap justify-center gap-8 opacity-60">
-            {['Caracas', 'Valencia', 'Maracaibo', 'Barquisimeto', 'Puerto Ordaz', 'San Cristóbal'].map((city) => (
-              <span key={city} className="text-lg font-semibold">{city}</span>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Cobertura className="bg-muted/20" />
     </div>
   );
 }

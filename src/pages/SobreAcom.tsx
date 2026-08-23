@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Building2, ShieldCheck, Target, Users, Truck } from 'lucide-react';
 import { CTAButton } from '@/components/CTAButton';
+import { brands, categoriesProse, coverage } from '@/data/index';
 import { PageHero } from '@/components/PageHero';
 import { MEDIA } from '@/assets/media';
 import { fadeInUp, staggerContainer, staggerItem } from '@/lib/motion';
@@ -30,7 +31,7 @@ export default function SobreAcom() {
             >
               <h2 className="text-3xl font-bold text-foreground">Trayectoria y Enfoque</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Acom Trading es una empresa dedicada a la importación y distribución mayorista de productos escolares, de oficina y hogar en Venezuela.
+                Acom Trading es una empresa dedicada a la importación y distribución mayorista de productos {categoriesProse()} en Venezuela.
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Trabajamos con marcas exclusivas y un modelo de atención directa que garantiza continuidad de suministro, asesoría comercial y procesos claros.
@@ -73,18 +74,35 @@ export default function SobreAcom() {
       {/* Stats/Highlights Section */}
       <section className="py-16 sm:py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
+          {/*
+            Three stats, so the md:grid-cols-3 grid stays full — a fourth would hang centred on the
+            most visible red band of the page. Two of the previous three were slogans, and the third
+            ("24h") contradicted the 48-hour commitment on /contacto.
+
+            🚨 "+700" is a FLOOR, not a count, and deliberately so. At least four live product
+            counts coexist across the ERP (695 · 779 · 942 · 1.201), none of them carrying its own
+            definition, and the figure moved by 84 in a single day when Momentop was unhidden. A
+            hard integer in a static site with no detector rots in silence. The definition used
+            here: products in the catalogue a sales rep can actually sell (779 today). The floor has
+            to survive archiving the 74 SKUs of the brand that is no longer commercialised and is
+            still pending removal in the ERP, which would leave ~705. 700 survives that; 750 would not.
+            ⚠️ Not re-measured against PROD from this machine: the anon key returns 0 rows (RLS
+            doing its job) and there is no service-role key on disk.
+
+            The other two are derived from the data, so they cannot drift.
+          */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div className="space-y-2">
-              <div className="text-4xl lg:text-5xl font-bold font-mono">$250</div>
-              <p className="text-primary-foreground/80 font-medium">Pedido Mínimo Accesible</p>
+              <div className="text-4xl lg:text-5xl font-bold font-mono">+700</div>
+              <p className="text-primary-foreground/80 font-medium">Productos en catálogo</p>
             </div>
             <div className="space-y-2">
-              <div className="text-4xl lg:text-5xl font-bold font-mono">100%</div>
-              <p className="text-primary-foreground/80 font-medium">Venta Exclusiva B2B</p>
+              <div className="text-4xl lg:text-5xl font-bold font-mono">{brands.length}</div>
+              <p className="text-primary-foreground/80 font-medium">Marcas distribuidas</p>
             </div>
             <div className="space-y-2">
-              <div className="text-4xl lg:text-5xl font-bold font-mono">24h</div>
-              <p className="text-primary-foreground/80 font-medium">Respuesta Comercial</p>
+              <div className="text-4xl lg:text-5xl font-bold font-mono">{coverage.length}</div>
+              <p className="text-primary-foreground/80 font-medium">Regiones atendidas</p>
             </div>
           </div>
         </div>
@@ -118,12 +136,14 @@ export default function SobreAcom() {
 const pillars = [
   {
     title: 'Marcas Exclusivas',
-    description: 'Representamos nombres líderes como Pelikan y Bambary con total respaldo.',
+    description: 'Representamos a Bambary, Pelikan, Sanremo y Momentop con total respaldo.',
     icon: <Target className="w-6 h-6" />
   },
   {
     title: 'Suministro Continuo',
-    description: 'Garantizamos stock constante para que su negocio nunca se detenga.',
+    // Softened: the Terms say "disponibilidad sujeta a inventario existente" and there are
+    // products visible with stock <= 0. Guaranteeing constant stock contradicted our own legals.
+    description: 'Reposición planificada y cobertura de inventario para las líneas de mayor rotación.',
     icon: <Truck className="w-6 h-6" />
   },
   {
