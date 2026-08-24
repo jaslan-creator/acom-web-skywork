@@ -44,7 +44,11 @@ export function nombreCompleto(d: Pick<LeadDraft, "firstName" | "lastName">): st
 export function negocioAEnviar(d: LeadDraft): string {
   const negocio = d.businessName.trim();
   if (negocio) return negocio.slice(0, 160);
-  return nombreCompleto(d).slice(0, 160);
+  // 🚨 SOLO en una consulta. Abrir cuenta hace nacer una ficha en la app con este texto como razón
+  // social: caer al nombre de la persona ahí fabricaría un prospecto que después nadie reconoce
+  // —y que ya no se puede fusionar con Odoo por nombre—. En «cuenta» el negocio es obligatorio y
+  // el formulario lo pide antes de enviar.
+  return d.intent === "question" ? nombreCompleto(d).slice(0, 160) : "";
 }
 
 /**

@@ -24,6 +24,68 @@ function exigir(cond, mensaje) {
   if (!cond) fallos.push(mensaje);
 }
 
+/**
+ * 🚨 LAS REGLAS SE EJERCEN DE VERDAD, no se buscan en el texto. `src/lib/leadForm.ts` no importa
+ * nada más que un tipo, así que Node lo carga tal cual (le quita los tipos solo) y acá se le
+ * pueden pasar casos. Un guard que solo mira literales certifica la forma y no el comportamiento —
+ * y estos tres casos son de comportamiento: en los tres el formulario ENVÍA algo equivocado.
+ */
+const { motivoBloqueo, negocioAEnviar, llaveDeEnvio } = await import("../src/lib/leadForm.ts");
+
+const BASE = {
+  intent: null,
+  businessName: "",
+  firstName: "",
+  lastName: "",
+  phone: "",
+  email: "",
+  message: "",
+};
+const con = (extra) => ({ ...BASE, ...extra });
+
+// Abrir cuenta SIN nombre de negocio no se puede enviar — aunque la persona haya puesto su nombre.
+// La ficha nace en la app con ese texto como razón social, y el nombre de una persona ahí es una
+// ficha que después nadie reconoce.
+exigir(
+  motivoBloqueo(con({ intent: "account", firstName: "Juan", phone: "04141234567" })) !== null,
+  "abrir cuenta sin nombre de negocio tiene que quedar bloqueado, aunque haya nombre de persona",
+);
+exigir(
+  negocioAEnviar(con({ intent: "account", firstName: "Juan" })) === "",
+  "el respaldo al nombre de la persona es SOLO para una consulta, nunca para abrir cuenta",
+);
+// Una consulta sí puede no tener negocio: se manda el nombre de la persona, porque el servidor lo
+// exige y la columna es NOT NULL.
+exigir(
+  negocioAEnviar(con({ intent: "question", firstName: "Ana", lastName: "Pérez" })) === "Ana Pérez",
+  "una consulta sin negocio tiene que viajar con el nombre de la persona",
+);
+exigir(
+  motivoBloqueo(con({ intent: "question", firstName: "Ana", phone: "04141234567" })) !== null,
+  "una consulta sin texto no se puede enviar: deja una tarjeta sin nada que contestar",
+);
+exigir(
+  motivoBloqueo(
+    con({ intent: "question", firstName: "Ana", phone: "04141234567", message: "hola" }),
+  ) === null,
+  "una consulta completa tiene que poder enviarse",
+);
+// Un negocio de UNA letra pasa: el servidor valida `min(1)`, y el cliente exigía `> 1`.
+exigir(
+  motivoBloqueo(con({ intent: "account", businessName: "A", email: "a@b.com" })) === null,
+  "un nombre de una sola letra no puede quedar bloqueado sin explicación (el servidor lo acepta)",
+);
+// Sin forma de contestarle, no se envía.
+exigir(
+  motivoBloqueo(con({ intent: "account", businessName: "Papelería X" })) !== null,
+  "sin teléfono ni correo no se puede enviar",
+);
+// Y la llave lleva la opción pegada.
+exigir(
+  llaveDeEnvio("k1", "account") !== llaveDeEnvio("k1", "question"),
+  "la llave de idempotencia tiene que cambiar con la opción",
+);
+
 // ── 1. El guard vive en la TRANSACCIÓN, no en el `disabled` ────────────────────────────────────
 // Enter en cualquier input dispara el submit aunque el botón esté gris. Sin esta línea el POST
 // sale con `intent: null`, el `z.enum` del servidor lo rechaza con un 400 y el visitante lee
