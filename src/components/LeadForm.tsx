@@ -12,6 +12,7 @@ import {
   type LeadIntent,
 } from "@/lib/leadApi";
 import { llaveDeEnvio, motivoBloqueo, negocioAEnviar, nombreCompleto } from "@/lib/leadForm";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { VE_STATES, citiesForState, veCityId, type VeState } from "@/data/veGeo";
 
 /**
@@ -46,6 +47,10 @@ const MENSAJES_ERROR: Record<LeadError, string> = {
   // competencia. Y en los tres queda el botón de WhatsApp a la vista.
   rate_limited: "Recibimos varios intentos seguidos. Espera un minuto y vuelve a enviar.",
   invalid: "Revisa los datos: falta algo o hay un campo mal escrito.",
+  // 🚨 Dice qué hacer, no solo qué pasó: quien tiene el candado bloqueado no puede arreglar nada
+  // dentro del formulario, así que la salida es recargar o el WhatsApp que ya está al lado.
+  verification:
+    "No pudimos comprobar que no eres un robot. Recarga la página e intenta de nuevo.",
   offline: "No pudimos conectar. Revisa tu conexión e intenta de nuevo.",
   unknown: "No pudimos enviar tu solicitud. Intenta de nuevo en un momento.",
 };
@@ -98,6 +103,9 @@ export function LeadForm({
   const [city, setCity] = useState("");
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
+  // Vacío mientras el candado no haya resuelto —o si nunca cargó—. NO bloquea el envío: el widget
+  // falla abierto a propósito y quien decide es el servidor.
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -142,6 +150,7 @@ export function LeadForm({
       geoCityId: state && city ? veCityId(state as VeState, city) : null,
       message: message.trim() || undefined,
       hp_website: honeypot || undefined,
+      turnstileToken: turnstileToken || undefined,
     });
 
     setSending(false);
@@ -389,6 +398,9 @@ export function LeadForm({
           onChange={(e) => setHoneypot(e.target.value)}
         />
       </div>
+
+      {/* El candado. Si no carga, acá no se dibuja nada y el formulario sigue enviando. */}
+      <TurnstileWidget onToken={setTurnstileToken} className="mt-4" />
 
       {error ? (
         <div className="mt-4 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2.5 text-sm text-destructive">

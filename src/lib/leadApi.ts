@@ -28,9 +28,21 @@ export interface LeadPayload {
   message?: string;
   /** Campo trampa. Un humano no lo llena nunca. */
   hp_website?: string;
+  /**
+   * El token del candado de Cloudflare. **Opcional a propósito**: si el widget no carga (un
+   * bloqueador, una red corporativa, el CSP mal puesto) el envío sale igual y el servidor decide.
+   * Exigirlo acá convertiría un problema de la defensa en una captación caída.
+   */
+  turnstileToken?: string;
 }
 
-export type LeadError = "rate_limited" | "invalid" | "offline" | "unknown";
+/**
+ * 🚨 `verification` existe separado de `invalid` porque el servidor devuelve **400 para los dos** y
+ * significan cosas opuestas: uno es «te falta un dato» y el otro es «no pudimos comprobar que no
+ * eres un robot». Con un solo cartel, a alguien que tiene el candado bloqueado se le diría que
+ * revise campos que están bien, y no habría forma de que saliera de ahí.
+ */
+export type LeadError = "rate_limited" | "invalid" | "verification" | "offline" | "unknown";
 
 /**
  * ¿Está publicada la captación?
@@ -79,7 +91,18 @@ export async function submitLead(payload: LeadPayload): Promise<LeadResult> {
 
   if (res.ok) return { ok: true };
   if (res.status === 429) return { ok: false, error: "rate_limited" };
-  if (res.status === 400) return { ok: false, error: "invalid" };
+  if (res.status === 400) {
+    // El cuerpo distingue los dos 400. Si no se puede leer, se cae al genérico: inventar
+    // «candado» sobre un fallo de datos mandaría a la persona a recargar para siempre.
+    let code = "";
+    try {
+      const j = (await res.json()) as { code?: string };
+      code = j?.code ?? "";
+    } catch {
+      code = "";
+    }
+    return { ok: false, error: code === "VERIFICATION" ? "verification" : "invalid" };
+  }
   return { ok: false, error: "unknown" };
 }
 

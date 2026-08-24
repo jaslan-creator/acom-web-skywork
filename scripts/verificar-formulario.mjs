@@ -18,6 +18,9 @@ const FORM = readFileSync("src/components/LeadForm.tsx", "utf8");
 const REGLAS = readFileSync("src/lib/leadForm.ts", "utf8");
 const CONTACTO = readFileSync("src/pages/Contacto.tsx", "utf8");
 const CTA = readFileSync("src/components/CTAButton.tsx", "utf8");
+const CANDADO = readFileSync("src/components/TurnstileWidget.tsx", "utf8");
+const API = readFileSync("src/lib/leadApi.ts", "utf8");
+const CSP = readFileSync("vercel.json", "utf8");
 
 const fallos = [];
 function exigir(cond, mensaje) {
@@ -183,9 +186,49 @@ exigir(
   "el envoltorio del enlace interno va `inline-flex`: como bloque se estira o se apila",
 );
 
+
+// ── 7. El candado no puede tumbar la captación ────────────────────────────────────────────────
+// 🚨 Los cuatro fallan MUDOS. El peor es el del CSP: sin el host permitido el script no carga,
+// el widget no se dibuja, y la página se ve y funciona **exactamente igual** — con la defensa
+// apagada y nadie enterándose. No hay ningún error en ninguna consola del servidor.
+
+// El envío NO se gatea con el token: si el candado está bloqueado en ese navegador, la persona
+// tiene que poder mandar igual y que decida el servidor.
+exigir(
+  !/disabled=\{[^}]*turnstileToken/.test(FORM),
+  "el botón de enviar no puede depender del token del candado: un bloqueador dejaría el formulario muerto",
+);
+exigir(
+  !/if\s*\(\s*!\s*turnstileToken\s*\)\s*return/.test(FORM),
+  "`handleSubmit` no puede cortar por falta de token: el candado falla abierto a propósito",
+);
+
+// El sitekey tiene que ser el de acomve.com. Turnstile valida por DOMINIO: con el de Zentral el
+// widget se dibuja, la persona lo resuelve, y el servidor rechaza TODOS los envíos legítimos.
+exigir(
+  !CANDADO.includes("0x4AAAAAADgiLH6ugOKwXNfD"),
+  "ése es el sitekey de Zentral (zentralapp.ai): no cubre acomve.com y rechazaría todos los envíos",
+);
+
+// El CSP tiene que permitir el host en LAS DOS directivas: `script-src` carga la librería y
+// `frame-src` dibuja el desafío. Con una sola, el candado no funciona y no se ve por qué.
+for (const directiva of ["script-src", "frame-src"]) {
+  const m = CSP.match(new RegExp(`${directiva}([^;"]*)`));
+  exigir(
+    m !== null && m[1].includes("https://challenges.cloudflare.com"),
+    `falta https://challenges.cloudflare.com en \`${directiva}\` del CSP (vercel.json): el candado no carga y nada falla`,
+  );
+}
+
+// Los dos 400 del servidor significan cosas opuestas y no pueden compartir cartel.
+exigir(
+  /"VERIFICATION"/.test(API) && /verification/.test(FORM),
+  "un fallo del candado no puede leerse como «revisa los datos»: no hay nada que revisar y la persona queda trabada",
+);
+
 if (fallos.length > 0) {
   console.error("✗ guard del formulario de captación:");
   for (const f of fallos) console.error("  ·", f);
   process.exit(1);
 }
-console.log(`✓ formulario de captación: ${6} invariantes en verde`);
+console.log(`✓ formulario de captación: ${7} invariantes en verde`);
