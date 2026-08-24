@@ -388,6 +388,9 @@ export default function Home() {
             <p className="text-lg font-medium italic text-muted-foreground">
               Proceso claro, sin intermediarios ni complicaciones.
             </p>
+            <Link to={ROUTE_PATHS.FAQ} className="mt-4 inline-flex min-h-11 items-center font-semibold text-primary hover:underline">
+              Consultar preguntas frecuentes sobre compras mayoristas
+            </Link>
           </div>
         </div>
       </section>

@@ -1,105 +1,44 @@
-import { Suspense, lazy } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-import { Analytics } from "@vercel/analytics/react";
-import { ROUTE_PATHS } from "@/lib/index";
-import { Layout } from "@/components/Layout";
+import type { ComponentType } from "react";
+import type { RouteRecord } from "vite-react-ssg";
 
-const Home = lazy(() => import("@/pages/Home"));
-const Marcas = lazy(() => import("@/pages/Marcas"));
-const Catalogo = lazy(() => import("@/pages/Catalogo"));
-const ComoTrabajamos = lazy(() => import("@/pages/ComoTrabajamos"));
-const SobreAcom = lazy(() => import("@/pages/SobreAcom"));
-const AbrirCuenta = lazy(() => import("@/pages/AbrirCuenta"));
-const Contacto = lazy(() => import("@/pages/Contacto"));
-const Terminos = lazy(() => import("@/pages/Terminos"));
-const Privacidad = lazy(() => import("@/pages/Privacidad"));
-const NotFound = lazy(() => import("@/pages/not-found/Index"));
+import { AppShell } from "@/components/AppShell";
+import { PUBLIC_ROUTES, type PublicRouteId } from "@/data/publicContent";
 
-const routeFallback = (
-  <div className="min-h-[60vh] bg-background" aria-label="Cargando contenido" />
-);
+type RouteModule = { Component: ComponentType };
+type RouteLoader = () => Promise<RouteModule>;
 
-/**
- * Setup React Query Client with default settings
- */
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000,
-      retry: 1,
-    },
-  },
-});
-
-/**
- * Main Application Component
- * Configures the routing architecture and global providers for Acom Trading (2026).
- * Wraps all institutional pages within the standard B2B Layout.
- */
-const App = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner position="top-right" />
-        <BrowserRouter>
-          <Layout>
-            <Suspense fallback={routeFallback}>
-              <Routes>
-                <Route
-                  path={ROUTE_PATHS.HOME}
-                  element={<Home />}
-                />
-                <Route
-                  path={ROUTE_PATHS.MARCAS}
-                  element={<Marcas />}
-                />
-                <Route
-                  path={ROUTE_PATHS.CATALOGO}
-                  element={<Catalogo />}
-                />
-                <Route
-                  path={ROUTE_PATHS.COMO_TRABAJAMOS}
-                  element={<ComoTrabajamos />}
-                />
-                <Route
-                  path={ROUTE_PATHS.SOBRE_ACOM}
-                  element={<SobreAcom />}
-                />
-                <Route
-                  path={ROUTE_PATHS.ABRIR_CUENTA}
-                  element={<AbrirCuenta />}
-                />
-                <Route
-                  path={ROUTE_PATHS.CONTACTO}
-                  element={<Contacto />}
-                />
-                <Route
-                  path={ROUTE_PATHS.TERMINOS}
-                  element={<Terminos />}
-                />
-                <Route
-                  path={ROUTE_PATHS.PRIVACIDAD}
-                  element={<Privacidad />}
-                />
-                <Route
-                  path="*"
-                  element={<NotFound />}
-                />
-              </Routes>
-            </Suspense>
-          </Layout>
-        </BrowserRouter>
-        <Analytics />
-        <SpeedInsights />
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
+const pageLoaders: Record<PublicRouteId, RouteLoader> = {
+  home: async () => ({ Component: (await import("@/pages/Home")).default }),
+  marcas: async () => ({ Component: (await import("@/pages/Marcas")).default }),
+  catalogo: async () => ({ Component: (await import("@/pages/Catalogo")).default }),
+  "como-trabajamos": async () => ({ Component: (await import("@/pages/ComoTrabajamos")).default }),
+  "sobre-acom": async () => ({ Component: (await import("@/pages/SobreAcom")).default }),
+  "abrir-cuenta": async () => ({ Component: (await import("@/pages/AbrirCuenta")).default }),
+  contacto: async () => ({ Component: (await import("@/pages/Contacto")).default }),
+  faq: async () => ({ Component: (await import("@/pages/PreguntasFrecuentes")).default }),
+  terminos: async () => ({ Component: (await import("@/pages/Terminos")).default }),
+  privacidad: async () => ({ Component: (await import("@/pages/Privacidad")).default }),
 };
 
-export default App;
+const publicChildren: RouteRecord[] = PUBLIC_ROUTES.map((route) =>
+  route.path === "/"
+    ? { index: true, lazy: pageLoaders[route.id] }
+    : { path: route.path.slice(1), lazy: pageLoaders[route.id] },
+);
+
+const notFound = async () => ({ Component: (await import("@/pages/not-found/Index")).default });
+
+export const routes: RouteRecord[] = [
+  {
+    path: "/",
+    element: <AppShell />,
+    entry: "src/components/AppShell.tsx",
+    children: [
+      ...publicChildren,
+      { path: "404", lazy: notFound },
+      { path: "*", lazy: notFound },
+    ],
+  },
+];
+
+export default routes;

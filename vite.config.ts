@@ -6,6 +6,7 @@ import fs from 'node:fs/promises';
 import nodePath from 'node:path';
 import { componentTagger } from 'lovable-tagger';
 import path from "path";
+import { PUBLIC_ROUTES } from "./src/data/publicContent";
 
 import { parse } from '@babel/parser';
 import _traverse from '@babel/traverse';
@@ -222,11 +223,10 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
-        // Proxy react-router-dom to our wrapper
-        "react-router-dom": path.resolve(__dirname, "./src/lib/react-router-dom-proxy.tsx"),
-        // Original react-router-dom under a different name
-        "react-router-dom-original": "react-router-dom",
       },
+    },
+    ssgOptions: {
+      includedRoutes: () => [...PUBLIC_ROUTES.map((route) => route.path), "/404"],
     },
     define: {
       // Define environment variables for build-time configuration

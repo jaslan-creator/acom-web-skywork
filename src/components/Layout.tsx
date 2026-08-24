@@ -323,7 +323,8 @@ export function Layout({ children }: LayoutProps) {
 
             <div>
               <h4 className="font-bold text-foreground mb-4 sm:mb-6 uppercase tracking-wider text-xs">Contacto Comercial</h4>
-              <ul className="space-y-3 sm:space-y-4">
+              <address className="not-italic">
+                <ul className="space-y-3 sm:space-y-4">
                 <li className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <a href={whatsappLink} className="text-muted-foreground hover:text-primary text-sm transition-colors">
@@ -342,13 +343,15 @@ export function Layout({ children }: LayoutProps) {
                     {BUSINESS_CONFIG.ADDRESS}
                   </span>
                 </li>
-              </ul>
+                </ul>
+              </address>
             </div>
           </div>
 
           <div className="mt-10 sm:mt-16 pt-6 sm:pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left text-xs text-muted-foreground font-medium">
             <p>© 2026 Acom Trading, C.A. Todos los derechos reservados.</p>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-3">
+              <Link to={ROUTE_PATHS.FAQ} className="hover:text-primary transition-colors">Preguntas Frecuentes</Link>
               <Link to={ROUTE_PATHS.TERMINOS} className="hover:text-primary transition-colors">Términos y Condiciones</Link>
               <Link to={ROUTE_PATHS.PRIVACIDAD} className="hover:text-primary transition-colors">Política de Privacidad</Link>
             </div>

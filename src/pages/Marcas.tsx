@@ -67,11 +67,44 @@ const Marcas: React.FC = () => {
             className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12"
           >
             {brands.map((brand) => (
-              <motion.div key={brand.id} variants={fadeInUp}>
+              <motion.article key={brand.id} variants={fadeInUp}>
                 <BrandCard brand={brand} />
-              </motion.div>
+              </motion.article>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-16" aria-labelledby="comparacion-marcas">
+        <div className="container mx-auto px-4">
+          <h2 id="comparacion-marcas" className="text-2xl sm:text-3xl font-bold mb-6">
+            Comparación del portafolio publicado
+          </h2>
+          <div className="overflow-x-auto rounded-xl border border-border">
+            <table className="w-full min-w-[680px] border-collapse text-left">
+              <caption className="sr-only">Acceso a catálogos y precios de las marcas distribuidas por ACOM</caption>
+              <thead className="bg-muted/60">
+                <tr>
+                  <th scope="col" className="px-5 py-4 font-semibold">Marca</th>
+                  <th scope="col" className="px-5 py-4 font-semibold">Qué distribuye</th>
+                  <th scope="col" className="px-5 py-4 font-semibold">Catálogo</th>
+                  <th scope="col" className="px-5 py-4 font-semibold">Precios mayoristas</th>
+                </tr>
+              </thead>
+              <tbody>
+                {brands.map((brand) => (
+                  <tr key={brand.id} className="border-t border-border align-top">
+                    <th scope="row" className="px-5 py-4 font-semibold text-primary">{brand.name}</th>
+                    <td className="px-5 py-4 text-muted-foreground">{brand.headline}</td>
+                    <td className="px-5 py-4 text-muted-foreground">
+                      {brand.catalogUrl ? "Público en la web" : "Disponible por asesor"}
+                    </td>
+                    <td className="px-5 py-4 text-muted-foreground">Asignados por un asesor</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 

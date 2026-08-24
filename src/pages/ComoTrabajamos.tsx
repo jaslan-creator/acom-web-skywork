@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import {
   Building2,
   DollarSign,
@@ -14,6 +15,7 @@ import { ProcessCard, BenefitCard, PROCESS_ICONS } from "../components/Cards";
 import { PageHero } from "../components/PageHero";
 import { MEDIA } from "../assets/media";
 import { springPresets, staggerContainer, staggerItem } from "../lib/motion";
+import { ROUTE_PATHS } from "../lib";
 
 const details = [
   {
@@ -182,6 +184,11 @@ export default function ComoTrabajamos() {
                 Consultar mi línea de crédito
               </CTAButton>
             </div>
+            <p className="mt-6 text-center">
+              <Link to={ROUTE_PATHS.FAQ} className="inline-flex min-h-11 items-center font-semibold underline underline-offset-4">
+                Ver preguntas frecuentes sobre requisitos, precios y crédito
+              </Link>
+            </p>
           </div>
         </div>
       </section>

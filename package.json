@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "VITE_ENABLE_ROUTE_MESSAGING=true vite",
-    "build": "node scripts/verificar-formulario.mjs && tsc --noEmit -p tsconfig.app.json && vite build",
+    "build": "node scripts/verificar-formulario.mjs && tsc --noEmit -p tsconfig.app.json && vite-react-ssg build && node scripts/generar-artefactos-publicos.mjs && node scripts/verificar-contenido.mjs && node scripts/verificar-aeo.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "verify": "node scripts/verificar-contenido.mjs",
+    "verify:aeo": "node scripts/verificar-aeo.mjs",
     "verify:catalogo": "node scripts/verificar-catalogo.mjs",
     "build:dev": "VITE_ENABLE_ROUTE_MESSAGING=true vite build --mode development --sourcemap",
     "build:map": "VITE_ENABLE_ROUTE_MESSAGING=true vite build --sourcemap",
@@ -93,6 +94,7 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "vite-react-ssg": "0.8.9"
   }
 }

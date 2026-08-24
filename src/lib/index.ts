@@ -11,6 +11,7 @@ export const ROUTE_PATHS = {
   SOBRE_ACOM: "/sobre-acom",
   ABRIR_CUENTA: "/abrir-cuenta",
   CONTACTO: "/contacto",
+  FAQ: "/preguntas-frecuentes",
   TERMINOS: "/terminos-y-condiciones",
   PRIVACIDAD: "/politica-de-privacidad",
 } as const;

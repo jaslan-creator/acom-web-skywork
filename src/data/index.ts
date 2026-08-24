@@ -1,4 +1,5 @@
-import { Brand, ProcessStep, Benefit, Category, ROUTE_PATHS } from "../lib/index.ts";
+import { ROUTE_PATHS } from "../lib/index.ts";
+import type { Brand, ProcessStep, Benefit, Category } from "../lib/index.ts";
 
 /**
  * Data for the brands distributed by Acom Trading.

@@ -1,4 +1,6 @@
 {
+    "cleanUrls": true,
+    "trailingSlash": false,
     "headers": [
         {
             "source": "/(.*)",
@@ -36,12 +38,6 @@
             "source": "/linea-credito",
             "destination": "/como-trabajamos",
             "permanent": true
-        }
-    ],
-    "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/index.html"
         }
     ]
 }
