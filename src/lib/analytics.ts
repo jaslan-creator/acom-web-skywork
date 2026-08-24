@@ -52,3 +52,26 @@ export function trackWhatsappLeads(): () => void {
   document.addEventListener("click", handleClick, true);
   return () => document.removeEventListener("click", handleClick, true);
 }
+
+/**
+ * El envío del formulario de «Abrir cuenta».
+ *
+ * 🚨 EVENTO DISTINTO, y no es un detalle. `trackWhatsappLeads` dispara `Lead` en CUALQUIER ancla
+ * `wa.me`, presente o futura — y la pantalla de confirmación tiene una, porque invita a escribir
+ * por WhatsApp a quien no quiere esperar. Si el envío también emitiera `Lead`, la persona que
+ * envía y después toca ese botón contaría DOS, y Meta optimizaría sobre un número inflado. Falla
+ * mudo: la campaña simplemente aprende mal.
+ *
+ * `CompleteRegistration` es el evento estándar de Meta para «completó un formulario de alta», que
+ * es literalmente lo que pasó.
+ */
+export function trackLeadFormSubmit(intent: "account" | "question"): void {
+  try {
+    window.fbq?.("track", "CompleteRegistration", {
+      content_name: intent === "account" ? "Abrir cuenta" : "Consulta",
+      content_category: "lead_form",
+    });
+  } catch {
+    /* el pixel puede estar bloqueado; no es un error para el visitante */
+  }
+}

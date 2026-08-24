@@ -14,6 +14,7 @@ const Marcas = lazy(() => import("@/pages/Marcas"));
 const Catalogo = lazy(() => import("@/pages/Catalogo"));
 const ComoTrabajamos = lazy(() => import("@/pages/ComoTrabajamos"));
 const SobreAcom = lazy(() => import("@/pages/SobreAcom"));
+const AbrirCuenta = lazy(() => import("@/pages/AbrirCuenta"));
 const Contacto = lazy(() => import("@/pages/Contacto"));
 const Terminos = lazy(() => import("@/pages/Terminos"));
 const Privacidad = lazy(() => import("@/pages/Privacidad"));
@@ -69,6 +70,10 @@ const App = () => {
                 <Route
                   path={ROUTE_PATHS.SOBRE_ACOM}
                   element={<SobreAcom />}
+                />
+                <Route
+                  path={ROUTE_PATHS.ABRIR_CUENTA}
+                  element={<AbrirCuenta />}
                 />
                 <Route
                   path={ROUTE_PATHS.CONTACTO}

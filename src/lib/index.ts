@@ -9,6 +9,7 @@ export const ROUTE_PATHS = {
   CATALOGO: "/catalogo",
   COMO_TRABAJAMOS: "/como-trabajamos",
   SOBRE_ACOM: "/sobre-acom",
+  ABRIR_CUENTA: "/abrir-cuenta",
   CONTACTO: "/contacto",
   TERMINOS: "/terminos-y-condiciones",
   PRIVACIDAD: "/politica-de-privacidad",

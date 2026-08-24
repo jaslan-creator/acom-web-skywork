@@ -87,7 +87,7 @@ export default function Privacidad() {
                             <section className="space-y-4">
                                 <h2 className="text-2xl font-bold text-primary">5. Cookies y Tecnologías de Seguimiento</h2>
                                 <p className="text-muted-foreground leading-relaxed">
-                                    Nuestro sitio web puede utilizar cookies y tecnologías de seguimiento para mejorar la experiencia de navegación. Esto incluye Meta Pixel, Vercel Analytics, Vercel Speed Insights y formularios integrados de Zoho Forms para entender la interacción con el sitio y gestionar solicitudes comerciales.
+                                    Nuestro sitio web puede utilizar cookies y tecnologías de seguimiento para mejorar la experiencia de navegación. Esto incluye Meta Pixel y Vercel Speed Insights. Los datos que nos dejas en el formulario de apertura de cuenta se envían a nuestro sistema comercial interno (Zentral) para que un asesor te contacte.
                                 </p>
                             </section>
 

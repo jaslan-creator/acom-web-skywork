@@ -34,12 +34,16 @@ export function Layout({ children }: LayoutProps) {
   // Layout wraps all routes — see src/lib/analytics.ts for why it is delegated, not per-button.
   useEffect(() => trackWhatsappLeads(), []);
 
+  // 🚨 «Home» salió del menú al entrar «Abrir cuenta», y no es una preferencia: con seis ítems la
+  // barra ocupaba 1.241 de 1.280 px a 1440 y 986 de 1.018 a 1024 —39 y 32 px de aire—, y un
+  // séptimo la parte en dos líneas. El logo ya lleva a la portada, que es la convención universal,
+  // así que es el ítem que menos cuesta. Si alguna vez entra otro, hay que volver a medir.
   const navItems = [
-    { label: "Home", path: ROUTE_PATHS.HOME },
     { label: "Marcas", path: ROUTE_PATHS.MARCAS },
     { label: "Catálogo", path: ROUTE_PATHS.CATALOGO },
     { label: "Cómo Trabajamos", path: ROUTE_PATHS.COMO_TRABAJAMOS },
     { label: "Sobre Acom", path: ROUTE_PATHS.SOBRE_ACOM },
+    { label: "Abrir cuenta", path: ROUTE_PATHS.ABRIR_CUENTA },
     { label: "Contacto", path: ROUTE_PATHS.CONTACTO },
   ];
 

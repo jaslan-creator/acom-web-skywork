@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Clock,
@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { CTAButton } from '@/components/CTAButton';
 import { Cobertura } from '@/components/Cobertura';
+import { LeadForm } from '@/components/LeadForm';
+import { isCaptureEnabled } from '@/lib/leadApi';
 import { Card, CardContent } from '@/components/ui/card';
 import { springPresets } from '@/lib/motion';
 import { BUSINESS_CONFIG } from '@/lib/index';
@@ -21,7 +23,27 @@ const ZOHO_FORM_ORIGIN = "https://forms.acom.com.ve";
  * CTA Principal: Formulario de contacto y WhatsApp.
  */
 export default function Contacto() {
+  /**
+   * 🚨 El interruptor de Zentral decide QUÉ formulario se dibuja acá, y por eso conviven los dos
+   * caminos en el código. Encendido: el formulario nuevo, que registra el envío en la bandeja.
+   * Apagado: el de Zoho de siempre, intacto. Sin esto, encender la captación dejaría de ser un
+   * clic —necesitaría un despliegue mío— o esta página se quedaría sin formulario mientras tanto,
+   * que es una regresión.
+   *
+   * `null` = todavía no se sabe. Se trata como apagado a efectos del iframe, pero NO se dibuja el
+   * de Zoho hasta saberlo, para no montarlo y desmontarlo medio segundo después.
+   */
+  const [captureEnabled, setCaptureEnabled] = useState<boolean | null>(null);
+
   useEffect(() => {
+    const ac = new AbortController();
+    void isCaptureEnabled(ac.signal).then(setCaptureEnabled);
+    return () => ac.abort();
+  }, []);
+
+  useEffect(() => {
+    // El iframe de Zoho SOLO se monta si la captación propia está apagada.
+    if (captureEnabled !== false) return;
     // Initialize Zoho Contact Form
     const containerId = "zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU";
     const container = document.getElementById(containerId);
@@ -83,7 +105,7 @@ export default function Contacto() {
         console.error("Error loading Zoho form:", e);
       }
     }
-  }, []);
+  }, [captureEnabled]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -193,11 +215,15 @@ export default function Contacto() {
             >
               <Card className="overflow-hidden border-border bg-card shadow-2xl shadow-primary/5">
                 <CardContent className="p-0">
-                  <div
-                    id="zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU"
-                    className="w-full min-h-[400px] overflow-x-hidden [&_iframe]:!m-0 [&_iframe]:!w-full [&_iframe]:!max-w-full"
-                  >
-                  </div>
+                  {captureEnabled === true ? (
+                    <LeadForm className="border-0" />
+                  ) : (
+                    <div
+                      id="zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU"
+                      className="w-full min-h-[400px] overflow-x-hidden [&_iframe]:!m-0 [&_iframe]:!w-full [&_iframe]:!max-w-full"
+                    >
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
