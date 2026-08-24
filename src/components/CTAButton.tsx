@@ -12,6 +12,14 @@ interface CTAButtonProps {
   children: React.ReactNode;
   href?: string;
   showIcon?: boolean;
+  /**
+   * 🚨 Con qué icono sale. Existía porque NO HABÍA «sin icono»: `showIcon` elegía entre el logo
+   * verde de WhatsApp y un globo de mensaje, así que un botón «Abrir cuenta» —que abre una página
+   * del sitio, no WhatsApp— salía con el logo de WhatsApp al lado del botón que sí abre WhatsApp.
+   * Es la peor confusión posible justo en el gesto que el formulario vino a desambiguar.
+   * `null` = sin icono. Sin pasar nada, el comportamiento de siempre.
+   */
+  icon?: React.ReactNode | null;
 }
 
 /**
@@ -24,6 +32,7 @@ export function CTAButton({
   children,
   href,
   showIcon = true,
+  icon,
 }: CTAButtonProps) {
   const resolvedHref = href ?? `https://wa.me/${BUSINESS_CONFIG.WHATSAPP_PHONE}`;
   const isInternalLink = resolvedHref.startsWith("/");
@@ -39,15 +48,25 @@ export function CTAButton({
     damping: 30,
   };
 
+  // `icon` sin declarar → lo de siempre. Declarado (incluido `null`) → manda él.
+  const iconoDeclarado = icon !== undefined;
   const content = (
     <>
-      {showIcon && (
-        <span className="flex items-center justify-center">
-          <SiWhatsapp className="w-5 h-5" />
-        </span>
+      {iconoDeclarado ? (
+        icon ? (
+          <span className="flex items-center justify-center">{icon}</span>
+        ) : null
+      ) : (
+        <>
+          {showIcon && (
+            <span className="flex items-center justify-center">
+              <SiWhatsapp className="w-5 h-5" />
+            </span>
+          )}
+        </>
       )}
       <span>{children}</span>
-      {!showIcon && <MessageCircle className="w-4 h-4 opacity-70" />}
+      {!iconoDeclarado && !showIcon && <MessageCircle className="w-4 h-4 opacity-70" />}
     </>
   );
 
@@ -59,7 +78,11 @@ export function CTAButton({
 
   if (isInternalLink) {
     return (
+      // 🚨 `inline-flex` en el envoltorio, no bloque. Sin esto rompe el layout en dos páginas:
+      // dentro de un `flex flex-col items-center` (Catálogo) se estira a todo el ancho, y en un
+      // contenedor sin flex (Cómo trabajamos) los botones se apilan pegados sin separación.
       <motion.div
+        className="inline-flex"
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}
         transition={springConfig}

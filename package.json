@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "VITE_ENABLE_ROUTE_MESSAGING=true vite",
-    "build": "tsc --noEmit -p tsconfig.app.json && vite build",
+    "build": "node scripts/verificar-formulario.mjs && tsc --noEmit -p tsconfig.app.json && vite build",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "verify": "node scripts/verificar-contenido.mjs",
     "verify:catalogo": "node scripts/verificar-catalogo.mjs",
@@ -13,7 +13,8 @@
     "build:map": "VITE_ENABLE_ROUTE_MESSAGING=true vite build --sourcemap",
     "lint": "eslint .",
     "preview": "vite preview",
-    "preview:dev": "npm run build:dev && npm run preview"
+    "preview:dev": "npm run build:dev && npm run preview",
+    "verify:form": "node scripts/verificar-formulario.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

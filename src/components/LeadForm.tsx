@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { SiWhatsapp } from "react-icons/si";
-import { CheckCircle2 } from "lucide-react";
+import { Check, CheckCircle2 } from "lucide-react";
 
 import { BUSINESS_CONFIG } from "@/lib/index";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ import {
   type LeadError,
   type LeadIntent,
 } from "@/lib/leadApi";
+import { llaveDeEnvio, motivoBloqueo, negocioAEnviar, nombreCompleto } from "@/lib/leadForm";
 import { VE_STATES, citiesForState, veCityId, type VeState } from "@/data/veGeo";
 
 /**
@@ -26,7 +27,16 @@ import { VE_STATES, citiesForState, veCityId, type VeState } from "@/data/veGeo"
  *
  * 🚨 La llave de idempotencia se acuña UNA VEZ, al montar. Si se generara en cada envío, un doble
  * clic crearía dos fichas del mismo negocio — y dos prospectos con el mismo RIF apagan la fusión
- * con Odoo de los dos, en silencio y para siempre.
+ * con Odoo de los dos, en silencio y para siempre. **Pero lleva la opción pegada** (`llaveDeEnvio`):
+ * el servidor deduplica sin mirar `intent`, así que sin eso cambiar de opción y reenviar devuelve
+ * el envío anterior — ver el porqué en `lib/leadForm.ts`.
+ *
+ * 🚨 NINGUNA OPCIÓN VIENE MARCADA en `/abrir-cuenta` (founder, 2026-08-24). Eran dos botones casi
+ * iguales con «abrir cuenta» marcada sola, y quien no lee escribe en ésa: elegir mal por inercia
+ * le mete a la vendedora un prospecto que nadie pidió. La regla que lo gobierna, y que es lo que
+ * salva a `defaultIntent` de ser configurabilidad suelta: **la opción que CREA una ficha nunca
+ * viene marcada; la que no crea nada puede venir marcada en la página que la promete** — por eso
+ * `/contacto`, cuya promesa impresa es «déjanos tus datos», pasa `"question"`.
  */
 
 const WHATSAPP = `https://wa.me/${BUSINESS_CONFIG.WHATSAPP_PHONE}`;
@@ -40,16 +50,41 @@ const MENSAJES_ERROR: Record<LeadError, string> = {
   unknown: "No pudimos enviar tu solicitud. Intenta de nuevo en un momento.",
 };
 
+/**
+ * 🚨 Cada opción dice PARA QUIÉN ES, no solo qué hace. Es lo único que separa a un mayorista de
+ * alguien con una duda suelta antes de que escriba, y la de la izquierda —la que crea una ficha en
+ * la app— NO viene marcada.
+ */
+const OPCIONES = [
+  {
+    id: "account",
+    titulo: "Abrir cuenta y comprar al mayor",
+    paraQuien: "Para librerías, papelerías y comercios que revenden.",
+  },
+  {
+    id: "question",
+    titulo: "Tengo otra consulta",
+    paraQuien: "Para cualquier otra pregunta. No abre cuenta.",
+  },
+] as const;
+
 const label = "block text-sm font-medium text-foreground mb-1.5";
 const input =
   "w-full rounded-lg border border-border bg-background px-3 py-2.5 text-base text-foreground " +
   "placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20";
 
-export function LeadForm({ className }: { className?: string }) {
+export function LeadForm({
+  className,
+  defaultIntent,
+}: {
+  className?: string;
+  /** Solo `"question"` es un valor legítimo acá. Ver el encabezado. */
+  defaultIntent?: LeadIntent;
+}) {
   // Una por montaje del formulario. Ver el encabezado.
-  const submissionKey = useRef(newSubmissionKey()).current;
+  const submissionKeyBase = useRef(newSubmissionKey()).current;
 
-  const [intent, setIntent] = useState<LeadIntent>("account");
+  const [intent, setIntent] = useState<LeadIntent | null>(defaultIntent ?? null);
   const [businessName, setBusinessName] = useState("");
   // 🚨 Nombre y apellido POR SEPARADO, no un solo «Tu nombre» (founder, 2026-08-24). Con un campo
   // único la gente escribe el nombre de pila y nada más —las dos pruebas reales entraron como
@@ -72,22 +107,32 @@ export function LeadForm({ className }: { className?: string }) {
   // «Caracas» en Distrito Capital Y en Miranda. Sin el estado, la ciudad es ambigua.
   const ciudades = useMemo(() => (state ? citiesForState(state) : []), [state]);
 
-  const puedeEnviar = businessName.trim().length > 1 && (phone.trim() !== "" || email.trim() !== "");
+  const borrador = { intent, businessName, firstName, lastName, phone, email, message };
+  const falta = motivoBloqueo(borrador);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (sending || sent) return;
+    // 🚨 EL GUARD VA ACÁ, NO EN EL `disabled`. Enter en cualquier input dispara el submit aunque el
+    // botón esté gris, y con `strict: false` un `intent` en null viaja compilando limpio: el POST
+    // llega con `intent: null`, el `z.enum` del servidor lo rechaza y el visitante lee «revisa los
+    // datos» sobre un formulario donde todo lo visible está bien.
+    if (!intent) return;
+    // Y la misma regla que pinta el motivo bajo el botón corta acá: si no, Enter saltea las tres
+    // condiciones nuevas y el 400 vuelve a ser genérico.
+    if (falta) return;
     setSending(true);
     setError(null);
 
     const res = await submitLead({
-      submissionKey,
+      submissionKey: llaveDeEnvio(submissionKeyBase, intent),
       intent,
-      businessName: businessName.trim(),
+      // En una consulta sin negocio va el nombre de la persona: el servidor lo exige y la columna
+      // es NOT NULL. Ver `negocioAEnviar`.
+      businessName: negocioAEnviar(borrador),
       // Cortado a la cota del servidor: dos nombres de 60 la pasarían y el envío volvería como
       // «revisa los datos», que no dice nada de dónde está el problema.
-      contactName:
-        [firstName.trim(), lastName.trim()].filter(Boolean).join(" ").slice(0, 120) || undefined,
+      contactName: nombreCompleto(borrador) || undefined,
       phone: phone.trim() || undefined,
       email: email.trim() || undefined,
       state: state || undefined,
@@ -143,38 +188,61 @@ export function LeadForm({ className }: { className?: string }) {
       className={cn("rounded-2xl border border-border bg-background p-5 sm:p-6", className)}
       noValidate
     >
-      {/* La pregunta que rutea. Va primero: decide si esto crea una cuenta o solo una consulta. */}
+      {/* La pregunta que rutea. Va primero: decide si esto crea una cuenta o solo una consulta.
+          🚨 Cada opción dice PARA QUIÉN ES, y el estado elegido es un fondo lleno con check, no un
+          borde fino: eran dos botones casi iguales y el que no lee escribía en el que venía
+          marcado — que además es el que crea la ficha. */}
       <fieldset className="mb-5">
         <legend className={label}>¿Qué necesitas?</legend>
-        <div className="grid gap-2 sm:grid-cols-2">
-          {(
-            [
-              { id: "account", t: "Abrir cuenta y comprar al mayor" },
-              { id: "question", t: "Tengo otra consulta" },
-            ] as const
-          ).map((o) => (
-            <button
-              key={o.id}
-              type="button"
-              onClick={() => setIntent(o.id)}
-              aria-pressed={intent === o.id}
-              className={cn(
-                "rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors",
-                intent === o.id
-                  ? "border-primary bg-primary/5 text-primary"
-                  : "border-border text-muted-foreground hover:border-primary/40",
-              )}
-            >
-              {o.t}
-            </button>
-          ))}
+        <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="¿Qué necesitas?">
+          {OPCIONES.map((o) => {
+            const elegida = intent === o.id;
+            return (
+              <button
+                key={o.id}
+                type="button"
+                role="radio"
+                aria-checked={elegida}
+                onClick={() => setIntent(o.id)}
+                className={cn(
+                  "flex items-start gap-2.5 rounded-lg border px-4 py-3 text-left transition-colors",
+                  elegida
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-background hover:border-primary/40",
+                )}
+              >
+                <span
+                  className={cn(
+                    "mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
+                    elegida ? "border-primary-foreground bg-primary-foreground" : "border-border",
+                  )}
+                  aria-hidden="true"
+                >
+                  {elegida ? <Check className="h-3 w-3 text-primary" strokeWidth={3} /> : null}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold">{o.titulo}</span>
+                  <span
+                    className={cn(
+                      "mt-0.5 block text-xs",
+                      elegida ? "text-primary-foreground/80" : "text-muted-foreground",
+                    )}
+                  >
+                    {o.paraQuien}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
         </div>
       </fieldset>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label className={label} htmlFor="lf-business">
-            Nombre del negocio *
+            {/* En una consulta el negocio deja de ser obligatorio: quien pregunta puede no tener
+                ninguno. Sin marcar, se pide igual — hay que elegir antes. */}
+            {intent === "question" ? "Nombre del negocio (si tienes)" : "Nombre del negocio *"}
           </label>
           <input
             id="lf-business"
@@ -182,7 +250,6 @@ export function LeadForm({ className }: { className?: string }) {
             value={businessName}
             onChange={(e) => setBusinessName(e.target.value)}
             maxLength={160}
-            required
             autoComplete="organization"
           />
         </div>
@@ -291,7 +358,14 @@ export function LeadForm({ className }: { className?: string }) {
 
         <div className="sm:col-span-2">
           <label className={label} htmlFor="lf-message">
-            {intent === "account" ? "¿Qué productos te interesan?" : "Tu consulta"}
+            {/* 🚨 Los TRES lugares que preguntaban `intent === "account" ? A : B` ahora contemplan
+                el estado «todavía no eligió»: con `null` los tres caían a la rama «consulta» sin
+                fallar, o sea que el formulario afirmaba una intención que nadie eligió. */}
+            {intent === "account"
+              ? "¿Qué productos te interesan?"
+              : intent === "question"
+                ? "Tu consulta *"
+                : "Cuéntanos qué necesitas"}
           </label>
           <textarea
             id="lf-message"
@@ -326,17 +400,33 @@ export function LeadForm({ className }: { className?: string }) {
         </div>
       ) : null}
 
-      <div className="mt-5 flex flex-wrap items-center gap-3">
-        <button
-          type="submit"
-          disabled={sending || !puedeEnviar}
-          className="inline-flex items-center rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-        >
-          {sending ? "Enviando…" : intent === "account" ? "Solicitar mi cuenta" : "Enviar consulta"}
-        </button>
-        <span className="text-xs text-muted-foreground">
-          Te respondemos en {BUSINESS_CONFIG.RESPONSE_TIME_EXPECTATION}.
-        </span>
+      <div className="mt-5 flex flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="submit"
+            disabled={sending || Boolean(falta)}
+            className="inline-flex items-center rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+          >
+            {sending
+              ? "Enviando…"
+              : intent === "account"
+                ? "Solicitar mi cuenta"
+                : intent === "question"
+                  ? "Enviar consulta"
+                  : "Enviar"}
+          </button>
+          <span className="text-xs text-muted-foreground">
+            Te respondemos en {BUSINESS_CONFIG.RESPONSE_TIME_EXPECTATION}.
+          </span>
+        </div>
+        {/* 🚨 El botón gris DICE qué falta. El formulario corre con `noValidate` y un solo cartel
+            global; a 390 px el campo que falta puede estar fuera de pantalla, así que un botón
+            apagado sin motivo deja al visitante trabado sin nada que leer. */}
+        {falta && !sending ? (
+          <p className="text-xs text-muted-foreground" role="status">
+            {falta}
+          </p>
+        ) : null}
       </div>
     </form>
   );

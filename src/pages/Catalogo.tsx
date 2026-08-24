@@ -165,9 +165,21 @@ export default function Catalogo() {
                 Escríbenos con los códigos y un asesor te envía precios mayoristas, disponibilidad y
                 condiciones de despacho. También tenemos catálogos de Pelikan, Sanremo y Momentop.
               </p>
-              <CTAButton className="border-none bg-white text-primary shadow-xl hover:bg-white/90" showIcon>
-                Pedir precios a un asesor
-              </CTAButton>
+              <div className="flex flex-wrap justify-center gap-3">
+                <CTAButton
+                  href="/abrir-cuenta"
+                  className="border-none bg-white text-primary shadow-xl hover:bg-white/90"
+                  icon={null}
+                >
+                  Abrir cuenta
+                </CTAButton>
+                <CTAButton
+                  className="border-2 border-white/60 bg-white/10 text-white hover:bg-white/20"
+                  showIcon
+                >
+                  Pedir precios a un asesor
+                </CTAButton>
+              </div>
             </div>
           </motion.div>
         </div>

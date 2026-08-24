@@ -203,10 +203,17 @@ export default function ComoTrabajamos() {
                   Nuestros asesores están preparados para guiarte en cada paso del proceso.
                 </p>
               </div>
-              <div className="shrink-0">
-                <CTAButton 
-                  variant="secondary" 
+              <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+                <CTAButton
+                  href="/abrir-cuenta"
+                  variant="secondary"
                   className="text-lg px-8 py-6"
+                  icon={null}
+                >
+                  Abrir cuenta
+                </CTAButton>
+                <CTAButton 
+                  className="text-lg px-8 py-6 bg-white/10 text-white hover:bg-white/20 border-2 border-white/60"
                   showIcon
                 >
                   Iniciar contacto comercial

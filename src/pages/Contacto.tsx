@@ -216,7 +216,11 @@ export default function Contacto() {
               <Card className="overflow-hidden border-border bg-card shadow-2xl shadow-primary/5">
                 <CardContent className="p-0">
                   {captureEnabled === true ? (
-                    <LeadForm className="border-0" />
+                    // 🚨 Abre marcado en «consulta» y en nada más: la promesa impresa de esta
+                    // página es «déjanos tus datos y un asesor se pondrá en contacto», así que
+                    // abrir sin nada marcado y con el botón gris sería una regresión. Y solo
+                    // «consulta» puede venir marcada: la opción que CREA una ficha nunca lo hace.
+                    <LeadForm className="border-0" defaultIntent="question" />
                   ) : (
                     <div
                       id="zf_div_6r0Xvyp-VFnH5Y0jgBU0a5PsKJ0ICQi2vRLN4W-ajVU"

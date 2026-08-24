@@ -121,8 +121,13 @@ export default function SobreAcom() {
             <p className="text-xl text-muted-foreground leading-relaxed italic">
               "En Acom Trading, entendemos los desafíos del mercado local. Por eso, no solo entregamos productos, sino que aseguramos la rotación de inventario y el éxito comercial de nuestros aliados."
             </p>
-            <div className="pt-8">
-              <CTAButton href="/contacto" variant="secondary">
+            {/* ✅ De paso se arregla una mentira viva: este botón apuntaba a `/contacto` y salía
+                con el logo de WhatsApp, o sea un botón de WhatsApp que no abre WhatsApp. */}
+            <div className="flex flex-wrap justify-center gap-3 pt-8">
+              <CTAButton href="/abrir-cuenta" icon={null}>
+                Abrir cuenta
+              </CTAButton>
+              <CTAButton href="/contacto" variant="secondary" icon={null}>
                 Hablar con un asesor
               </CTAButton>
             </div>

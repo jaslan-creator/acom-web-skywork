@@ -414,9 +414,20 @@ export default function Home() {
               <p className="text-lg sm:text-xl opacity-90 mb-8 sm:mb-10">
                 Si tienes una librería, papelería o comercio mayorista, Acom está listo para abastecerte.
               </p>
-              <div className="flex justify-center">
-                <CTAButton 
+              {/* 🚨 DOS caminos, no uno. Hasta hoy TODAS las salidas de esta página iban a
+                  WhatsApp: a «Abrir cuenta» solo se llegaba por el menú. Va uno por página y en el
+                  bloque de cierre — duplicarlo en los 8 CTA que ya tiene convertía la página en
+                  una pared de botones. */}
+              <div className="flex flex-wrap justify-center gap-3">
+                <CTAButton
+                  href="/abrir-cuenta"
                   className="bg-white text-primary hover:bg-white/90 border-none shadow-xl"
+                  icon={null}
+                >
+                  Abrir cuenta
+                </CTAButton>
+                <CTAButton 
+                  className="bg-white/10 text-white hover:bg-white/20 border-2 border-white/60"
                   showIcon
                 >
                   Hablar con un asesor comercial
