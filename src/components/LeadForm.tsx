@@ -51,7 +51,12 @@ export function LeadForm({ className }: { className?: string }) {
 
   const [intent, setIntent] = useState<LeadIntent>("account");
   const [businessName, setBusinessName] = useState("");
-  const [contactName, setContactName] = useState("");
+  // 🚨 Nombre y apellido POR SEPARADO, no un solo «Tu nombre» (founder, 2026-08-24). Con un campo
+  // único la gente escribe el nombre de pila y nada más —las dos pruebas reales entraron como
+  // «melisa» y «andres»—, y al cliente hay que preguntarle por alguien con apellido. Se guardan
+  // unidos porque el contacto es UN nombre, acá y en Odoo.
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [state, setState] = useState("");
@@ -79,7 +84,10 @@ export function LeadForm({ className }: { className?: string }) {
       submissionKey,
       intent,
       businessName: businessName.trim(),
-      contactName: contactName.trim() || undefined,
+      // Cortado a la cota del servidor: dos nombres de 60 la pasarían y el envío volvería como
+      // «revisa los datos», que no dice nada de dónde está el problema.
+      contactName:
+        [firstName.trim(), lastName.trim()].filter(Boolean).join(" ").slice(0, 120) || undefined,
       phone: phone.trim() || undefined,
       email: email.trim() || undefined,
       state: state || undefined,
@@ -186,10 +194,24 @@ export function LeadForm({ className }: { className?: string }) {
           <input
             id="lf-contact"
             className={input}
-            value={contactName}
-            onChange={(e) => setContactName(e.target.value)}
-            maxLength={120}
-            autoComplete="name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            maxLength={60}
+            autoComplete="given-name"
+          />
+        </div>
+
+        <div>
+          <label className={label} htmlFor="lf-lastname">
+            Tu apellido
+          </label>
+          <input
+            id="lf-lastname"
+            className={input}
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            maxLength={60}
+            autoComplete="family-name"
           />
         </div>
 
@@ -209,7 +231,7 @@ export function LeadForm({ className }: { className?: string }) {
           />
         </div>
 
-        <div className="sm:col-span-2">
+        <div>
           <label className={label} htmlFor="lf-email">
             Correo
           </label>
