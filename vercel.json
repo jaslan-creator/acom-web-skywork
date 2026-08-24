@@ -17,7 +17,7 @@
                 },
                 {
                     "key": "Content-Security-Policy",
-                    "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://www.facebook.com https://*.facebook.com https://catalogos.acomve.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://vitals.vercel-insights.com https://*.vercel-insights.com https://www.zentralapp.ai; frame-src https://forms.acom.com.ve; form-action 'self' https://forms.acom.com.ve"
+                    "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://connect.facebook.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://www.facebook.com https://*.facebook.com https://catalogos.acomve.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://vitals.vercel-insights.com https://*.vercel-insights.com https://www.zentralapp.ai; frame-src https://forms.acom.com.ve https://challenges.cloudflare.com; form-action 'self' https://forms.acom.com.ve"
                 }
             ]
         },
