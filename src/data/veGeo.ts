@@ -1,6 +1,6 @@
 // ARCHIVO GENERADO — no editar a mano.
 //   railway run -s zentral-erp-sync -- .venv/bin/python scripts/gen_ve_cities.py --write
-// Corte: 2026-08-17 13:42 UTC  ·  137 ciudades en 24 estados.
+// Corte: 2026-08-28 04:17 UTC  ·  138 ciudades en 24 estados.
 //
 // Copia para el sitio público del catálogo `res.country.city` de Odoo. La escribe la MISMA corrida que
 // genera `FMAPP/src/lib/veCities.ts`, así que las dos no pueden divergir salvo que alguien edite
@@ -54,7 +54,7 @@ export const VE_CITIES: Record<VeState, readonly string[]> = {
   "Guárico": ["Altagracia de Orituco", "Calabozo", "San Juan de los Morros", "Valle de la Pascua", "Zaraza"],
   "La Guaira": ["Caraballeda", "Catia La Mar", "La Guaira", "Macuto", "Maiquetía", "Naiguatá"],
   "Lara": ["Barquisimeto", "Cabudare", "Carora", "El Tocuyo", "Quibor", "Siquisique"],
-  "Miranda": ["Caracas", "Caucagua", "Charallave", "Cúa", "Guarenas", "Guatire", "Higuerote", "Los Teques", "Ocumare del Tuy", "Río Chico", "San Antonio de los Altos", "Santa Lucía", "Santa Teresa del Tuy"],
+  "Miranda": ["Caracas", "Caucagua", "Charallave", "Cúa", "Guarenas", "Guatire", "Higuerote", "Los Teques", "Ocumare del Tuy", "Río Chico", "San Antonio de los Altos", "San Pedro de los Altos", "Santa Lucía", "Santa Teresa del Tuy"],
   "Monagas": ["Maturín", "Punta de Mata"],
   "Mérida": ["Ejido", "El Vigía", "Guayabones", "La Popita Nueva Bolivia", "Mérida", "Pueblo Llano", "Tabay", "Tovar", "Tucaní"],
   "Nueva Esparta": ["Juan Griego", "La Asunción", "Los Robles", "Pampatar", "Porlamar"],
@@ -111,7 +111,7 @@ export const VE_CITY_IDS: Record<VeState, Readonly<Record<string, number>>> = {
   "Guárico": { "Altagracia de Orituco": 676, "Calabozo": 635, "San Juan de los Morros": 645, "Valle de la Pascua": 651, "Zaraza": 668 },
   "La Guaira": { "Caraballeda": 704, "Catia La Mar": 663, "La Guaira": 683, "Macuto": 689, "Maiquetía": 690, "Naiguatá": 692 },
   "Lara": { "Barquisimeto": 45, "Cabudare": 4, "Carora": 625, "El Tocuyo": 630, "Quibor": 636, "Siquisique": 670 },
-  "Miranda": { "Caracas": 751, "Caucagua": 726, "Charallave": 649, "Cúa": 643, "Guarenas": 43, "Guatire": 618, "Higuerote": 687, "Los Teques": 46, "Ocumare del Tuy": 641, "Río Chico": 696, "San Antonio de los Altos": 677, "Santa Lucía": 652, "Santa Teresa del Tuy": 699 },
+  "Miranda": { "Caracas": 751, "Caucagua": 726, "Charallave": 649, "Cúa": 643, "Guarenas": 43, "Guatire": 618, "Higuerote": 687, "Los Teques": 46, "Ocumare del Tuy": 641, "Río Chico": 696, "San Antonio de los Altos": 677, "San Pedro de los Altos": 752, "Santa Lucía": 652, "Santa Teresa del Tuy": 699 },
   "Monagas": { "Maturín": 41, "Punta de Mata": 660 },
   "Mérida": { "Ejido": 661, "El Vigía": 162, "Guayabones": 686, "La Popita Nueva Bolivia": 50, "Mérida": 6, "Pueblo Llano": 695, "Tabay": 700, "Tovar": 717, "Tucaní": 701 },
   "Nueva Esparta": { "Juan Griego": 732, "La Asunción": 650, "Los Robles": 688, "Pampatar": 682, "Porlamar": 2 },
@@ -303,4 +303,5 @@ export const VE_CITY_ZONE: Record<number, readonly [VeRegion, string]> = {
   748: ["Zuliana", "Maracaibo-San Francisco"],
   750: ["Zuliana", "Costa Oriental del Lago"],
   751: ["Capital", "Caracas"],
+  752: ["Capital", "Altos Mirandinos"],
 };
