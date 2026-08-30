@@ -294,6 +294,24 @@ export const PUBLIC_SITE = {
   organization: {
     name: "ACOM Trading",
     legalName: "ACOM Trading C.A.",
+    /**
+     * Descripción canónica de la empresa. Fuente ÚNICA: la consumen el nodo Organization del
+     * JSON-LD y la línea de resumen de llms.txt, que hasta hoy la tenía escrita a mano en el
+     * generador. Dos copias de la misma frase se separan sin que nada falle.
+     */
+    description: "Importador y distribuidor mayorista para comercios en Venezuela.",
+    /**
+     * Grafías con las que la empresa se nombra fuera de este sitio. No son invento: son las que
+     * usan sus propias redes (`acom.ve`, `acom_ve`) y su razón social registrada.
+     */
+    alternateName: ["ACOM", "ACOM VE", "ACOM Trading Venezuela"],
+    /**
+     * RIF. Corroborado por dos fuentes independientes antes de publicarlo: la palabra del dueño y
+     * `zentral-erp-sync/docs/runbooks/auditoria-padron-clientes.md`, que lista
+     * «ACOM TRADING, C.A | J502296140». Un identificador fiscal publicado con una sola voz es
+     * exactamente lo que no se puede desdecir después: queda indexado y cacheado por terceros.
+     */
+    taxId: "J-502296140",
     url: `${SITE_ORIGIN}/`,
     email: BUSINESS_CONFIG.EMAIL,
     telephone: `+${BUSINESS_CONFIG.WHATSAPP_PHONE}`,
