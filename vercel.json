@@ -20,6 +20,10 @@
                 {
                     "key": "Content-Security-Policy",
                     "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://connect.facebook.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://www.facebook.com https://*.facebook.com https://catalogos.acomve.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://vitals.vercel-insights.com https://*.vercel-insights.com https://www.zentralapp.ai; frame-src https://forms.acom.com.ve https://challenges.cloudflare.com; form-action 'self' https://forms.acom.com.ve"
+                },
+                {
+                    "key": "Vary",
+                    "value": "Accept"
                 }
             ]
         },
@@ -38,6 +42,258 @@
             "source": "/linea-credito",
             "destination": "/como-trabajamos",
             "permanent": true
+        },
+        {
+            "source": "/privacy",
+            "destination": "/politica-de-privacidad",
+            "permanent": false
+        },
+        {
+            "source": "/privacidad",
+            "destination": "/politica-de-privacidad",
+            "permanent": false
+        },
+        {
+            "source": "/about",
+            "destination": "/sobre-acom",
+            "permanent": false
+        },
+        {
+            "source": "/contact",
+            "destination": "/contacto",
+            "permanent": false
+        },
+        {
+            "source": "/terms",
+            "destination": "/terminos-y-condiciones",
+            "permanent": false
+        },
+        {
+            "source": "/faq",
+            "destination": "/preguntas-frecuentes",
+            "permanent": false
+        }
+    ],
+    "routes": [
+        {
+            "src": "/",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/inicio.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/marcas",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/marcas.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/catalogo",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/catalogo.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/como-trabajamos",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/como-trabajamos.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/sobre-acom",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/sobre-acom.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/abrir-cuenta",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/abrir-cuenta.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/contacto",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/contacto.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/preguntas-frecuentes",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/preguntas-frecuentes.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/terminos-y-condiciones",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/terminos-y-condiciones.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/politica-de-privacidad",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/politica-de-privacidad.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
         }
     ]
 }

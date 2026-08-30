@@ -4,6 +4,16 @@ import { BUSINESS_CONFIG, CATALOG, ROUTE_PATHS } from "../lib/index.ts";
 export const SITE_ORIGIN = "https://www.acomve.com";
 export const CONTENT_UPDATED_AT = "2026-08-24";
 
+/**
+ * Fecha publicada de la política de privacidad.
+ *
+ * 🚨 NO se deriva de CONTENT_UPDATED_AT, aunque sea lo obvio. Esa constante es la frescura del
+ * SITIO y alimenta el <lastmod> de las diez URLs: atarla acá haría que un retoque de texto en
+ * /marcas re-fechara un documento legal, afirmando una revisión que nadie hizo. Esta se mueve
+ * SOLO cuando cambia el texto legal. Mismo criterio para Términos el día que se toque.
+ */
+export const PRIVACY_UPDATED_AT = "Febrero 2026";
+
 export type PublicRouteId =
   | "home"
   | "marcas"

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { springPresets } from '@/lib/motion';
 import { BUSINESS_CONFIG } from '@/lib/index';
+import { PRIVACY_UPDATED_AT } from '@/data/publicContent';
 
 /**
  * Página de Política de Privacidad de ACOM Trading
@@ -20,7 +21,7 @@ export default function Privacidad() {
                             Política de Privacidad
                         </h1>
                         <p className="text-muted-foreground">
-                            Última actualización: Febrero 2026
+                            Última actualización: {PRIVACY_UPDATED_AT}
                         </p>
                     </motion.div>
                 </div>

@@ -22,6 +22,19 @@ function organizationNode() {
       addressCountry: "VE",
     },
     areaServed: { "@type": "Country", name: "Venezuela" },
+    // Derivado de PUBLIC_SITE, nunca re-tipeado: un contacto escrito a mano acá se pudre
+    // respecto del resto del sitio sin que nada falle. Va DENTRO de este nodo, no como un
+    // segundo bloque JSON-LD (el gate exige exactamente uno por página).
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        email: PUBLIC_SITE.organization.email,
+        telephone: PUBLIC_SITE.organization.telephone,
+        areaServed: "VE",
+        availableLanguage: ["es"],
+      },
+    ],
     sameAs: Object.values(PUBLIC_SITE.organization.socialMedia),
     hasOfferCatalog: {
       "@type": "OfferCatalog",
