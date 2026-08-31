@@ -17,40 +17,59 @@ que abre el primer bloque y pregunta por el tipo no encuentra nada. En el segund
 español y la detección es en inglés. Implementar la lista al pie de la letra —«agregá url y logo»—
 habría escrito campos que ya estaban.
 
-## El hallazgo que cambió el mecanismo: la fase que suena correcta es la peligrosa
+## El hallazgo que cambió el mecanismo: la fase que suena correcta apaga media configuración
 
 El objetivo era servir `/agent/404.md` **con estado 404** en cualquier dirección inexistente. La
 ronda anterior lo había descartado con esta nota:
 
-> *No se sirve un 404 en Markdown por negociación. Una regla de reescritura devuelve **200**, así que
+> *No se sirve un 404 en Markdown por negociación. Una regla de reescritura responde **200**, así que
 > cumplir esa media línea del informe destruiría el 404 real.*
 
 **La objeción era al mecanismo, no al objetivo**, y el mecanismo que la resuelve lo descubrió esa
 misma ronda: una entrada de `routes` acepta `status`, así que devuelve **404 y Markdown a la vez**.
 
-Lo que sí obligó a pensar fue **qué fase**:
+### 🚨 `{"handle":"error"}` desactiva los `redirects` y el bloque `headers` ENTEROS
 
-| Fase | Qué significa | Veredicto |
+La primera versión usó el marcador de fase `error`, que es lo que la propia guía de Vercel publica
+para un 404 personalizado. Se descartó `filesystem` con un argumento correcto (está río arriba de la
+resolución de `cleanUrls`, y la documentación no dice dónde ocurre) y se eligió `error` por estar río
+abajo de todo. **El razonamiento era bueno y el resultado fue falso**, y lo dijo el preview:
+
+| Sondeo, mismo dominio de preview | con `{"handle":"error"}` | sin marcador (commit anterior) |
 |---|---|---|
-| `handle: "filesystem"` | «después de que el filesystem falle» | 🚨 **rechazada** |
-| `handle: "error"` | «después de un error» | ✅ elegida |
+| `/faq` | **404** | 307 → `/preguntas-frecuentes` |
+| `/about`, `/contact`, `/terms`… | **404** | 307 |
+| Cabeceras globales en `/contacto` | **0 de 3** | 3 de 3 |
+| `Cache-Control` de `/images` | `max-age=0` | `max-age=86400` |
 
-`filesystem` suena exacto y es la que publica la propia guía de Vercel para un 404 personalizado.
-Se rechaza porque está **río arriba** de lo que resuelve `/contacto` → `contacto.html`, y **la
-documentación no dice en qué fase ocurre esa resolución de `cleanUrls`**. Si ocurriera en esa fase o
-después, un comodín ahí interceptaría **todas las páginas del sitio** — y eso no se puede verificar
-leyendo, solo desplegando. `error` está río abajo de todo (filesystem, `cleanUrls`, `redirects` y las
-diez reglas de Markdown), así que **estructuralmente no las puede tocar**; y si la fase suprimiera el
-`404.html` automático, el remedio vive en la misma fase, una línea más abajo.
+⇒ el marcador puso a Vercel en modo `routes` heredado y **apagó los siete alias, la CSP, la
+`Permissions-Policy`, la `Referrer-Policy` y el cacheo de imágenes**. 🚨 **Sin un solo error**: el
+sitio se veía idéntico. Ir directo a `main` habría publicado eso, y lo único que lo cazó fue correr
+el control **con el código anterior en el mismo dominio de preview** — el preview solo no alcanzaba,
+porque ahí las cabeceras también faltan por el candado de despliegue, y esa coincidencia parecía la
+explicación.
+
+### Lo que quedó: un comodín al final, sin fase
+
+La regla va al final de `routes`, **sin `handle`**. Corre antes del filesystem, así que **no detecta
+un 404: lo afirma** — y lo que la vuelve segura es que exige que la ruta **no tenga ni un punto**.
+Medido: los **68 archivos de `dist/` tienen extensión**, incluido el manifiesto con hash variable por
+build que era justo lo que hundía la versión enumerada de esta idea. Las diez páginas las atrapan sus
+propias reglas, que van antes.
+
+🚨 **Y su lista de exclusiones se DERIVA de los `redirects`, jamás se escribe a mano.** Un alias nuevo
+sin tocar el comodín dejaría de redirigir y empezaría a devolver «no encontrado» en Markdown: callado
+y **solo para agentes**, que son quienes no reportan. El gate compara la expresión contra la lista
+derivada y se pone rojo — ejercido.
 
 ✅ **Y la coexistencia dejó de ser un hallazgo empírico:** la documentación de Vercel, actualizada el
-**2026-08-14**, ahora dice explícitamente que `routes` **se puede usar junto con** `rewrites`,
-`redirects`, `headers`, `cleanUrls` y `trailingSlash`. El texto viejo que decía lo contrario ya no
-existe; lo que aparece en buscadores son copias en caché. La producción de hoy no era un accidente.
+**2026-08-14**, dice explícitamente que `routes` **se puede usar junto con** `rewrites`, `redirects`,
+`headers`, `cleanUrls` y `trailingSlash`. Lo que no dice en ningún lado es que **`handle` rompe esa
+convivencia**, que es exactamente lo que se midió.
 
 ## Implementado
 
-1. **404 en Markdown con estado 404** (`vercel.json`): `{"handle":"error"}` + una regla comodín con
+1. **404 en Markdown con estado 404** (`vercel.json`): una regla comodín al final, **sin fase**, con
    `status: 404`, `dest: /agent/404.md`, los **mismos** regex de `Accept` y de rechazo `;q=0` que las
    diez reglas, y `Vary: Accept` + `nosniff` **en la propia regla**.
 2. **`<link rel="alternate" type="text/markdown" href="/agent/404.md">`** en el 404, para el agente
@@ -63,8 +82,9 @@ existe; lo que aparece en buscadores son copias en caché. La producción de hoy
 5. **JSON-LD partido en dos bloques**: identidad plana primero (`@type` **cadena**), grafo después,
    con la organización **solo referenciada por `@id`**.
 6. **`description`, `alternateName` y el RIF** entran al manifiesto como fuente única.
-7. **Un invariante nuevo por cada cosa de arriba** en `verificar-aeo.mjs` — **28 ejercidos en rojo**,
-   cada uno por su propio motivo, y verde restaurado.
+7. **Un invariante nuevo por cada cosa de arriba** en `verificar-aeo.mjs` — **29 ejercidos en rojo**,
+   cada uno por su propio motivo, y verde restaurado. Entre ellos, el que prohíbe que vuelva a
+   aparecer un `handle` en `routes`.
 
 ## Decisiones deliberadas — no las «arregles» sin leer esto
 
@@ -78,12 +98,11 @@ existe; lo que aparece en buscadores son copias en caché. La producción de hoy
   «defensiva» le quitaría al 404 humano su CSP: una regresión de seguridad **silenciosa introducida
   por la propia medida de seguridad**. Si algún día hiciera falta, va con **todas** las cabeceras
   globales copiadas y un invariante que impida que las dos copias de la CSP se separen.
-- 🚫 **Se evaluó y se descartó la versión sin fases** (un comodín con lista de exclusiones antes del
-  filesystem). No detecta un 404: lo **afirma** desde una lista escrita a mano que tendría que
-  enumerar las diez páginas, los assets, los doce artefactos, los siete alias y un archivo con
-  **hash variable por build**. Su modo de fallo es que una página nueva devuelva «no encontrado» en
-  Markdown mientras se ve perfecta en un navegador — falla mudo y **solo para agentes**, que son
-  quienes no reportan. Si la fase `error` no hubiera servido, la decisión era **no hacer nada**.
+- 🚫 **La versión enumerada del comodín se descartó** — la que lista a mano las páginas, los assets,
+  los artefactos y los alias. Uno de los archivos lleva **hash variable por build**: una exclusión
+  literal se pudre en el build siguiente y una con comodín ensancha el agujero. Lo que la reemplaza
+  no enumera casi nada: exige **ausencia de punto**, que es una propiedad del conjunto entero, y su
+  única lista —los alias— **se deriva de `redirects`** en vez de escribirse.
 - **La guía en inglés NO es un paso hacia un sitio bilingüe.** El sitio se queda en español. Es que
   las herramientas de agentes detectan en inglés, y está medido: el informe reportó «sin guía» con la
   sección española completa en el archivo.
