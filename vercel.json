@@ -296,10 +296,7 @@
             }
         },
         {
-            "handle": "error"
-        },
-        {
-            "src": "/(.*)",
+            "src": "^/(?!about$|contact$|faq$|linea-credito$|privacidad$|privacy$|terms$)[^.]*[^./]$",
             "has": [
                 {
                     "type": "header",

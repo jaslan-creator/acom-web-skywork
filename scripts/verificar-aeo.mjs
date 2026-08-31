@@ -205,27 +205,20 @@ if (existsSync(vercelConfigPath)) {
   if (vercelConfig) {
     const allRoutes = vercelConfig.routes ?? [];
 
-    // 0. `routes` tiene DOS fases y hay que separarlas antes de afirmar nada sobre cualquiera.
-    //    Todo lo anterior al marcador corre antes del filesystem (son las reglas del manifiesto);
-    //    todo lo posterior corre despues de un error, o sea sobre un 404.
+    // 0. La ULTIMA entrada de `routes` es el 404 en Markdown; las anteriores, las del manifiesto.
     //
-    //    🚨 Por que `handle: "error"` y NO `handle: "filesystem"`, que es lo que suena correcto:
-    //    la fase filesystem esta rio ARRIBA de lo que resuelve /contacto -> contacto.html, y la
-    //    documentacion de Vercel no dice en que fase ocurre esa resolucion de cleanUrls. Un comodin
-    //    ahi puede interceptar TODAS las paginas del sitio, y no hay forma de verificarlo por
-    //    lectura. La fase error esta rio abajo de todo (filesystem, cleanUrls, redirects y estas
-    //    diez reglas), asi que estructuralmente no las puede tocar.
-    //
-    //    ⚠️ La particion NO se afloja a un `>=`: eso dejaria la asercion sin filo y permitiria
-    //    colar una regla de pagina sin que nadie la mire.
-    const markerIndex = allRoutes.findIndex((rule) => rule.handle === "error");
-    check(markerIndex !== -1, 'vercel.json: falta el marcador {"handle":"error"}');
+    //    🚨 NO hay marcador de fase, y esto se midio contra un preview el 2026-08-30 en vez de
+    //    razonarlo: agregar `{"handle":"error"}` DESACTIVA en silencio los `redirects` y el bloque
+    //    `headers` enteros. Control corrido en el MISMO dominio de preview con el commit anterior:
+    //    con el marcador, /faq daba 404 y las cabeceras globales 0 de 3; sin el, 307 y 3 de 3.
+    //    Nada fallaba: el sitio se veia igual y se quedaba sin CSP, sin Permissions-Policy y sin
+    //    sus siete alias. Por eso este guard vigila que no vuelva a aparecer un `handle`.
+    const routes = allRoutes.slice(0, -1);
+    const markdown404 = allRoutes[allRoutes.length - 1];
     check(
-      allRoutes.filter((rule) => rule.handle !== undefined).length === 1,
-      "vercel.json: debe haber exactamente un marcador de fase en routes",
+      allRoutes.every((rule) => rule.handle === undefined),
+      "vercel.json: ningun route puede llevar `handle`: desactiva los redirects y las cabeceras globales",
     );
-    const routes = markerIndex === -1 ? allRoutes : allRoutes.slice(0, markerIndex);
-    const errorPhase = markerIndex === -1 ? [] : allRoutes.slice(markerIndex + 1);
 
     // 1. Una regla por CADA ruta del manifiesto y ninguna de mas. Las 10 son explicitas a
     //    proposito: `/` es el unico caso asimetrico (su Markdown es inicio.md), asi que una regla
@@ -235,7 +228,7 @@ if (existsSync(vercelConfigPath)) {
     //    error y no dispararia NUNCA, sin dar ningun error.
     check(
       routes.length === PUBLIC_ROUTES.length,
-      `vercel.json: ${routes.length} reglas de Markdown antes del marcador para ${PUBLIC_ROUTES.length} rutas del manifiesto`,
+      `vercel.json: ${routes.length} reglas de pagina para ${PUBLIC_ROUTES.length} rutas del manifiesto`,
     );
     for (const route of PUBLIC_ROUTES) {
       const rule = routes.find((candidate) => candidate.src === route.path);
@@ -268,23 +261,29 @@ if (existsSync(vercelConfigPath)) {
       );
     }
 
-    // 3-ter. La fase de error entrega el 404 en Markdown, y con estado 404 DE VERDAD.
+    // 3-ter. El comodin del final entrega el 404 en Markdown, y con estado 404 DE VERDAD.
     //
     //    🚨 Esto se habia descartado en la ronda del 2026-08-30 por una razon que resulto ser del
     //    mecanismo y no del objetivo: un `rewrite` responde 200, asi que servir Markdown ahi
     //    destruia el 404 real, que es el punto principal del mismo requisito. Una entrada de
     //    `routes` acepta `status`, asi que devuelve las dos cosas a la vez.
     //
-    //    🚫 Y NO hay una regla de respaldo a /404.html «por las dudas»: medido, cuando un `routes`
-    //    empareja, las cabeceras globales no se aplican => esa regla le quitaria al 404 humano su
-    //    CSP, su Referrer-Policy y su Permissions-Policy. Seria una regresion de seguridad
-    //    silenciosa introducida por la propia medida defensiva. El 404 por defecto de Vercel se
-    //    verifica contra un preview, que es donde se ve; si algun dia hiciera falta esa regla, va
-    //    con TODAS las cabeceras globales copiadas y un invariante que impida que se separen.
-    check(errorPhase.length === 1, `vercel.json: la fase de error debe tener exactamente una regla, tiene ${errorPhase.length}`);
-    const markdown404 = errorPhase[0];
+    //    🚨 Corre ANTES del filesystem, asi que NO detecta un 404: lo AFIRMA. Lo que lo vuelve
+    //    seguro es que no puede tapar ningun archivo real — exige que la ruta no tenga NI UN punto,
+    //    y los 68 archivos de dist/ tienen extension, incluido el manifiesto de hash variable por
+    //    build que hundia la version enumerada de esta idea. Las diez paginas las atrapan sus
+    //    propias reglas, que van antes.
+    //
+    //    🚨 Y la lista de exclusiones se DERIVA de los `redirects`, jamas se escribe a mano: un
+    //    alias nuevo sin actualizar el comodin dejaria de redirigir y empezaria a devolver «no
+    //    encontrado» en Markdown, callado y solo para agentes, que son quienes no reportan.
+    const aliasSources = (vercelConfig.redirects ?? []).map((entry) => entry.source.replace(/^\//, "")).sort();
+    const expectedWildcard = `^/(?!${aliasSources.map((alias) => `${alias}$`).join("|")})[^.]*[^./]$`;
     if (markdown404) {
-      check(markdown404.src === "/(.*)", "vercel.json: la regla del 404 en Markdown debe cubrir todo el espacio de rutas");
+      check(
+        markdown404.src === expectedWildcard,
+        `vercel.json: el comodin del 404 no excluye exactamente los alias de redirects\n      esperado: ${expectedWildcard}\n      esta:     ${markdown404.src}`,
+      );
       check(markdown404.status === 404, "vercel.json: el 404 en Markdown debe responder con estado 404, no 200");
       check(markdown404.dest === "/agent/404.md", `vercel.json: el 404 en Markdown apunta a ${markdown404.dest}`);
       check(
