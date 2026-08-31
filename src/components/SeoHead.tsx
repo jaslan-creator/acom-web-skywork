@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { Head } from "vite-react-ssg";
 
 import { publicRouteByPath, SITE_ORIGIN } from "@/data/publicContent";
-import { structuredDataForRoute } from "@/lib/structuredData";
+import { structuredDataDocumentsForRoute } from "@/lib/structuredData";
 
 export function SeoHead() {
   const location = useLocation();
@@ -14,13 +14,22 @@ export function SeoHead() {
         <title>Página no encontrada | ACOM Trading</title>
         <meta name="description" content="La página solicitada no existe o fue movida." />
         <meta name="robots" content="noindex, follow" />
+        {/*
+          Representación en Markdown del 404, para el agente que recibió HTML porque no negoció.
+          Es descubrimiento, no enrutamiento: el 404 en Markdown lo entrega vercel.json a quien pide
+          `Accept: text/markdown`, y esto es lo que le dice a los demás dónde mirar sin adivinar.
+        */}
+        <link rel="alternate" type="text/markdown" href="/agent/404.md" />
       </Head>
     );
   }
 
   const canonical = `${SITE_ORIGIN}${route.path}`;
   const socialImage = `${SITE_ORIGIN}${route.image}`;
-  const jsonLd = JSON.stringify(structuredDataForRoute(route)).replace(/</g, "\\u003c");
+  // Dos documentos, dos <script>. El primero es la identidad plana; ver structuredData.ts.
+  const jsonLdDocuments = structuredDataDocumentsForRoute(route).map((document) =>
+    JSON.stringify(document).replace(/</g, "\\u003c"),
+  );
 
   return (
     <Head>
@@ -44,7 +53,13 @@ export function SeoHead() {
       <meta name="twitter:description" content={route.description} />
       <meta name="twitter:image" content={socialImage} />
 
-      <script type="application/ld+json">{jsonLd}</script>
+      {jsonLdDocuments.map((document, index) => (
+        // La clave es el índice a propósito: el orden ES el contrato (identidad primero) y la lista
+        // tiene largo fijo. Una clave derivada del contenido invitaría a reordenarlos.
+        <script key={index} type="application/ld+json">
+          {document}
+        </script>
+      ))}
     </Head>
   );
 }

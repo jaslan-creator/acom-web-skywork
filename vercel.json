@@ -294,6 +294,29 @@
                 "Vary": "Accept",
                 "X-Content-Type-Options": "nosniff"
             }
+        },
+        {
+            "src": "^/(?!about$|contact$|faq$|linea-credito$|privacidad$|privacy$|terms$)[^.]*[^./]$",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "status": 404,
+            "dest": "/agent/404.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
         }
     ]
 }

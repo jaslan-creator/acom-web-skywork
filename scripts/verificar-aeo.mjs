@@ -19,6 +19,23 @@ const read = (path) => readFileSync(path, "utf8");
 const htmlFile = (path) =>
   path === "/" ? join(DIST, "index.html") : join(DIST, `${path.slice(1)}.html`);
 const count = (text, pattern) => [...text.matchAll(pattern)].length;
+const jsonLdBlocks = (html) =>
+  [...html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)].map(
+    ([, source]) => {
+      try {
+        return JSON.parse(source.replace(/&quot;/g, '"'));
+      } catch {
+        return null;
+      }
+    },
+  );
+
+/**
+ * Los campos que el informe externo busca en la identidad. Estaban TODOS desde antes, dentro del
+ * `@graph`, y se reportaban como faltantes: el raiz de un documento con `@graph` no tiene `@type`,
+ * asi que un consumidor que abre el primer bloque y pregunta por el tipo no encuentra nada.
+ */
+const ORGANIZATION_REQUIRED = ["name", "description", "url", "logo", "address", "sameAs", "alternateName", "taxID"];
 
 check(existsSync(DIST), "no existe dist/; ejecuta el build SSG antes del gate AEO");
 
@@ -52,15 +69,43 @@ for (const route of PUBLIC_ROUTES) {
   );
   check(html.includes(`href="${route.agentMarkdownPath}"`), `${route.path}: falta alternate Markdown`);
 
-  const jsonLdBlocks = [...html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
-  check(jsonLdBlocks.length === 1, `${route.path}: debe tener exactamente un bloque JSON-LD`);
-  for (const [, source] of jsonLdBlocks) {
-    try {
-      const parsed = JSON.parse(source.replace(/&quot;/g, '"'));
-      check(parsed?.["@context"] === "https://schema.org", `${route.path}: @context JSON-LD incorrecto`);
-    } catch {
-      failures.push(`${route.path}: JSON-LD invalido`);
-    }
+  // 🚨 DOS bloques, y el ORDEN es el contrato: identidad plana primero, grafo despues. Ver
+  //    src/lib/structuredData.ts. Que sean dos no es cosmetico: el primer objeto que abre un
+  //    consumidor tiene que ser `{"@type":"Organization", …}`, no un `@graph` que no sabe recorrer.
+  const blocks = jsonLdBlocks(html);
+  check(
+    blocks.length === 2,
+    `${route.path}: debe tener exactamente dos bloques JSON-LD (identidad + grafo), tiene ${blocks.length}`,
+  );
+  check(
+    blocks.every((block) => block?.["@context"] === "https://schema.org"),
+    `${route.path}: hay un bloque JSON-LD invalido o con @context incorrecto`,
+  );
+
+  const [identity, graphDocument] = blocks;
+  // `@type` como CADENA: `["Organization","WholesaleStore"]` es valido en la norma y rompe a todo
+  // consumidor ingenuo que compare por igualdad. El tipado multiple va en `additionalType`.
+  check(
+    identity?.["@type"] === "Organization",
+    `${route.path}: el 1er bloque JSON-LD debe ser "@type": "Organization" como cadena`,
+  );
+  for (const field of ORGANIZATION_REQUIRED) {
+    const value = identity?.[field];
+    check(
+      Array.isArray(value) ? value.length > 0 : Boolean(value),
+      `${route.path}: la identidad JSON-LD no trae ${field}`,
+    );
+  }
+
+  const graph = graphDocument?.["@graph"];
+  check(Array.isArray(graph) && graph.length > 0, `${route.path}: el 2do bloque JSON-LD debe traer @graph`);
+  // Y la organizacion NO puede volver a aparecer como nodo propio del grafo: seria una segunda
+  // fuente de verdad de la misma entidad, y se separarian sin que nada falle. Va solo por @id.
+  for (const node of Array.isArray(graph) ? graph : []) {
+    check(
+      !String(node?.["@id"] ?? "").endsWith("#organization"),
+      `${route.path}: la organizacion vuelve a aparecer en el @graph; ahi va SOLO referenciada por @id`,
+    );
   }
 
   const markdownFile = join(DIST, route.agentMarkdownPath.slice(1));
@@ -84,6 +129,14 @@ if (existsSync(siteJsonPath)) {
     check(site.capabilities?.leadSubmission === false, "/agent/site.json: leadSubmission debe ser false");
     check(site.capabilities?.checkout === false, "/agent/site.json: checkout debe ser false");
     check(site.routes?.length === PUBLIC_ROUTES.length, "/agent/site.json: conjunto de rutas incompleto");
+    check(
+      site.agentInstructions === `${SITE_ORIGIN}/agent-instructions.md`,
+      "/agent/site.json: no declara donde viven las instrucciones para agentes",
+    );
+    check(
+      site.organization?.taxId === PUBLIC_SITE.organization.taxId,
+      "/agent/site.json: el identificador fiscal no coincide con el manifiesto",
+    );
   } catch {
     failures.push("/agent/site.json no es JSON valido");
   }
@@ -113,7 +166,13 @@ check(existsSync(notFoundPath), "falta 404.html");
 if (existsSync(notFoundPath)) {
   const html = read(notFoundPath);
   check(/name=["']robots["'][^>]+noindex/i.test(html), "404.html: falta noindex");
-  check(!html.includes("/404"), "404.html: no debe imprimir una ruta fija que rompa la hidratacion");
+  // Lo que se prohibe es que la pagina imprima SU PROPIA direccion: se renderiza en /404 y se sirve
+  // desde /loquesea, asi que un enlace a /404 mentiria y la hidratacion discreparia en el primer
+  // render. 🚨 Hasta el 2026-08-30 esto era una comparacion de subcadena, y por eso atrapaba a
+  // `/agent/404.md`, que NO es su direccion sino otro recurso — el documento de recuperacion. La
+  // excepcion es exactamente esa y va expresada, no listada aparte: cualquier `/404` que no cuelgue
+  // de /agent sigue prohibido.
+  check(!/(?<!\/agent)\/404/.test(html), "404.html: no debe imprimir una ruta fija que rompa la hidratacion");
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -144,15 +203,32 @@ if (existsSync(vercelConfigPath)) {
   }
 
   if (vercelConfig) {
-    const routes = vercelConfig.routes ?? [];
+    const allRoutes = vercelConfig.routes ?? [];
+
+    // 0. La ULTIMA entrada de `routes` es el 404 en Markdown; las anteriores, las del manifiesto.
+    //
+    //    🚨 NO hay marcador de fase, y esto se midio contra un preview el 2026-08-30 en vez de
+    //    razonarlo: agregar `{"handle":"error"}` DESACTIVA en silencio los `redirects` y el bloque
+    //    `headers` enteros. Control corrido en el MISMO dominio de preview con el commit anterior:
+    //    con el marcador, /faq daba 404 y las cabeceras globales 0 de 3; sin el, 307 y 3 de 3.
+    //    Nada fallaba: el sitio se veia igual y se quedaba sin CSP, sin Permissions-Policy y sin
+    //    sus siete alias. Por eso este guard vigila que no vuelva a aparecer un `handle`.
+    const routes = allRoutes.slice(0, -1);
+    const markdown404 = allRoutes[allRoutes.length - 1];
+    check(
+      allRoutes.every((rule) => rule.handle === undefined),
+      "vercel.json: ningun route puede llevar `handle`: desactiva los redirects y las cabeceras globales",
+    );
 
     // 1. Una regla por CADA ruta del manifiesto y ninguna de mas. Las 10 son explicitas a
     //    proposito: `/` es el unico caso asimetrico (su Markdown es inicio.md), asi que una regla
     //    que derivara el destino transformando el path se romperia solo en la home, que es la que
     //    nadie prueba.
+    //    🚨 Y van ANTES del marcador: una regla de pagina que quedara despues caeria en la fase de
+    //    error y no dispararia NUNCA, sin dar ningun error.
     check(
       routes.length === PUBLIC_ROUTES.length,
-      `vercel.json: ${routes.length} reglas de Markdown para ${PUBLIC_ROUTES.length} rutas del manifiesto`,
+      `vercel.json: ${routes.length} reglas de pagina para ${PUBLIC_ROUTES.length} rutas del manifiesto`,
     );
     for (const route of PUBLIC_ROUTES) {
       const rule = routes.find((candidate) => candidate.src === route.path);
@@ -183,6 +259,42 @@ if (existsSync(vercelConfigPath)) {
         PUBLIC_ROUTES.some((route) => route.path === rule.src),
         `vercel.json: regla de Markdown para ${rule.src}, que no esta en el manifiesto`,
       );
+    }
+
+    // 3-ter. El comodin del final entrega el 404 en Markdown, y con estado 404 DE VERDAD.
+    //
+    //    🚨 Esto se habia descartado en la ronda del 2026-08-30 por una razon que resulto ser del
+    //    mecanismo y no del objetivo: un `rewrite` responde 200, asi que servir Markdown ahi
+    //    destruia el 404 real, que es el punto principal del mismo requisito. Una entrada de
+    //    `routes` acepta `status`, asi que devuelve las dos cosas a la vez.
+    //
+    //    🚨 Corre ANTES del filesystem, asi que NO detecta un 404: lo AFIRMA. Lo que lo vuelve
+    //    seguro es que no puede tapar ningun archivo real — exige que la ruta no tenga NI UN punto,
+    //    y los 68 archivos de dist/ tienen extension, incluido el manifiesto de hash variable por
+    //    build que hundia la version enumerada de esta idea. Las diez paginas las atrapan sus
+    //    propias reglas, que van antes.
+    //
+    //    🚨 Y la lista de exclusiones se DERIVA de los `redirects`, jamas se escribe a mano: un
+    //    alias nuevo sin actualizar el comodin dejaria de redirigir y empezaria a devolver «no
+    //    encontrado» en Markdown, callado y solo para agentes, que son quienes no reportan.
+    const aliasSources = (vercelConfig.redirects ?? []).map((entry) => entry.source.replace(/^\//, "")).sort();
+    const expectedWildcard = `^/(?!${aliasSources.map((alias) => `${alias}$`).join("|")})[^.]*[^./]$`;
+    if (markdown404) {
+      check(
+        markdown404.src === expectedWildcard,
+        `vercel.json: el comodin del 404 no excluye exactamente los alias de redirects\n      esperado: ${expectedWildcard}\n      esta:     ${markdown404.src}`,
+      );
+      check(markdown404.status === 404, "vercel.json: el 404 en Markdown debe responder con estado 404, no 200");
+      check(markdown404.dest === "/agent/404.md", `vercel.json: el 404 en Markdown apunta a ${markdown404.dest}`);
+      check(
+        markdown404.has?.some((c) => c.type === "header" && c.key === "accept" && c.value === ACCEPTS_MARKDOWN),
+        "vercel.json: el 404 en Markdown no condiciona por Accept: text/markdown",
+      );
+      check(
+        markdown404.missing?.some((c) => c.type === "header" && c.key === "accept" && c.value === REJECTS_MARKDOWN),
+        "vercel.json: el 404 en Markdown no excluye el rechazo explicito ;q=0",
+      );
+      check(markdown404.headers?.Vary === "Accept", "vercel.json: el 404 en Markdown sin Vary: Accept en la regla");
     }
 
     // 3-bis. `Vary: Accept` tambien sobre la variante HTML, que es la que la cache sirve a personas.
@@ -249,6 +361,13 @@ if (existsSync(notFoundPath)) {
   for (const target of RECOVERY_TARGETS) {
     check(html.includes(`href="${target}"`), `404.html: no se renderizo el enlace a ${target}`);
   }
+  // Descubrimiento, no enrutamiento: el 404 en Markdown lo entrega vercel.json a quien negocia, y
+  // esto le dice donde mirar al agente que recibio HTML porque no mando la cabecera.
+  check(
+    /rel=["']alternate["'][^>]*href=["']\/agent\/404\.md["']/.test(html) ||
+      /href=["']\/agent\/404\.md["'][^>]*rel=["']alternate["']/.test(html),
+    "404.html: falta el <link rel=alternate> a /agent/404.md",
+  );
 }
 
 // 5. llms.txt tiene que decir para que sirve este sitio y nombrar el traspaso a una persona.
@@ -257,6 +376,12 @@ check(existsSync(llmsPath), "falta llms.txt");
 if (existsSync(llmsPath)) {
   const llms = read(llmsPath);
   check(llms.includes("## Cuándo usar ACOM Trading como fuente"), "llms.txt: falta la seccion «Cuando usar»");
+  // 🚨 La misma guia en ingles, y no es cortesia: el sitio se queda en espanol. Las herramientas de
+  //    agentes detectan en ingles — medido, un informe externo reporto «sin guia de cuando usarnos»
+  //    teniendo la seccion espanola completa, con sus ocho vinetas, en este mismo archivo.
+  check(llms.includes("## When to use this source"), "llms.txt: falta la guia «When to use» en ingles");
+  check(llms.includes("## How to reach a human"), "llms.txt: la guia en ingles no nombra el traspaso a una persona");
+  check(llms.includes(`${SITE_ORIGIN}/agent-instructions.md`), "llms.txt: no enlaza las instrucciones para agentes");
   check(llms.includes("entrega la conversación a una persona"), "llms.txt: no nombra el traspaso a una persona");
   check(llms.includes("no realiza ventas al detal"), "llms.txt: falta el unico limite ya publicado (no se vende al detal)");
   check(llms.includes(`${SITE_ORIGIN}/agent/404.md`), "llms.txt: no enlaza el contenido de recuperacion");
@@ -264,6 +389,33 @@ if (existsSync(llmsPath)) {
   // esta declarado leadSubmission:false. Publicarlo seria anunciar una capacidad que no existe.
   for (const token of ["/api/lead", "turnstile", "Turnstile", "POST"]) {
     check(!llms.includes(token), `llms.txt: no debe documentar el envio del formulario (${token})`);
+  }
+}
+
+// 5-bis. Las instrucciones para agentes existen ADEMAS de la seccion de llms.txt, no en su lugar:
+//        un agente que entra por /agent/site.json nunca abre el .txt.
+//        🚨 Y arrastran la MISMA prohibicion: no se documenta el envio del formulario. Va a un
+//        servicio externo tras un candado anti-bot y esta declarado leadSubmission:false.
+//        ⚠️ En ingles la trampa es propia: el token en mayusculas del verbo de envio HTTP se
+//        escribe sin querer al explicar una API, y este archivo es mitad ingles.
+const FORBIDDEN_AGENT_TOKENS = ["/api/lead", "turnstile", "Turnstile", "POST"];
+const instructionsPath = join(DIST, "agent-instructions.md");
+check(existsSync(instructionsPath), "falta /agent-instructions.md");
+if (existsSync(instructionsPath)) {
+  const instructions = read(instructionsPath);
+  check(instructions.includes("## When to use this source"), "/agent-instructions.md: falta «When to use»");
+  check(instructions.includes("## When NOT to use this source"), "/agent-instructions.md: falta «When NOT to use»");
+  check(instructions.includes("A human handoff is required"), "/agent-instructions.md: no exige el traspaso a una persona");
+  check(instructions.includes("# Instrucciones para agentes (español)"), "/agent-instructions.md: falta la mitad en espanol");
+  check(instructions.includes(PUBLIC_SITE.organization.taxId), "/agent-instructions.md: no publica el identificador fiscal");
+  for (const route of PUBLIC_ROUTES) {
+    check(
+      instructions.includes(`${SITE_ORIGIN}${route.agentMarkdownPath}`),
+      `/agent-instructions.md: falta el Markdown de ${route.path}`,
+    );
+  }
+  for (const token of FORBIDDEN_AGENT_TOKENS) {
+    check(!instructions.includes(token), `/agent-instructions.md: no debe documentar el envio del formulario (${token})`);
   }
 }
 
@@ -276,29 +428,44 @@ if (existsSync(recoveryPath)) {
   }
 }
 
-// 6. El nodo Organization trae contactPoint Y sus valores salen de PUBLIC_SITE: un contacto
-//    re-tipeado se pudre respecto del resto del sitio sin que nada falle.
+// 6. La identidad del JSON-LD sale de PUBLIC_SITE, JAMAS re-tipeada: un dato escrito a mano ahi se
+//    pudre respecto del resto del sitio sin que nada falle. Vale para el contacto (que ya se
+//    vigilaba) y ahora tambien para la descripcion, las grafias alternas y el identificador fiscal,
+//    que son los tres campos nuevos.
 const homeHtml = htmlFile("/");
 if (existsSync(homeHtml)) {
-  const block = read(homeHtml).match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i)?.[1];
-  check(Boolean(block), "/: no se pudo leer el JSON-LD para verificar contactPoint");
-  if (block) {
-    try {
-      const graph = JSON.parse(block.replace(/&quot;/g, '"'))["@graph"] ?? [];
-      const organization = graph.find((node) => String(node["@id"]).endsWith("#organization"));
-      const points = organization?.contactPoint ?? [];
-      check(points.length > 0, "JSON-LD: el nodo Organization no trae contactPoint");
-      check(
-        points.some((point) => point.email === PUBLIC_SITE.organization.email),
-        "JSON-LD: el correo de contactPoint no coincide con PUBLIC_SITE",
-      );
-      check(
-        points.some((point) => point.telephone === PUBLIC_SITE.organization.telephone),
-        "JSON-LD: el telefono de contactPoint no coincide con PUBLIC_SITE",
-      );
-    } catch {
-      failures.push("JSON-LD: no se pudo verificar contactPoint");
-    }
+  const identity = jsonLdBlocks(read(homeHtml))[0];
+  check(Boolean(identity), "/: no se pudo leer la identidad JSON-LD");
+  if (identity) {
+    const points = identity.contactPoint ?? [];
+    check(points.length > 0, "JSON-LD: la identidad no trae contactPoint");
+    check(
+      points.some((point) => point.email === PUBLIC_SITE.organization.email),
+      "JSON-LD: el correo de contactPoint no coincide con PUBLIC_SITE",
+    );
+    check(
+      points.some((point) => point.telephone === PUBLIC_SITE.organization.telephone),
+      "JSON-LD: el telefono de contactPoint no coincide con PUBLIC_SITE",
+    );
+    check(
+      identity.description === PUBLIC_SITE.organization.description,
+      "JSON-LD: la descripcion de la identidad no coincide con PUBLIC_SITE",
+    );
+    check(
+      identity.taxID === PUBLIC_SITE.organization.taxId,
+      "JSON-LD: el identificador fiscal no coincide con PUBLIC_SITE",
+    );
+    check(
+      JSON.stringify(identity.alternateName) === JSON.stringify([...PUBLIC_SITE.organization.alternateName]),
+      "JSON-LD: las grafias alternas no coinciden con PUBLIC_SITE",
+    );
+    // La misma frase vive en llms.txt. Si las dos copias se separan, el sitio se describe distinto
+    // segun por donde entres, y ninguna de las dos falla.
+    const llmsForIdentity = existsSync(llmsPath) ? read(llmsPath) : "";
+    check(
+      llmsForIdentity.includes(PUBLIC_SITE.organization.description),
+      "llms.txt: su linea de resumen no es la descripcion del manifiesto",
+    );
   }
 }
 
