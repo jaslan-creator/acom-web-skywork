@@ -1,0 +1,17 @@
+{
+  // 🚨 Sin esto la función de Vercel cae con ERR_MODULE_NOT_FOUND: Vercel compila cada archivo a
+  // `.js` pero deja los imports con `.ts`, que es como los tiene que escribir `node --test`.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rewriteRelativeImportExtensions": true,
+    "allowImportingTsExtensions": false,
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"],
+    "strict": false,
+    "skipLibCheck": true,
+    "noEmit": false
+  },
+  "include": ["./**/*.ts", "../src/lib/metaMatch.ts"]
+}
