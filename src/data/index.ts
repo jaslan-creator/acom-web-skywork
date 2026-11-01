@@ -60,6 +60,7 @@ export const brands: Brand[] = [
   {
     id: "beifa",
     name: "Beifa",
+    logo: "/images/brands/beifa.webp",
     headline: "Bolígrafos, marcadores y útiles de oficina de alta rotación.",
     description: "Escritura y oficina a buen precio, más bolsas de regalo para las temporadas fuertes.",
     cta: "Ver el catálogo Beifa",
