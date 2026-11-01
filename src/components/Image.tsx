@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { settledStatus } from "@/lib/imageSettled";
 
 /** Preset aspect ratios; any arbitrary Tailwind aspect-* class is also accepted. */
 const RATIO_CLASS: Record<string, string> = {
@@ -78,6 +79,17 @@ export function Image({
           alt={alt}
           loading={priority ? "eager" : "lazy"}
           decoding="async"
+          // 🚨 El ref lee el estado al conectarse: una imagen que cargó antes de la hidratación
+          // ya disparó su `load` y React no lo repite. Ver `lib/imageSettled.ts`.
+          ref={(el) => {
+            if (!el || status !== "loading") return;
+            const settled = settledStatus(el);
+            if (settled === "loaded") setLoadedSrc(src);
+            else if (settled === "error") {
+              setErrorSrc(src);
+              onLoadError?.();
+            }
+          }}
           onLoad={() => setLoadedSrc(src)}
           onError={() => {
             setErrorSrc(src);
