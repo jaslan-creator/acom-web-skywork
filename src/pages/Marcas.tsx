@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { brands } from '../data/index';
 import { BrandCard } from '../components/Cards';
 import { CTAButton } from '../components/CTAButton';
+import { BrandBanners } from '../components/BrandBanners';
 
 /**
  * Animation variants for smooth entry following the project standards
@@ -57,6 +58,13 @@ const Marcas: React.FC = () => {
 
         {/* Decorative element mirroring logo curves */}
         <div className="absolute top-0 right-0 -z-0 w-[40%] h-full bg-accent/30 rounded-bl-[200px] opacity-50" />
+      </section>
+
+      {/* Rotating product banners, one per brand */}
+      <section className="pt-10 sm:pt-12 lg:pt-16">
+        <div className="container mx-auto px-4">
+          <BrandBanners brands={brands} />
+        </div>
       </section>
 
       {/* Brands Display */}

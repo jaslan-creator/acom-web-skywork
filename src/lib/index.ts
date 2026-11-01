@@ -35,6 +35,12 @@ export interface Brand {
   logo?: string;
   /** Internal route to this brand's published catalog, when one exists. Otherwise the CTA goes to /contacto. */
   catalogUrl?: string;
+  /**
+   * Wide product banner for the rotating carousel on /marcas, in /public/images/banners.
+   * A `-mobile` variant with the same name must sit next to it. Generated with Higgsfield from
+   * the brand's real product photos; the left side is left empty on purpose for the overlay text.
+   */
+  banner?: string;
 }
 
 /**

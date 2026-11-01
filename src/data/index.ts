@@ -24,7 +24,8 @@ export const brands: Brand[] = [
     headline: "Productos escolares y de manualidades diseñados para alta rotación.",
     description: "Ideal para librerías y papelerías que buscan volumen, variedad y reposición constante.",
     cta: "Ver el catálogo Bambary",
-    catalogUrl: catalogUrl("bambary")
+    catalogUrl: catalogUrl("bambary"),
+    banner: "/images/banners/bambary.webp"
   },
   {
     id: "pelikan",
@@ -33,7 +34,8 @@ export const brands: Brand[] = [
     headline: "Marca internacional reconocida en escritura y oficina.",
     description: "Confianza, calidad y prestigio que facilitan la venta en punto comercial.",
     cta: "Ver el catálogo Pelikan",
-    catalogUrl: catalogUrl("pelikan")
+    catalogUrl: catalogUrl("pelikan"),
+    banner: "/images/banners/pelikan.webp"
   },
   {
     id: "sanremo",
@@ -42,7 +44,8 @@ export const brands: Brand[] = [
     headline: "Soluciones funcionales para el hogar.",
     description: "Productos de alta utilidad y buena rotación.",
     cta: "Ver el catálogo Sanremo",
-    catalogUrl: catalogUrl("sanremo")
+    catalogUrl: catalogUrl("sanremo"),
+    banner: "/images/banners/sanremo.webp"
   },
   {
     id: "momentop",
@@ -51,7 +54,8 @@ export const brands: Brand[] = [
     headline: "Termos, vasos térmicos, cavas y neveras portátiles.",
     description: "Una categoría de ticket alto y venta durante todo el año, para ampliar tu portafolio.",
     cta: "Ver el catálogo Momentop",
-    catalogUrl: catalogUrl("momentop")
+    catalogUrl: catalogUrl("momentop"),
+    banner: "/images/banners/momentop.webp"
   },
   {
     id: "beifa",
@@ -59,7 +63,8 @@ export const brands: Brand[] = [
     headline: "Bolígrafos, marcadores y útiles de oficina de alta rotación.",
     description: "Escritura y oficina a buen precio, más bolsas de regalo para las temporadas fuertes.",
     cta: "Ver el catálogo Beifa",
-    catalogUrl: catalogUrl("beifa")
+    catalogUrl: catalogUrl("beifa"),
+    banner: "/images/banners/beifa.webp"
   }
 ];
 
