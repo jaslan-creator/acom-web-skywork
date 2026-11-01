@@ -239,3 +239,35 @@
 - **El chequeo de `Origin` no autentica.** Un script con `curl` puede falsificarlo y meter eventos falsos. La whitelist de eventos y el formato del `eventId` acotan el daño. Si algún día se ve basura en Events Manager, el siguiente paso es una regla de rate limit en el firewall de Vercel sobre `/api/meta-event`, no más código.
 - **`CompleteRegistration` en 0 hoy** puede significar que nadie envió el formulario en 7 días o que el evento falla. El Step 4 de la Task 4 lo responde de paso, con un envío real de prueba.
 - **Costo:** una invocación de función por conversión (~10/semana hoy). Despreciable.
+
+---
+
+## Registro de ejecución (2026-11-01)
+
+### Desvíos del plan
+
+- **`npm test` usa `node --test "tests/*.test.ts"`**, no `node --test tests/`: Node 24 trata el directorio como un archivo y falla.
+- **`api/tsconfig.json` nuevo, con `rewriteRelativeImportExtensions`.** Sin él, el primer preview cayó con `ERR_MODULE_NOT_FOUND: /var/task/api/_lib/capi.ts`: Vercel compila cada archivo a `.js` pero dejaba los imports con `.ts`, que es como los necesita `node --test`. Con el tsconfig, la misma función responde bien.
+- **`GRAPH_VERSION = "v26.0"`**: la última del changelog de Meta (29/07/2026).
+- **`api/` no lo cubre `npm run typecheck`** (solo mira `src/`). Se comprobó aparte con `npx tsc -p api/tsconfig.json --noEmit`.
+
+### Medido en el preview `acom-web-skywork-37zjytk2v` (protegido; probado con enlace de acceso temporal)
+
+- `/api/meta-event`: otro origen → 403; evento válido → 204; GET → 405. Sin token, el log dice `[meta-event] falta META_CAPI_ACCESS_TOKEN`.
+- Rutas intactas: `/` y `/marcas` → 200; `Accept: text/markdown` en `/` → 200 `text/markdown`; en `/no-existe` → 404; `/about` → 307.
+- Clic a WhatsApp: el pixel manda `Lead` con `eid=61ace673-…` y el beacon lleva el mismo `eventId`.
+- Clic a WhatsApp **sin `window.fbq`** (como con bloqueador): el beacon sale igual.
+- «Abrir cuenta» (con el envío a Zentral interceptado para no crear una ficha real): `CompleteRegistration` del pixel y del beacon con el mismo `eventId`; `userData` solo con hashes. `ph` = sha256(`584141234567`) a partir de `0414-1234567`; `em` = sha256(`prueba@ejemplo.com`).
+- La función recibió los 3 eventos (logs de Vercel).
+- **Falta**: verlos en «Probar eventos» de Meta como Navegador + Servidor «Deduplicado». Depende del token (Task 3, Step 5).
+
+### Hallazgo ajeno a este plan (no se tocó)
+
+El CSP bloquea un envío alternativo del pixel: `Framing 'https://www.facebook.com/'` (frame-src) y `Sending form data to 'https://www.facebook.com/tr/'` (form-action). El pixel usa ese camino (iframe + POST) cuando un evento no entra en la URL del GET. En esta prueba el GET de `CompleteRegistration` salió bien, así que no se perdió nada, pero conviene sumar `https://www.facebook.com` a `frame-src` y `form-action`. Ya existe del pasado; no lo causó esta obra.
+
+### Dónde quedó
+
+Tasks 1–4 hechas y commiteadas en `main` (local, sin push). Pendiente:
+1. **Dueño:** generar el token y cargarlo en Vercel (Task 3, Step 5).
+2. **Dueño:** aprobar el texto de privacidad (Task 5, Step 1).
+3. Después: push/producción (Task 5, Step 3) y el control a 48 h / 7 días (Task 5, Step 4).
