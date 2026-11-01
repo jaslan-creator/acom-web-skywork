@@ -17,6 +17,7 @@
  */
 type MediaKey =
   | "hero"
+  | "heroMobile"
   | "categoryEscolar"
   | "categoryOficina"
   | "categoryManualidades"
@@ -27,6 +28,10 @@ type MediaKey =
 
 export const MEDIA: Record<MediaKey, string | null> = {
   hero: "/images/hero.webp",
+  // 🚨 La misma foto a 1280 px (58 KB contra 129 KB): es la imagen más grande de la primera
+  // pantalla en celular, y medida con red de celular su descarga eran 3,7 s de los 4,4 s del LCP.
+  // Si se cambia `hero`, regenerar esta también o el celular sigue viendo la foto vieja.
+  heroMobile: "/images/hero-mobile.webp",
   categoryEscolar: "/images/category-escolar.webp",
   categoryOficina: "/images/category-oficina.webp",
   categoryManualidades: "/images/category-manualidades.webp",

@@ -92,14 +92,22 @@ export default function Home() {
         {/* Background layer: hero image with legibility scrim, or on-brand ambient gradient */}
         {hasHero ? (
           <>
-            <img
-              src={MEDIA.hero ?? undefined}
-              alt=""
-              aria-hidden="true"
-              loading="eager"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+            {/* `<picture>` y no `srcset`: con `object-cover` el ancho no decide qué se ve, así que
+                el corte va por breakpoint (`sm`, donde cambia la altura del hero). */}
+            <picture>
+              {MEDIA.heroMobile && <source media="(max-width: 639px)" srcSet={MEDIA.heroMobile} />}
+              <img
+                src={MEDIA.hero ?? undefined}
+                alt=""
+                aria-hidden="true"
+                loading="eager"
+                // En minúscula y por spread: React 18 no conoce `fetchPriority` y avisa en cada
+                // render; TypeScript no acepta el atributo en minúscula escrito directo.
+                {...{ fetchpriority: "high" }}
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </picture>
             <div className="absolute inset-0 bg-gradient-to-r from-foreground/92 via-foreground/75 to-foreground/35" />
           </>
         ) : (

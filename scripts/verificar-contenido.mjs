@@ -44,6 +44,8 @@ const REQUIRED = [
   ["catalogos.acomve.com", "el catálogo enlazado"],
   ["Montserrat", "tipografía del manual"],
   ["IBM Plex Mono", "la mono se conserva: sostiene el banner, los $250 y las stats"],
+  ["hero-mobile.webp", "la foto del hero liviana para celular: es el LCP móvil"],
+  ['fetchpriority="high"', "la foto del hero se pide antes que el JS: es el LCP"],
 ];
 
 function walk(dir) {
