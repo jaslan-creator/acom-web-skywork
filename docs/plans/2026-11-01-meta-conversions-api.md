@@ -265,9 +265,15 @@
 
 El CSP bloquea un envío alternativo del pixel: `Framing 'https://www.facebook.com/'` (frame-src) y `Sending form data to 'https://www.facebook.com/tr/'` (form-action). El pixel usa ese camino (iframe + POST) cuando un evento no entra en la URL del GET. En esta prueba el GET de `CompleteRegistration` salió bien, así que no se perdió nada, pero conviene sumar `https://www.facebook.com` a `frame-src` y `form-action`. Ya existe del pasado; no lo causó esta obra.
 
+### Token y cadena completa (2026-11-01, 00:24 EDT)
+
+- `META_CAPI_ACCESS_TOKEN` cargado en Vercel (Production y Preview, «sensitive»). `META_TEST_EVENT_CODE=TEST00001` **solo en Preview**, para que lo que mande un preview cuente como tráfico de prueba y no como conversión real.
+- El token puede **enviar** eventos (`events_received: 1`) pero no **leer** el pixel (`#100 Missing Permission`). Es lo esperado en un token de CAPI; no es una falla.
+- Preview `acom-web-skywork-8h7t5r930`: evento válido → 204, sin `[meta-event] Meta respondió …` en los logs. Meta marca `server_last_fired_time: 2026-10-31T21:24:04-0700` (antes: 2025-03-18).
+
 ### Dónde quedó
 
-Tasks 1–4 hechas y commiteadas en `main` (local, sin push). Pendiente:
-1. **Dueño:** generar el token y cargarlo en Vercel (Task 3, Step 5).
-2. **Dueño:** aprobar el texto de privacidad (Task 5, Step 1).
-3. Después: push/producción (Task 5, Step 3) y el control a 48 h / 7 días (Task 5, Step 4).
+Tasks 1–4 hechas y commiteadas en `main` (local, sin push). Token cargado y probado. Pendiente:
+1. **Dueño:** aprobar el texto de privacidad (Task 5, Step 1).
+2. **Dueño:** visto bueno para push/producción (Task 5, Step 3).
+3. Control a 48 h / 7 días (Task 5, Step 4).
