@@ -78,8 +78,11 @@ export function BrandBanners({ brands }: { brands: Brand[] }) {
                   width={1920}
                   height={823}
                   loading={i === 0 ? "eager" : "lazy"}
+                  // The first slide opens the page, so it is the LCP. Lowercase via spread: React 18
+                  // does not know `fetchPriority` (same trick as the hero in Home.tsx).
+                  {...(i === 0 ? { fetchpriority: "high" } : {})}
                   decoding="async"
-                  className="block aspect-[16/10] w-full object-cover object-[85%_center] md:aspect-[21/9] md:object-center"
+                  className="block aspect-[16/10] w-full object-cover object-right md:aspect-[21/9] md:object-center"
                 />
               </picture>
 

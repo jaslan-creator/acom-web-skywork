@@ -39,29 +39,12 @@ const Marcas: React.FC = () => {
       animate="animate"
       className="min-h-screen bg-background"
     >
-      {/* Header Section */}
-      <section className="relative py-16 sm:py-20 lg:py-32 overflow-hidden border-b border-border">
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div 
-            variants={fadeInUp}
-            className="max-w-3xl"
-          >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-5 sm:mb-6 leading-tight">
-              Marcas mayoristas con <br />
-              <span className="text-primary">demanda comprobada</span>
-            </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Nuestro portafolio está enfocado en productos que rotan, se reponen y generan margen para el canal mayorista venezolano.
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Decorative element mirroring logo curves */}
-        <div className="absolute top-0 right-0 -z-0 w-[40%] h-full bg-accent/30 rounded-bl-[200px] opacity-50" />
-      </section>
+      {/* The visible header was removed (founder, 2026-11-01): the banner carousel opens the page.
+          The h1 stays as sr-only text — it is the page's only h1 and its main keyword. */}
+      <h1 className="sr-only">Marcas mayoristas con demanda comprobada</h1>
 
       {/* Rotating product banners, one per brand */}
-      <section className="pt-10 sm:pt-12 lg:pt-16">
+      <section className="pt-6 sm:pt-8 lg:pt-10">
         <div className="container mx-auto px-4">
           <BrandBanners brands={brands} />
         </div>
