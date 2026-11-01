@@ -16,6 +16,7 @@ export const brands: Brand[] = [
   {
     id: "bambary",
     name: "Bambary",
+    logo: "/images/brands/bambary.webp",
     headline: "Productos escolares y de manualidades diseñados para alta rotación.",
     description: "Ideal para librerías y papelerías que buscan volumen, variedad y reposición constante.",
     cta: "Ver el catálogo Bambary",
@@ -24,6 +25,7 @@ export const brands: Brand[] = [
   {
     id: "pelikan",
     name: "Pelikan",
+    logo: "/images/brands/pelikan.svg",
     headline: "Marca internacional reconocida en escritura y oficina.",
     description: "Confianza, calidad y prestigio que facilitan la venta en punto comercial.",
     cta: "Solicitar catálogo Pelikan"
@@ -31,6 +33,7 @@ export const brands: Brand[] = [
   {
     id: "sanremo",
     name: "Sanremo",
+    logo: "/images/brands/sanremo.svg",
     headline: "Soluciones funcionales para el hogar.",
     description: "Productos de alta utilidad y buena rotación.",
     cta: "Solicitar catálogo Sanremo"
@@ -38,6 +41,7 @@ export const brands: Brand[] = [
   {
     id: "momentop",
     name: "Momentop",
+    logo: "/images/brands/momentop.svg",
     headline: "Termos, vasos térmicos, cavas y neveras portátiles.",
     description: "Una categoría de ticket alto y venta durante todo el año, para ampliar tu portafolio.",
     cta: "Solicitar catálogo Momentop"
