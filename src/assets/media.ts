@@ -36,10 +36,9 @@ export const MEDIA: Record<MediaKey, string | null> = {
   categoryOficina: "/images/category-oficina.webp",
   categoryManualidades: "/images/category-manualidades.webp",
   categoryHogar: "/images/category-hogar.webp",
-  // Deliberately null: no real Momentop product photo yet, and an AI-generated stand-in would
-  // be a picture of nothing we sell. CategoryCard falls back to the on-brand gradient, which
-  // is a designed state, not a failure. Swap in the photo when it exists.
-  categoryTermosCavas: null,
+  // Generada con las fotos reales de producto de Momentop (Drive) como referencia, así que
+  // muestra solo SKUs que vendemos: botellas 32/40 oz y tumblers 12/20/40 oz.
+  categoryTermosCavas: "/images/category-termos-cavas.webp",
   comoTrabajamos: "/images/como-trabajamos.webp",
   sobreAcom: "/images/sobre-acom.webp",
 };
