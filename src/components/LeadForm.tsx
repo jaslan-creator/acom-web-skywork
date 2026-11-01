@@ -160,7 +160,7 @@ export function LeadForm({
       setError(res.error ?? "unknown");
       return;
     }
-    trackLeadFormSubmit(intent);
+    trackLeadFormSubmit(intent, { email, phone, firstName, lastName, city, state });
     setSent(true);
   }
 

@@ -17,6 +17,8 @@
  * "clicked through to WhatsApp", nothing more.
  */
 
+import { hashContact, type ContactInput, type HashedUserData } from "./metaMatch";
+
 declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
@@ -38,15 +40,20 @@ export function trackWhatsappLeads(): () => void {
     const href = anchor.getAttribute("href") ?? "";
     if (!href.startsWith(WHATSAPP_PREFIX)) return;
 
+    const customData = {
+      content_name: anchor.textContent?.trim().slice(0, 60) || "WhatsApp",
+      content_category: "whatsapp",
+    };
+    const eventId = crypto.randomUUID();
     // Never let analytics break navigation: the click must go through regardless.
     try {
-      window.fbq?.("track", "Lead", {
-        content_name: anchor.textContent?.trim().slice(0, 60) || "WhatsApp",
-        content_category: "whatsapp",
-      });
+      window.fbq?.("track", "Lead", customData, { eventID: eventId });
     } catch {
       /* the pixel may be blocked by an ad blocker; that is not an error for the user */
     }
+    // 🚨 Outside the pixel's try, on purpose: when an ad blocker removes `fbq`, this is the only
+    // copy of the conversion that reaches Meta — which is the whole reason the server copy exists.
+    sendServerEvent("Lead", eventId, customData);
   };
 
   document.addEventListener("click", handleClick, true);
@@ -65,13 +72,43 @@ export function trackWhatsappLeads(): () => void {
  * `CompleteRegistration` es el evento estándar de Meta para «completó un formulario de alta», que
  * es literalmente lo que pasó.
  */
-export function trackLeadFormSubmit(intent: "account" | "question"): void {
+export function trackLeadFormSubmit(intent: "account" | "question", contact: ContactInput): void {
+  const customData = {
+    content_name: intent === "account" ? "Abrir cuenta" : "Consulta",
+    content_category: "lead_form",
+  };
+  const eventId = crypto.randomUUID();
   try {
-    window.fbq?.("track", "CompleteRegistration", {
-      content_name: intent === "account" ? "Abrir cuenta" : "Consulta",
-      content_category: "lead_form",
-    });
+    window.fbq?.("track", "CompleteRegistration", customData, { eventID: eventId });
   } catch {
     /* el pixel puede estar bloqueado; no es un error para el visitante */
+  }
+  // Los datos de contacto viajan SOLO cifrados: ver `lib/metaMatch.ts`.
+  hashContact(contact)
+    .then((userData) => sendServerEvent("CompleteRegistration", eventId, customData, userData))
+    .catch(() => {
+      /* sin `crypto.subtle` (http, navegador viejo) se pierde solo la copia del servidor */
+    });
+}
+
+/**
+ * La copia del servidor de cada conversión, hacia `/api/meta-event` (Conversions API).
+ *
+ * 🚨 `sendBeacon`, no `fetch` a secas: el clic a WhatsApp suele sacar a la persona de la página, y
+ * un `fetch` común se cancela al descargarse la página. El beacon sobrevive a la navegación. Va
+ * mismo origen, así que el CSP (`connect-src 'self'`) no se toca.
+ */
+export function sendServerEvent(
+  eventName: "Lead" | "CompleteRegistration",
+  eventId: string,
+  customData: Record<string, string>,
+  userData?: HashedUserData,
+): void {
+  try {
+    const body = JSON.stringify({ eventName, eventId, eventSourceUrl: window.location.href, customData, userData });
+    if (navigator.sendBeacon?.("/api/meta-event", body)) return;
+    void fetch("/api/meta-event", { method: "POST", body, keepalive: true }).catch(() => {});
+  } catch {
+    /* la analítica nunca rompe la página */
   }
 }
