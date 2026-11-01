@@ -1,5 +1,8 @@
 import { ROUTE_PATHS } from "../lib/index.ts";
-import type { Brand, ProcessStep, Benefit, Category } from "../lib/index.ts";
+import type { Brand, CatalogId, ProcessStep, Benefit, Category } from "../lib/index.ts";
+
+/** Typed on CatalogId so a brand cannot link to a catalog that is not published. */
+const catalogUrl = (id: CatalogId) => `${ROUTE_PATHS.CATALOGO}/${id}`;
 
 /**
  * Data for the brands distributed by Acom Trading.
@@ -11,6 +14,7 @@ import type { Brand, ProcessStep, Benefit, Category } from "../lib/index.ts";
  * Zanotti was archived in Odoo on 2026-08-22 (120 templates) and discontinued commercially
  * back in nov-2024; Momentop took its slot (84 live SKUs, prefix MT-, since 2026-08-22).
  * Newell/Sanford is NOT commercialised and does not belong here.
+ * Beifa joined the portfolio on 2026-11-01 (founder), with its own published catalog.
  */
 export const brands: Brand[] = [
   {
@@ -20,7 +24,7 @@ export const brands: Brand[] = [
     headline: "Productos escolares y de manualidades diseñados para alta rotación.",
     description: "Ideal para librerías y papelerías que buscan volumen, variedad y reposición constante.",
     cta: "Ver el catálogo Bambary",
-    catalogUrl: ROUTE_PATHS.CATALOGO
+    catalogUrl: catalogUrl("bambary")
   },
   {
     id: "pelikan",
@@ -28,7 +32,8 @@ export const brands: Brand[] = [
     logo: "/images/brands/pelikan.svg",
     headline: "Marca internacional reconocida en escritura y oficina.",
     description: "Confianza, calidad y prestigio que facilitan la venta en punto comercial.",
-    cta: "Solicitar catálogo Pelikan"
+    cta: "Ver el catálogo Pelikan",
+    catalogUrl: catalogUrl("pelikan")
   },
   {
     id: "sanremo",
@@ -36,7 +41,8 @@ export const brands: Brand[] = [
     logo: "/images/brands/sanremo.svg",
     headline: "Soluciones funcionales para el hogar.",
     description: "Productos de alta utilidad y buena rotación.",
-    cta: "Solicitar catálogo Sanremo"
+    cta: "Ver el catálogo Sanremo",
+    catalogUrl: catalogUrl("sanremo")
   },
   {
     id: "momentop",
@@ -44,7 +50,16 @@ export const brands: Brand[] = [
     logo: "/images/brands/momentop.svg",
     headline: "Termos, vasos térmicos, cavas y neveras portátiles.",
     description: "Una categoría de ticket alto y venta durante todo el año, para ampliar tu portafolio.",
-    cta: "Solicitar catálogo Momentop"
+    cta: "Ver el catálogo Momentop",
+    catalogUrl: catalogUrl("momentop")
+  },
+  {
+    id: "beifa",
+    name: "Beifa",
+    headline: "Bolígrafos, marcadores y útiles de oficina de alta rotación.",
+    description: "Escritura y oficina a buen precio, más bolsas de regalo para las temporadas fuertes.",
+    cta: "Ver el catálogo Beifa",
+    catalogUrl: catalogUrl("beifa")
   }
 ];
 

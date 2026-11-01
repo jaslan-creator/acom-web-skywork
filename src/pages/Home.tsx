@@ -22,7 +22,7 @@ import { Cobertura } from "../components/Cobertura.tsx";
 import { BrandCard, BenefitCard, ProcessCard, CategoryCard, PROCESS_ICONS } from "../components/Cards.tsx";
 import { springPresets, fadeInUp, staggerContainer } from "../lib/motion.ts";
 import { MEDIA } from "../assets/media.ts";
-import { BUSINESS_CONFIG, CATALOG, ROUTE_PATHS, catalogPageUrl } from "../lib/index.ts";
+import { BUSINESS_CONFIG, CATALOGS, ROUTE_PATHS, catalogPageUrl } from "../lib/index.ts";
 import { cn } from "../lib/utils.ts";
 
 /**
@@ -209,8 +209,8 @@ export default function Home() {
                 Mira el catálogo antes de escribirnos
               </h2>
               <p className="mt-4 leading-relaxed text-muted-foreground">
-                {CATALOG.PAGES} páginas de {brands[0].name} con códigos, presentaciones y unidades por
-                bulto. Sin registro y sin dejar tus datos.{" "}
+                {CATALOGS.length} catálogos ({brands.filter((brand) => brand.catalogUrl).map((brand) => brand.name).join(", ")})
+                con códigos, presentaciones y unidades por bulto. Sin registro y sin dejar tus datos.{" "}
                 <span className="font-medium text-foreground">Los precios te los envía tu asesor</span>,
                 según tu tipo de negocio.
               </p>
@@ -220,7 +220,7 @@ export default function Home() {
                   className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-base font-bold text-primary-foreground shadow-md transition-colors hover:bg-primary/90"
                 >
                   <BookOpen className="h-5 w-5" />
-                  Ver el catálogo
+                  Ver los catálogos
                 </Link>
                 <Link
                   to={ROUTE_PATHS.MARCAS}
@@ -239,7 +239,7 @@ export default function Home() {
               tabIndex={-1}
             >
               <img
-                src={catalogPageUrl(1)}
+                src={catalogPageUrl(CATALOGS[0], 1)}
                 alt=""
                 loading="lazy"
                 decoding="async"

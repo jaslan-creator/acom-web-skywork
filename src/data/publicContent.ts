@@ -1,8 +1,8 @@
 import { brands, categories, categoriesProse, coverage } from "./index.ts";
-import { BUSINESS_CONFIG, CATALOG, ROUTE_PATHS } from "../lib/index.ts";
+import { BUSINESS_CONFIG, CATALOGS, CATALOG_TOTAL_PAGES, ROUTE_PATHS, catalogPath, type CatalogId } from "../lib/index.ts";
 
 export const SITE_ORIGIN = "https://www.acomve.com";
-export const CONTENT_UPDATED_AT = "2026-08-24";
+export const CONTENT_UPDATED_AT = "2026-11-01";
 
 /**
  * Fecha publicada de la política de privacidad.
@@ -18,6 +18,7 @@ export type PublicRouteId =
   | "home"
   | "marcas"
   | "catalogo"
+  | `catalogo-${CatalogId}`
   | "como-trabajamos"
   | "sobre-acom"
   | "abrir-cuenta"
@@ -60,6 +61,7 @@ export interface PublicFaq {
 
 const categoriesText = categoriesProse();
 const brandsText = brands.map((brand) => brand.name).join(", ");
+const catalogNamesText = CATALOGS.map((catalog) => catalog.title).join(", ");
 
 export const FAQS: readonly PublicFaq[] = [
   {
@@ -86,7 +88,7 @@ export const FAQS: readonly PublicFaq[] = [
   },
   {
     question: "¿Hay un catálogo público?",
-    answer: `Sí. El ${CATALOG.TITLE} se puede consultar sin registro. Tiene ${CATALOG.PAGES} páginas con códigos, descripciones, presentaciones y unidades por bulto, pero no incluye precios.`,
+    answer: `Sí. Hay ${CATALOGS.length} catálogos que se pueden consultar sin registro: ${catalogNamesText}. Tienen códigos, descripciones, presentaciones y unidades por bulto, pero no incluyen precios.`,
   },
   {
     question: "¿ACOM realiza despachos nacionales?",
@@ -156,19 +158,44 @@ export const PUBLIC_ROUTES: readonly PublicRouteDocument[] = [
     id: "catalogo",
     path: ROUTE_PATHS.CATALOGO,
     slug: "catalogo",
-    breadcrumbName: "Catálogo",
-    title: `${CATALOG.TITLE} | ACOM Trading`,
-    description: `Consulta gratis el ${CATALOG.TITLE}: ${CATALOG.PAGES} páginas con códigos, presentaciones y unidades por bulto. Precios por asesor.`,
+    breadcrumbName: "Catálogos",
+    title: "Catálogos mayoristas | ACOM Trading",
+    description: `Consulta gratis ${CATALOGS.length} catálogos mayoristas: ${CATALOGS.map((catalog) => catalog.title.replace("Catálogo ", "")).join(", ")}. Códigos y presentaciones, sin precios.`,
     image: "/images/category-escolar.webp",
     schemaType: "CollectionPage",
-    htmlMustContain: CATALOG.TITLE,
-    agentMustContain: `${CATALOG.PAGES} páginas`,
+    htmlMustContain: "Catálogos mayoristas",
+    agentMustContain: `${CATALOGS.length} catálogos`,
     agentMarkdownPath: "/agent/pages/catalogo.md",
     agentSections: [
-      { heading: "Catálogo disponible", paragraphs: [`${CATALOG.TITLE}, ${CATALOG.PAGES} páginas, acceso público y sin registro.`] },
-      { heading: "Contenido", paragraphs: ["Incluye códigos, descripciones, presentaciones y unidades por bulto. No incluye precios."] },
+      {
+        heading: "Catálogos disponibles",
+        paragraphs: [
+          `${CATALOGS.length} catálogos, ${CATALOG_TOTAL_PAGES} páginas en total, acceso público y sin registro.`,
+          ...CATALOGS.map((catalog) => `${catalog.title} (${catalog.pages} páginas): ${SITE_ORIGIN}${catalogPath(catalog)}`),
+        ],
+      },
+      { heading: "Contenido", paragraphs: ["Incluyen códigos, descripciones, presentaciones y unidades por bulto. No incluyen precios."] },
     ],
   },
+  ...CATALOGS.map(
+    (catalog): PublicRouteDocument => ({
+      id: `catalogo-${catalog.id}`,
+      path: catalogPath(catalog),
+      slug: `catalogo-${catalog.id}`,
+      breadcrumbName: catalog.title,
+      title: `${catalog.title} | ACOM Trading`,
+      description: `Consulta gratis el ${catalog.title}: ${catalog.pages} páginas con códigos, presentaciones y unidades por bulto. Precios por asesor.`,
+      image: "/images/category-escolar.webp",
+      schemaType: "CollectionPage",
+      htmlMustContain: catalog.title,
+      agentMustContain: `${catalog.pages} páginas`,
+      agentMarkdownPath: `/agent/pages/catalogo-${catalog.id}.md`,
+      agentSections: [
+        { heading: "Catálogo", paragraphs: [`${catalog.title}, ${catalog.pages} páginas, acceso público y sin registro.`] },
+        { heading: "Contenido", paragraphs: ["Incluye códigos, descripciones, presentaciones y unidades por bulto. No incluye precios."] },
+      ],
+    }),
+  ),
   {
     id: "como-trabajamos",
     path: ROUTE_PATHS.COMO_TRABAJAMOS,
@@ -329,15 +356,14 @@ export const PUBLIC_SITE = {
   brands,
   categories,
   coverage,
-  catalogs: [
-    {
-      name: CATALOG.TITLE,
-      url: `${SITE_ORIGIN}${ROUTE_PATHS.CATALOGO}`,
-      pages: CATALOG.PAGES,
-      public: true,
-      includesPrices: false,
-    },
-  ],
+  catalogs: CATALOGS.map((catalog) => ({
+    name: catalog.title,
+    brand: catalog.brandId,
+    url: `${SITE_ORIGIN}${catalogPath(catalog)}`,
+    pages: catalog.pages,
+    public: true,
+    includesPrices: false,
+  })),
   contact: {
     page: `${SITE_ORIGIN}${ROUTE_PATHS.CONTACTO}`,
     openAccountPage: `${SITE_ORIGIN}${ROUTE_PATHS.ABRIR_CUENTA}`,

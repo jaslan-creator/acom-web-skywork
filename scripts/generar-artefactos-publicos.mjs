@@ -65,7 +65,8 @@ const routeLinks = PUBLIC_ROUTES.map(
 const brandNames = PUBLIC_SITE.brands.map((brand) => brand.name).join(", ");
 const categoryLabels = PUBLIC_SITE.categories.map((category) => category.label).join(", ");
 const coverageRegions = PUBLIC_SITE.coverage.map((zone) => zone.region).join(", ");
-const publicCatalog = PUBLIC_SITE.catalogs[0];
+const catalogsIndexUrl = `${SITE_ORIGIN}${ROUTE_PATHS.CATALOGO}`;
+const catalogList = PUBLIC_SITE.catalogs.map((catalog) => `${catalog.name} ${catalog.url}`).join("; ");
 const minimumOrder = `$${PUBLIC_SITE.commercialTerms.minimumOrder.amount} ${PUBLIC_SITE.commercialTerms.minimumOrder.currency}`;
 const openAccountUrl = `${SITE_ORIGIN}${ROUTE_PATHS.ABRIR_CUENTA}`;
 const agentInstructionsUrl = `${SITE_ORIGIN}/agent-instructions.md`;
@@ -94,7 +95,7 @@ const whenToUseEnglish = [
   "- How pricing works: a sales advisor assigns the price list per business and volume. Prices are never published on this site.",
   `- Delivery coverage: free nationwide dispatch, subject to coordination and availability. Regions served: ${coverageRegions}.`,
   `- How to open a wholesale account: ${openAccountUrl}.`,
-  `- Where the public catalogue lives: ${publicCatalog.url} (${publicCatalog.name}, ${publicCatalog.pages} pages, no prices).`,
+  `- Where the public catalogues live: ${catalogsIndexUrl} (${PUBLIC_SITE.catalogs.length} catalogues, no prices): ${catalogList}.`,
   `- Published response time: ${PUBLIC_SITE.commercialTerms.responseTime}.`,
   "",
   "Do not use this source for retail questions: ACOM sells wholesale only, to established businesses, and does not sell at retail.",
@@ -135,7 +136,7 @@ const whenToUse = [
   `- Cómo se asignan los precios: ${PUBLIC_SITE.commercialTerms.pricing} No se publican en la web.`,
   `- Cobertura de despacho: ${PUBLIC_SITE.commercialTerms.shipping} Regiones atendidas: ${coverageRegions}.`,
   `- Cómo se abre una cuenta mayorista: ${SITE_ORIGIN}${ROUTE_PATHS.ABRIR_CUENTA}.`,
-  `- Dónde está el catálogo público: ${publicCatalog.url} (${publicCatalog.name}, ${publicCatalog.pages} páginas, sin precios).`,
+  `- Dónde están los catálogos públicos: ${catalogsIndexUrl} (${PUBLIC_SITE.catalogs.length} catálogos, sin precios): ${catalogList}.`,
   `- Tiempo de respuesta publicado: ${PUBLIC_SITE.commercialTerms.responseTime}.`,
   "",
   "No es la fuente para la venta al detal: ACOM vende exclusivamente al mayor a comercios establecidos y no realiza ventas al detal.",
@@ -200,7 +201,7 @@ writePublic(
     "- How pricing is assigned (by a sales advisor, per business and volume).",
     "- Nationwide delivery coverage and the regions served.",
     `- How to open a wholesale account: ${openAccountUrl}.`,
-    `- Where the public catalogue is: ${publicCatalog.url} — ${publicCatalog.pages} pages, no prices.`,
+    `- Where the public catalogues are: ${catalogsIndexUrl} — ${PUBLIC_SITE.catalogs.length} catalogues, no prices.`,
     `- Published response time: ${PUBLIC_SITE.commercialTerms.responseTime}.`,
     "",
     "## When NOT to use this source",
@@ -247,7 +248,7 @@ writePublic(
     `- Cómo se asignan los precios: ${PUBLIC_SITE.commercialTerms.pricing}`,
     `- Cobertura de despacho: ${PUBLIC_SITE.commercialTerms.shipping} Regiones: ${coverageRegions}.`,
     `- Cómo se abre una cuenta mayorista: ${openAccountUrl}.`,
-    `- Catálogo público: ${publicCatalog.url} — ${publicCatalog.pages} páginas, sin precios.`,
+    `- Catálogos públicos: ${catalogsIndexUrl} — ${PUBLIC_SITE.catalogs.length} catálogos, sin precios.`,
     `- Tiempo de respuesta publicado: ${PUBLIC_SITE.commercialTerms.responseTime}.`,
     "",
     "## Para qué NO sirve",

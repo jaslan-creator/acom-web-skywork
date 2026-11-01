@@ -20,7 +20,7 @@ import { hoverLift, springPresets, staggerItem } from "@/lib/motion";
 export function BrandCard({ brand }: { brand: Brand }) {
   const [logoFailed, setLogoFailed] = useState(false);
   const showLogo = Boolean(brand.logo) && !logoFailed;
-  // Bambary has a published catalog; the rest still route to an advisor.
+  // A brand without a published catalog routes to an advisor instead.
   const ctaHref = brand.catalogUrl ?? ROUTE_PATHS.CONTACTO;
 
   return (

@@ -94,29 +94,85 @@ export const BUSINESS_CONFIG = {
 } as const;
 
 /**
- * Published product catalog, served as one WEBP per page from the R2 CDN.
+ * Published product catalogs, each served as one WEBP per page from the R2 CDN.
  *
- * Produced by `zentral-erp-sync/scripts/render_catalog_pages.py` from the Canva PDF, at
- * `catalog_pages/<slug>/p-NNN.webp`. It carries NO prices — photo, features and a
- * Código / Descripción / Und. x Inner / Bulto table — which is what makes it publishable here.
+ * Produced by `zentral-erp-sync/scripts/render_catalog_pages.py --doc <slug>` from the sales
+ * PDF, at `catalog_pages/<slug>/p-NNN.webp`. None of them carries prices — photo, features and
+ * codes / units per pack — which is what makes them publishable here. Checked page by page
+ * before upload (2026-11-01); a catalog WITH prices must never be added to this list.
+ *
+ * `id` is the public URL (`/catalogo/<id>`) and is stable; `slug` is the R2 key and changes
+ * with every re-render (`bambary-2027`). Keeping them apart means a new edition is a one-line
+ * change here, not a broken link everywhere the old URL was shared.
  *
  * 🚨 `pages` is hardcoded because the renderer writes its `pages.json` manifest to disk only:
  * it is NOT uploaded to R2, so there is nothing to read the count from at runtime. Verified
- * 2026-08-23: p-082 -> 200, p-083 -> 404. Re-rendering the 2027 catalog with a different page
- * count will rot this number, so the viewer treats a failed page as a visible end, not as a
- * blank frame.
+ * 2026-11-01 with `npm run verify:catalogo` (last page 200, next one 404, for all five).
+ * A re-render with a different page count rots the number, so the viewer treats a failed page
+ * as a visible end, not as a blank frame.
+ *
+ * `ratio` is per catalog because they are not all portrait: Momentop is a landscape deck.
  *
  * 🚨 The CDN host must stay listed in `img-src` in vercel.json or the browser never even
  * issues the request — and a blocked image is silent, not an error.
  */
-export const CATALOG = {
-  BASE_URL: "https://catalogos.acomve.com/catalog_pages",
-  SLUG: "bambary-2026",
-  TITLE: "Catálogo Bambary General 2026",
-  PAGES: 82,
-} as const;
+export const CATALOG_BASE_URL = "https://catalogos.acomve.com/catalog_pages";
+
+export const CATALOGS = [
+  {
+    id: "bambary",
+    brandId: "bambary",
+    slug: "bambary-2026",
+    title: "Catálogo Bambary General 2026",
+    pages: 82,
+    ratio: "aspect-[1080/1399]",
+  },
+  {
+    id: "pelikan",
+    brandId: "pelikan",
+    slug: "pelikan-2022",
+    title: "Catálogo Pelikan",
+    pages: 24,
+    ratio: "aspect-[1080/1398]",
+  },
+  {
+    id: "sanremo",
+    brandId: "sanremo",
+    slug: "sanremo-2022",
+    title: "Catálogo Sanremo",
+    pages: 19,
+    ratio: "aspect-[1080/1398]",
+  },
+  {
+    id: "momentop",
+    brandId: "momentop",
+    slug: "momentop-2026",
+    title: "Catálogo Momentop",
+    pages: 20,
+    ratio: "aspect-[1080/603]",
+  },
+  {
+    id: "beifa",
+    brandId: "beifa",
+    slug: "beifa-2026",
+    title: "Catálogo Beifa 2026",
+    pages: 9,
+    ratio: "aspect-[1080/1398]",
+  },
+] as const;
+
+export type Catalog = (typeof CATALOGS)[number];
+export type CatalogId = Catalog["id"];
+
+/** Public route of a catalog's viewer. */
+export function catalogPath(catalog: Catalog): string {
+  return `${ROUTE_PATHS.CATALOGO}/${catalog.id}`;
+}
 
 /** URL of a single catalog page (1-indexed), matching the renderer's `p-NNN.webp` key. */
-export function catalogPageUrl(page: number): string {
-  return `${CATALOG.BASE_URL}/${CATALOG.SLUG}/p-${String(page).padStart(3, "0")}.webp`;
+export function catalogPageUrl(catalog: Catalog, page: number): string {
+  return `${CATALOG_BASE_URL}/${catalog.slug}/p-${String(page).padStart(3, "0")}.webp`;
 }
+
+/** Total pages across every published catalog. */
+export const CATALOG_TOTAL_PAGES = CATALOGS.reduce((sum, catalog) => sum + catalog.pages, 0);

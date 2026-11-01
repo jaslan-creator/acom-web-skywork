@@ -1,5 +1,5 @@
 import { brands, categories } from "@/data/index";
-import { FAQS, PUBLIC_SITE, SITE_ORIGIN, type PublicRouteDocument } from "@/data/publicContent";
+import { FAQS, PUBLIC_ROUTES, PUBLIC_SITE, SITE_ORIGIN, type PublicRouteDocument } from "@/data/publicContent";
 
 const organizationId = `${SITE_ORIGIN}/#organization`;
 const websiteId = `${SITE_ORIGIN}/#website`;
@@ -81,23 +81,23 @@ function websiteNode() {
 
 function breadcrumbNode(route: PublicRouteDocument) {
   if (route.path === "/") return null;
+  // A nested route (/catalogo/pelikan) goes through its parent, which is also a public route.
+  const parent = PUBLIC_ROUTES.find(
+    (candidate) => candidate.path !== "/" && route.path.startsWith(`${candidate.path}/`),
+  );
+  const trail = [
+    { name: "Inicio", item: `${SITE_ORIGIN}/` },
+    ...(parent ? [{ name: parent.breadcrumbName, item: `${SITE_ORIGIN}${parent.path}` }] : []),
+    { name: route.breadcrumbName, item: `${SITE_ORIGIN}${route.path}` },
+  ];
   return {
     "@id": `${SITE_ORIGIN}${route.path}#breadcrumb`,
     "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Inicio",
-        item: `${SITE_ORIGIN}/`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: route.breadcrumbName,
-        item: `${SITE_ORIGIN}${route.path}`,
-      },
-    ],
+    itemListElement: trail.map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      ...crumb,
+    })),
   };
 }
 
@@ -132,18 +132,33 @@ function routeSpecificNodes(route: PublicRouteDocument): object[] {
     ];
   }
 
+  const catalogNode = (catalog: (typeof PUBLIC_SITE.catalogs)[number]) => ({
+    "@type": "CreativeWork",
+    name: catalog.name,
+    url: catalog.url,
+    isAccessibleForFree: true,
+    inLanguage: "es-VE",
+    publisher: { "@id": organizationId },
+    numberOfPages: catalog.pages,
+  });
+
   if (route.id === "catalogo") {
     return [
       {
-        "@type": "CreativeWork",
-        name: PUBLIC_SITE.catalogs[0].name,
-        url: PUBLIC_SITE.catalogs[0].url,
-        isAccessibleForFree: true,
-        inLanguage: "es-VE",
-        publisher: { "@id": organizationId },
-        numberOfPages: PUBLIC_SITE.catalogs[0].pages,
+        "@type": "ItemList",
+        name: "Catálogos mayoristas de ACOM Trading",
+        itemListElement: PUBLIC_SITE.catalogs.map((catalog, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item: catalogNode(catalog),
+        })),
       },
     ];
+  }
+
+  const catalog = PUBLIC_SITE.catalogs.find((candidate) => candidate.url === `${SITE_ORIGIN}${route.path}`);
+  if (catalog) {
+    return [catalogNode(catalog)];
   }
 
   if (route.id === "faq") {

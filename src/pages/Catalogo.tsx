@@ -1,69 +1,32 @@
-import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { CTAButton } from "@/components/CTAButton";
 import { Image } from "@/components/Image";
-import { Button } from "@/components/ui/button";
-import { CATALOG, catalogPageUrl } from "@/lib/index";
+import { CATALOGS, catalogPageUrl, catalogPath } from "@/lib/index";
 import { fadeInUp, springPresets } from "@/lib/motion";
 
 /**
- * Published catalog viewer.
+ * Index of every published catalog: one cover per catalog, each linking to its own viewer.
  *
- * 🚨 Why this page exists: until now there was not a SINGLE product anywhere on the site — no
- * catalog, no PDF, no list, no example. Categories and brands were described in prose, and the
- * portal that holds the real catalog is invite-only. A prospect had to message WhatsApp just to
- * find out whether we sell what they are looking for, and most do not. The catalog was already
- * rendered, uploaded and publicly readable; the only site that did not link it was ours.
- *
- * 🚨 One page at a time, on purpose: the 82 pages are ~5 MB together, and this is read on
- * Venezuelan mobile data. Each page is ~50 KB, and only the next one is prefetched.
- *
- * ⚠️ `CATALOG.PAGES` is hardcoded because the renderer's manifest is never uploaded (see the
- * comment on CATALOG). If a future catalog has fewer pages, the viewer shows a visible
- * "could not load" state instead of a blank frame — which is why <Image> has an onError.
+ * Only the covers load here (one ~100 KB page each), never a whole catalog: this is read on
+ * Venezuelan mobile data. The covers share one frame ratio with `object-contain` so the
+ * landscape Momentop deck sits in the same grid as the portrait ones.
  */
 export default function Catalogo() {
-  const [page, setPage] = useState(1);
-  const [failed, setFailed] = useState(false);
-
-  const goTo = useCallback((next: number) => {
-    setPage(Math.min(Math.max(next, 1), CATALOG.PAGES));
-    setFailed(false);
-  }, []);
-
-  // Prefetch the next page so paging forward feels instant without pulling all 82.
-  useEffect(() => {
-    if (page >= CATALOG.PAGES) return;
-    const preload = new window.Image();
-    preload.src = catalogPageUrl(page + 1);
-  }, [page]);
-
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight") goTo(page + 1);
-      if (event.key === "ArrowLeft") goTo(page - 1);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [page, goTo]);
-
-  const isFirst = page === 1;
-  const isLast = page === CATALOG.PAGES;
-
   return (
     <div className="flex w-full flex-col">
       <section className="border-b border-border py-12 sm:py-16">
         <div className="container mx-auto px-4">
           <motion.div className="max-w-3xl" initial="initial" animate="animate" variants={fadeInUp}>
             <span className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
-              Catálogo
+              Catálogos
             </span>
             <h1 className="mb-4 mt-3 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
-              {CATALOG.TITLE}
+              Catálogos mayoristas
             </h1>
             <p className="text-lg leading-relaxed text-muted-foreground">
-              {CATALOG.PAGES} páginas con códigos, presentaciones y unidades por bulto.{" "}
+              {CATALOGS.length} catálogos con códigos, presentaciones y unidades por bulto, sin registro.{" "}
               <span className="font-medium text-foreground">
                 Los precios mayoristas te los envía tu asesor
               </span>
@@ -75,76 +38,32 @@ export default function Catalogo() {
 
       <section className="py-10 sm:py-14">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
-            <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-              <Image
-                key={page}
-                src={catalogPageUrl(page)}
-                alt={`${CATALOG.TITLE}, página ${page} de ${CATALOG.PAGES}`}
-                ratio="aspect-[1080/1399]"
-                priority={page === 1}
-                className="object-contain"
-                onLoadError={() => setFailed(true)}
-                errorFallback={
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
-                    <ImageOff className="h-8 w-8 text-muted-foreground" aria-hidden="true" />
-                    <p className="text-sm font-medium text-foreground">
-                      No pudimos cargar la página {page}
-                    </p>
-                    <p className="max-w-sm text-sm text-muted-foreground">
-                      Revisa tu conexión y vuelve a intentarlo, o pídele el catálogo a un asesor.
-                    </p>
-                  </div>
-                }
-              />
-            </div>
-
-            {/*
-              Sticky: a page renders ~990 px tall at this width, so a static control bar sits below
-              the fold on every screen and paging means scrolling down, clicking, scrolling up.
-            */}
-            <div className="sticky bottom-4 z-10 mt-5 flex items-center justify-between gap-3 rounded-full border border-border bg-background/90 px-3 py-2 shadow-lg backdrop-blur-sm">
-              <Button
-                variant="outline"
-                className="min-h-11 gap-1.5 rounded-full"
-                onClick={() => goTo(page - 1)}
-                disabled={isFirst}
-                aria-label="Página anterior"
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Anterior
-              </Button>
-
-              <p className="font-mono text-sm font-semibold text-muted-foreground" aria-live="polite">
-                {page} <span className="font-normal">de</span> {CATALOG.PAGES}
-              </p>
-
-              <Button
-                variant="outline"
-                className="min-h-11 gap-1.5 rounded-full"
-                onClick={() => goTo(page + 1)}
-                disabled={isLast}
-                aria-label="Página siguiente"
-              >
-                Siguiente
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {failed && (
-              <p className="mt-4 text-center text-sm text-muted-foreground">
-                ¿Sigue sin cargar?{" "}
-                <button
-                  type="button"
-                  onClick={() => goTo(1)}
-                  className="font-medium text-primary underline underline-offset-2"
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {CATALOGS.map((catalog, index) => (
+              <li key={catalog.id}>
+                <Link
+                  to={catalogPath(catalog)}
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
                 >
-                  Volver a la primera página
-                </button>
-                .
-              </p>
-            )}
-          </div>
+                  <Image
+                    src={catalogPageUrl(catalog, 1)}
+                    alt={`Portada del ${catalog.title}`}
+                    ratio="aspect-[3/4]"
+                    priority={index < 3}
+                    wrapperClassName="bg-muted/40"
+                    className="object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                  />
+                  <div className="flex flex-1 items-center justify-between gap-3 border-t border-border p-5">
+                    <div>
+                      <h2 className="text-lg font-bold">{catalog.title}</h2>
+                      <p className="font-mono text-sm text-muted-foreground">{catalog.pages} páginas</p>
+                    </div>
+                    <ArrowRight className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -159,11 +78,11 @@ export default function Catalogo() {
           >
             <div className="relative z-10 flex flex-col items-center gap-6 text-center">
               <h2 className="max-w-2xl text-2xl font-bold sm:text-3xl md:text-4xl">
-                ¿Te interesa algún producto de este catálogo?
+                ¿Te interesa algún producto de estos catálogos?
               </h2>
               <p className="max-w-2xl text-lg text-primary-foreground/90">
                 Escríbenos con los códigos y un asesor te envía precios mayoristas, disponibilidad y
-                condiciones de despacho. También tenemos catálogos de Pelikan, Sanremo y Momentop.
+                condiciones de despacho.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
                 <CTAButton

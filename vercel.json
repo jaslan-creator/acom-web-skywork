@@ -142,6 +142,116 @@
             }
         },
         {
+            "src": "/catalogo/bambary",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/catalogo-bambary.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/catalogo/pelikan",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/catalogo-pelikan.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/catalogo/sanremo",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/catalogo-sanremo.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/catalogo/momentop",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/catalogo-momentop.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
+            "src": "/catalogo/beifa",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown.*"
+                }
+            ],
+            "missing": [
+                {
+                    "type": "header",
+                    "key": "accept",
+                    "value": ".*text/markdown *; *q=0(\\.0+)?([,;].*)?"
+                }
+            ],
+            "dest": "/agent/pages/catalogo-beifa.md",
+            "headers": {
+                "Vary": "Accept",
+                "X-Content-Type-Options": "nosniff"
+            }
+        },
+        {
             "src": "/como-trabajamos",
             "has": [
                 {

@@ -3,11 +3,25 @@ import type { RouteRecord } from "vite-react-ssg";
 
 import { AppShell } from "@/components/AppShell";
 import { PUBLIC_ROUTES, type PublicRouteId } from "@/data/publicContent";
+import { CATALOGS, type Catalog } from "@/lib/index";
 
 type RouteModule = { Component: ComponentType };
 type RouteLoader = () => Promise<RouteModule>;
 
+/** One viewer route per published catalog, each bound to its own catalog. */
+const catalogLoader =
+  (catalog: Catalog): RouteLoader =>
+  async () => {
+    const { default: CatalogoVisor } = await import("@/pages/CatalogoVisor");
+    return { Component: () => <CatalogoVisor catalog={catalog} /> };
+  };
+
+const catalogLoaders = Object.fromEntries(
+  CATALOGS.map((catalog) => [`catalogo-${catalog.id}`, catalogLoader(catalog)]),
+) as Record<`catalogo-${Catalog["id"]}`, RouteLoader>;
+
 const pageLoaders: Record<PublicRouteId, RouteLoader> = {
+  ...catalogLoaders,
   home: async () => ({ Component: (await import("@/pages/Home")).default }),
   marcas: async () => ({ Component: (await import("@/pages/Marcas")).default }),
   catalogo: async () => ({ Component: (await import("@/pages/Catalogo")).default }),
