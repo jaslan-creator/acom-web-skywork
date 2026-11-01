@@ -271,9 +271,13 @@ El CSP bloquea un envío alternativo del pixel: `Framing 'https://www.facebook.c
 - El token puede **enviar** eventos (`events_received: 1`) pero no **leer** el pixel (`#100 Missing Permission`). Es lo esperado en un token de CAPI; no es una falla.
 - Preview `acom-web-skywork-8h7t5r930`: evento válido → 204, sin `[meta-event] Meta respondió …` en los logs. Meta marca `server_last_fired_time: 2026-10-31T21:24:04-0700` (antes: 2025-03-18).
 
+### Producción (2026-11-01, 00:30 EDT)
+
+- Texto de privacidad aprobado por el dueño y publicado en `/politica-de-privacidad`.
+- Push a `main` → despliegue de producción `acom-web-skywork-bitqhtlfb` (Ready).
+- `www.acomve.com/api/meta-event`: otro origen → 403, GET → 405. `/` y `/marcas` → 200; Markdown en `/` → 200 y en `/no-existe` → 404. El bundle `app-DzFnKfey.js` lleva `/api/meta-event`.
+- **No** se mandó un evento válido a producción a mano: habría sumado un `Lead` falso. Lo confirman las visitas reales.
+
 ### Dónde quedó
 
-Tasks 1–4 hechas y commiteadas en `main` (local, sin push). Token cargado y probado. Pendiente:
-1. **Dueño:** aprobar el texto de privacidad (Task 5, Step 1).
-2. **Dueño:** visto bueno para push/producción (Task 5, Step 3).
-3. Control a 48 h / 7 días (Task 5, Step 4).
+Todo desplegado. Solo falta el control a las 48 h y a los 7 días (Task 5, Step 4). Pendiente aparte: rotar el token, que quedó escrito en una conversación.
