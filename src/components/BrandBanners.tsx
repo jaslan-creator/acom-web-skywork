@@ -6,7 +6,7 @@ import { Brand, ROUTE_PATHS } from "@/lib/index";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const AUTOPLAY_MS = 6000;
+const AUTOPLAY_MS = 4000;
 
 /** `/images/banners/x.webp` → `/images/banners/x-mobile.webp` */
 const mobileSrc = (src: string) => src.replace(/\.webp$/, "-mobile.webp");
