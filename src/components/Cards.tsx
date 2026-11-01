@@ -11,11 +11,11 @@ import { hoverLift, springPresets, staggerItem } from "@/lib/motion";
 /**
  * BrandCard - Displays detailed information about a distributed brand.
  *
- * 🚨 The logo is shown ALONGSIDE the name, never instead of it. It used to replace the
- * <CardTitle>, which meant that adding the four logos would have deleted "Bambary",
- * "Pelikan", "Sanremo" and "Momentop" as visible text — the highest-value keywords on a SPA
- * that has no per-route metadata. A logo that 404s falls back to the name alone; before, a
- * missing file left the card with neither logo nor title.
+ * 🚨 With a logo, the <CardTitle> is visually hidden (sr-only), never removed: "Bambary",
+ * "Pelikan", "Sanremo" and "Momentop" stay in the DOM as text — the highest-value keywords
+ * of the page and the card's accessible name. The founder asked for logo only because the
+ * name next to it read as a duplicate. A logo that 404s brings the visible name back;
+ * before, a missing file left the card with neither logo nor title.
  */
 export function BrandCard({ brand }: { brand: Brand }) {
   const [logoFailed, setLogoFailed] = useState(false);
@@ -39,13 +39,13 @@ export function BrandCard({ brand }: { brand: Brand }) {
                 src={brand.logo}
                 alt=""
                 aria-hidden="true"
-                className="h-9 w-auto max-w-[38%] shrink-0 object-contain object-left"
+                className="h-9 w-auto max-w-[13rem] shrink-0 object-contain object-left"
                 loading="lazy"
                 decoding="async"
                 onError={() => setLogoFailed(true)}
               />
             )}
-            <CardTitle className="text-xl sm:text-2xl font-bold text-primary">{brand.name}</CardTitle>
+            <CardTitle className={showLogo ? "sr-only" : "text-xl sm:text-2xl font-bold text-primary"}>{brand.name}</CardTitle>
           </div>
           <CardDescription className="text-accent-foreground font-medium">
             {brand.headline}
