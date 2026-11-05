@@ -8,27 +8,34 @@
   <meta name="theme-color" content="#A5002B" /> <!-- brand manual; must track --primary in index.css -->
   <link rel="icon" type="image/png" href="/favicon.png" />
 
-  <!-- Facebook Pixel Code -->
+  <!-- Facebook Pixel Code
+       Solo en producción: localhost y los previews de Vercel ensuciaban las estadísticas y las
+       audiencias del pixel. La lista es la misma que ALLOWED_HOSTS de api/_lib/capi.ts, y la ata
+       tests/pixelSoloEnProduccion.test.ts. Fuera de esos hosts `fbq` no existe y
+       src/lib/analytics.ts ya lo trata como pixel bloqueado. -->
   <script>
-    !function (f, b, e, v, n, t, s) {
-      if (f.fbq) return; n = f.fbq = function () {
-        n.callMethod ?
-          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-      };
-      if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-      n.queue = []; t = b.createElement(e); t.async = !0;
-      t.src = v; s = b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1274191492980071');
-    fbq('track', 'PageView');
+    if (['acomve.com', 'www.acomve.com'].indexOf(location.hostname) !== -1) {
+      !function (f, b, e, v, n, t, s) {
+        if (f.fbq) return; n = f.fbq = function () {
+          n.callMethod ?
+            n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+        };
+        if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+        n.queue = []; t = b.createElement(e); t.async = !0;
+        t.src = v; s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s)
+      }(window, document, 'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1274191492980071');
+      fbq('track', 'PageView');
+    }
   </script>
   <!-- End Facebook Pixel Code -->
 </head>
 
 <body>
-  <!-- Meta Pixel noscript fallback -->
+  <!-- Meta Pixel noscript fallback. No se puede limitar por host (sin JS no hay `location`);
+       solo dispara en navegadores sin JavaScript, que en localhost y en previews no existen. -->
   <noscript><img height="1" width="1" style="display:none"
       src="https://www.facebook.com/tr?id=1274191492980071&ev=PageView&noscript=1" /></noscript>
 
